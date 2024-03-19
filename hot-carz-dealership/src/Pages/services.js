@@ -1,10 +1,11 @@
 import React from 'react';
-import placeholderImage from './imgs/placeholder.png';
-import engineImage from './imgs/engine.png';
-import oilChangeImage from './imgs/oilChange.png';
-import tiresImage from './imgs/tires.png';
+import placeholderImage from '../imgs/placeholder.png';
+import engineImage from '../imgs/engine.png';
+import oilChangeImage from '../imgs/oilChange.png';
+import tiresImage from '../imgs/tires.png';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-const HomePage = () => {
+const services = () => {
   const styles = {
     homepage: {
       textAlign: 'center',
@@ -65,6 +66,8 @@ const HomePage = () => {
     },
     servicesDisplayTitle: {
       color: 'red',
+      textAlign: 'center',
+      fontSize: '1.5em',
     },
     price: {
       color: 'red',
@@ -78,27 +81,9 @@ const HomePage = () => {
     },
   };
 
+
   return (
     <div className="homepage" style={styles.homepage}>
-      <h1 className='welcome' style={styles.welcome}>Welcome to Hot Carz</h1>
-
-      <div className='carDisplay' style={styles.carDisplay}>
-        <h1 className='carDisplayTitle' style={styles.carDisplayTitle}>Featured Cars</h1> 
-
-        <ul className='featuredCarList' style={styles.featuredCarList}>
-          <li style={styles.featuredCarItem}>
-            <img src={placeholderImage} style={styles.featuredCarImage} alt="Vehicle" />
-            <h2>Vehicle 1</h2>
-          </li>
-          <li style={styles.featuredCarItem}>
-            <img src={placeholderImage} style={styles.featuredCarImage} alt="Vehicle" />
-            <h2>Vehicle 2</h2>
-          </li>
-        </ul>
-
-        <button className='searchButton' style={styles.searchButton}>Search Cars</button>
-      </div>
-
       <div className='servicesDisplay' style={styles.carDisplay}>
         <h1 className='servicesDisplayTitle' style={styles.servicesDisplayTitle}>OUR SERVICES</h1>
         <ul className='servicesList' style={styles.featuredCarList}>
@@ -129,14 +114,11 @@ const HomePage = () => {
             <p>We offer tire repair, alignments, tire balancing and tire rotation to help keep your tires healthy.</p>
             <button className='bookApptButton' style={styles.bookApptButton}>Book Appt.</button>
           </li>
-        </ul>
-
-        <button className='servicesButton' style={styles.searchButton}>GO TO SERVICE PAGE</button>
-
+        </ul>   
+        <button className='viewAppointments' style={styles.searchButton}><Link to="/account" className="button">VIEW CAR STATUS</Link></button>     
       </div>
-
     </div>
   );
 };
 
-export default HomePage;
+export default services;

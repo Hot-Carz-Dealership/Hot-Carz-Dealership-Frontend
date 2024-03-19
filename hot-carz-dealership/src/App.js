@@ -2,7 +2,8 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Homepage from './homepage';
+import Homepage from './Pages/homepage';
+import Services from './Pages/services'
 
 // Placeholder components
 const Placeholder = () => {
@@ -26,7 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/cars" element={<Placeholder />} />
-          <Route path="/services" element={<Placeholder />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Placeholder />} />
         </Routes>
       </div>
