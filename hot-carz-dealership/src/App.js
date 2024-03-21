@@ -2,10 +2,11 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Homepage from './Pages/homepage';
-import Services from './Pages/services';
-import Account from './Pages/account';
-import LogIn from './Pages/logIn';
+import Homepage from './pages/homepage';
+import Services from './pages/services';
+import Account from './pages/account';
+import LogIn from './pages/logIn';
+import ManagerPage from './pages/managerPage';
 
 // Placeholder components
 const Placeholder = () => {
@@ -32,6 +33,8 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
+          <Route path="/managerPage" element={<ManagerPage />} />
+
         </Routes>
       </div>
     </Router>
