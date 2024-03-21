@@ -1,10 +1,10 @@
 import React from "react";
-import CarInventoryPage from "../features/Car_Inv_Page/CarInventoryPage";
+import CarInventorySearchbar from "../features/Car_Inv_Page/CarInventorySearchbar";
 
 const Cars = () => {
   return (
     <div className="cars">
-      <CarInventoryPage />
+      <CarInventorySearchbar />
     </div>
   );
 };
