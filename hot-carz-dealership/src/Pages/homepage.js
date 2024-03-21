@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import placeholderImage from '../imgs/placeholder.png';
 import engineImage from '../imgs/engine.png';
 import oilChangeImage from '../imgs/oilChange.png';
@@ -131,7 +132,7 @@ const HomePage = () => {
           </li>
         </ul>
 
-        <button className='servicesButton' style={styles.searchButton}>GO TO SERVICE PAGE</button>
+        <button className='servicesButton' style={styles.searchButton}><Link to="/services" className="button">GO TO SERVICE PAGE</Link></button>
 
       </div>
 

@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Homepage from './Pages/homepage';
 import Services from './Pages/services'
+import Account from './Pages/account';
 
 // Placeholder components
 const Placeholder = () => {
@@ -28,7 +29,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/cars" element={<Placeholder />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/account" element={<Placeholder />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </div>
     </Router>
