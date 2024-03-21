@@ -82,6 +82,9 @@ const Account = () => {
     },
   };
 
+
+  
+
   return (
     <div className="account" style={styles.homepage}>
       <h1 style={styles.servicesDisplayTitle}>ACCOUNT INFO</h1>
@@ -95,6 +98,17 @@ const Account = () => {
       <button className='bookApptButton' style={styles.bookApptButton}>Edit Info</button>
       <button className='bookApptButton' style={styles.bookApptButton}>Log Out</button>
       <p>Modals for Test Drives and Tracker down below</p>
+
+            <form>
+                <label for="name">Name:  </label><input type="text" id="name" name="name"/><br/>
+                <label for="address">Address:  </label><input type="text" id="address" name="address"/><br/>
+                <label for="phnNumber">Address:  </label><input type="text" id="phnNumber" name="phnNumber"/><br/>
+                <label for="emailAddress">Email Address:  </label><input type="text" id="emailAddress" name="name"/><br/>
+                <label for="license">Drivers License Number:  </label><input type="text" id="license" name="license"/><br/>
+                <input type="submit" value="Submit" style={styles.bookApptButton}></input>
+            </form>
+
+
     </div>
   );
 };
