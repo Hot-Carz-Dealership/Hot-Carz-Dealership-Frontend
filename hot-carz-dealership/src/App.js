@@ -6,6 +6,7 @@ import Homepage from './Pages/homepage';
 import Services from './Pages/services';
 import Account from './Pages/account';
 import LogIn from './Pages/logIn';
+import EditAccount from './Pages/editAccount';
 
 // Placeholder components
 const Placeholder = () => {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
+          <Route path="/editAccount" element={<EditAccount />} />
         </Routes>
       </div>
     </Router>
