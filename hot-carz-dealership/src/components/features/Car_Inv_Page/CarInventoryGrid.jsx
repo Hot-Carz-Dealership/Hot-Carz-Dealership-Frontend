@@ -277,7 +277,6 @@ const CarInventoryGrid = () => {
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           {/* {cars.map((car) => (
             <CarCard key={car.id} car={car} />
