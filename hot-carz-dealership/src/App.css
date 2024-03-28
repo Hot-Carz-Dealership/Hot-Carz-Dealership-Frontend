@@ -5,6 +5,8 @@
   padding: 10px;
   background: black;
   color: white;
+  position: relative;
+  z-index: 10000;
 }
 
 .logo {

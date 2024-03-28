@@ -3,9 +3,9 @@ import React from "react";
 import "./index.css";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Homepage from "./Pages/homepage";
-import Services from "./Pages/services";
-import Cars from "./Pages/cars";
+import Homepage from "./pages/homepage";
+import Services from "./pages/services";
+import Cars from "./pages/cars";
 
 // Placeholder components
 const Placeholder = () => {
