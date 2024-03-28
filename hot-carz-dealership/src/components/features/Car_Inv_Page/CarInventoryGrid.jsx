@@ -7,13 +7,12 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import { Button, Menu, MenuItem } from "@mui/material";
+import { CardActions } from "@mui/material";
 
 // Sample car data
 const cars = [
@@ -23,7 +22,8 @@ const cars = [
     price: "$25,000",
     year: 2022,
     bodyType: "Sedan",
-    image: "../../../imgs/engine.png",
+    image:
+      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/engine.png?raw=true",
   },
   {
     id: 2,
@@ -31,7 +31,8 @@ const cars = [
     price: "$22,500",
     year: 2021,
     bodyType: "Sedan",
-    image: "../../../imgs/tires.png",
+    image:
+      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/oilChange.png?raw=true",
   },
   {
     id: 3,
@@ -39,7 +40,8 @@ const cars = [
     price: "$23,500",
     year: 2021,
     bodyType: "Sport",
-    image: "../../../imgs/oilChange.png",
+    image:
+      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/tires.png?raw=true",
   },
   // Add more cars as needed
 ];
@@ -191,6 +193,7 @@ const CarInventoryGrid = () => {
                   <div>
                     <Button
                       variant="contained"
+                      sx={{ backgroundColor: "red" }}
                       onClick={handleOpenMakeMenu}
                       aria-controls="car-make-menu"
                       aria-haspopup="true"
@@ -230,6 +233,7 @@ const CarInventoryGrid = () => {
                   <div>
                     <Button
                       variant="contained"
+                      sx={{ backgroundColor: "red" }}
                       onClick={handleOpenModelMenu}
                       aria-controls="car-model-menu"
                       aria-haspopup="true"
@@ -261,6 +265,12 @@ const CarInventoryGrid = () => {
                     )}
                   </div>
                 </ListItem>
+                <ListItem></ListItem>
+                <ListItem>
+                  <Button variant="contained" sx={{ backgroundColor: "black" }}>
+                    Apply Filter
+                  </Button>
+                </ListItem>
               </List>
             </ListItem>
           </List>
@@ -268,37 +278,50 @@ const CarInventoryGrid = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {/* {cars.map((car) => (
+            <CarCard key={car.id} car={car} />
+          ))} */}
+
+          {[...Array(10)].map((_, index) => (
+            <React.Fragment key={index}>
+              {cars.map((car) => (
+                <CarCard key={car.id} car={car} />
+              ))}
+            </React.Fragment>
+          ))}
+        </Box>
       </Box>
     </Box>
+  );
+};
+
+const CarCard = ({ car }) => {
+  return (
+    <Card sx={{ maxWidth: 345, margin: 2 }}>
+      <CardMedia
+        component="img"
+        // height="140"
+        image={car.image}
+        alt={car.name}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {car.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Price: {car.price} <br />
+          Year: {car.year} <br />
+          Body Type: {car.bodyType}
+        </Typography>
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      <CardActions>
+        <Button variant="contained" sx={{ backgroundColor: "red" }}>
+          View details
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 
