@@ -9,6 +9,7 @@ import Cars from "./pages/cars";
 import LogIn from "./pages/logIn";
 import ManagerPage from "./pages/managerPage";
 import Account from "./pages/account";
+import EditAccount from "./pages/editAccount";
 
 // Placeholder components
 const Placeholder = () => {
@@ -44,6 +45,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
+          <Route path="/editAccount" element={<EditAccount />} />
         </Routes>
       </div>
     </Router>
