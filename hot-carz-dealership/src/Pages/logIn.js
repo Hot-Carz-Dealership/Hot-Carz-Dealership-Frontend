@@ -14,62 +14,12 @@ const LogIn = () => {
           color: 'black',
           fontWeight: 'bold',
         },
-        carDisplay: {
-          marginTop: '20px',
-          backgroundColor: '#f5f5f5',
-          padding: '20px',
-          borderRadius: '5px',
-        },
-        carDisplayTitle: {
-          fontSize: '1.5em',
-          color: 'red',
-        },
-    
-        featuredCarList: {
-          listStyle: 'none', 
-          padding: 0, 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-        },
-        featuredCarItem: {
-          textAlign: 'center', 
-          flex: '1', 
-        },
-    
-        featuredCarImage: {
-          height: '300px',
-          width: '300px',
-          margin: '0 auto',
-        },
-    
-        searchButton: {
-          backgroundColor: 'red',
-          color: 'white',
-          padding: '5px 10px',
-        },
-    
-        servicesItem: {
-          marginLeft: '2%',
-          marginRight: '2%',
-          width: '30%', 
-          textAlign: 'center', 
-          display: 'inline-block',
-          marginBottom: '20px', 
-        },
-        serviceImage: {
-          height: '200px',
-          width: '300px',
-          margin: '0 auto',
-    
-        },
+        
         servicesDisplayTitle: {
           color: 'red',
           fontSize: '3em',
         },
-        price: {
-          color: 'red',
-    
-        },
+
         bookApptButton: {
           backgroundColor: 'red',
           color: 'white',
