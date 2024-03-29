@@ -8,6 +8,7 @@ import Services from "./pages/services";
 import Cars from "./pages/cars";
 import LogIn from "./pages/logIn";
 import ManagerPage from "./pages/managerPage";
+import Account from "./pages/account";
 
 // Placeholder components
 const Placeholder = () => {
