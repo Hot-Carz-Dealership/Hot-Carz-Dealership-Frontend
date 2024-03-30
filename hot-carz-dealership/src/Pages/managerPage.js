@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 
+
 const styles = {
     container: {
       display: 'flex',
@@ -44,13 +45,26 @@ const styles = {
       textAlign: 'left',
     },
   };
-const ManagerPage = () => {
+  const ManagerPage = () => {
     const [modal1Open, setModal1Open] = useState(false);
     const [modal2Open, setModal2Open] = useState(false);
     const [modal3Open, setModal3Open] = useState(false);
     const [modal4Open, setModal4Open] = useState(false);
     const [modal5Open, setModal5Open] = useState(false);
     const [modal6Open, setModal6Open] = useState(false);
+    const [fetchedData, setFetchedData] = useState(null);
+
+    const requestData = async (type) => {
+        try {
+            const response = await fetch(`api/${type}`);
+            console.log('Response received:', response); // Log the response object
+            const data = await response.json();
+            console.log('Data fetched successfully:', data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    
 
     const openModal = (modalNumber) => {
         setModal1Open(false);
@@ -84,24 +98,25 @@ const ManagerPage = () => {
         }
     };
     
+    
 
 
     return (
         <div style={styles.container}>
-        <div style={styles.buttonsContainer}>
-                {/* Button to open Modal 1 */}
-                <button style={styles.modalButton} onClick={() => openModal(1)}>Appointments</button>
-                {/* Button to open Modal 2 */}
-                <button style={styles.modalButton} onClick={() => openModal(2)}>Bids</button>
-                {/* Button to open Modal 3 */}
-                <button style={styles.modalButton} onClick={() => openModal(3)}>Test Drives</button>
-                {/* Button to open Modal 4 */}
-                <button style={styles.modalButton} onClick={() => openModal(4)}>Customers</button>
-                {/* Button to open Modal 5 */}
-                <button style={styles.modalButton} onClick={() => openModal(5)}>Vehicle Listings</button>
-                {/* Button to open Modal 6 */}
-                <button style={styles.modalButton} onClick={() => openModal(6)}>Sales Report</button>
-            </div>
+    <div style={styles.buttonsContainer}>
+        {/* Button to open Modal 1 */}
+        <button style={styles.modalButton} onClick={() => { openModal(1); requestData("service-appointments"); }}>Appointments</button>
+        {/* Button to open Modal 2 */}
+        <button style={styles.modalButton} onClick={() => { openModal(2); requestData("current-bids"); }}>Bids</button>
+        {/* Button to open Modal 3 */}
+        <button style={styles.modalButton} onClick={() => { openModal(3); requestData("testdrives"); }}>Test Drives</button>
+        {/* Button to open Modal 4 */}
+        <button style={styles.modalButton} onClick={() => { openModal(4); requestData("members"); }}>Customers</button>
+        {/* Button to open Modal 5 */}
+        <button style={styles.modalButton} onClick={() => { openModal(5); requestData('vehicles'); }}>Vehicle Listings</button>
+        {/* Button to open Modal 6 */}
+        <button style={styles.modalButton} onClick={() => { openModal(6); requestData("appointments"); }}>Sales Report</button>
+    </div>
 
             <div style={styles.modalContainer}>
 
