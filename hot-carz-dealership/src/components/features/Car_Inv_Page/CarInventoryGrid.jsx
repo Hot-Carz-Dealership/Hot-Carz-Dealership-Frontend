@@ -23,6 +23,7 @@ const drawerWidth = 240;
 const CarInventoryGrid = () => {
   const [makeAnchorEl, setMakeAnchorEl] = useState(null);
   const [cars, setCars] = useState([]);
+  const [originalCars, setOriginalCars] = useState([]);
   const [carMakes, setCarMakes] = useState([]);
   const [carModels, setCarModels] = useState([]);
 
@@ -30,11 +31,17 @@ const CarInventoryGrid = () => {
   const [modelAnchorEl, setModelAnchorEl] = useState(null);
   const [selectedCarModel, setSelectedCarModel] = useState(null);
 
+  const [minYear, setMinYear] = useState("");
+  const [maxYear, setMaxYear] = useState("");
+  const [minMileage, setMinMileage] = useState("");
+  const [maxMileage, setMaxMileage] = useState("");
+
   useEffect(() => {
     fetch("http://localhost:5000/api/vehicles")
       .then((response) => response.json())
       .then((data) => {
         setCars(data);
+        setOriginalCars(data);
         // Extract unique car makes
         const makes = [...new Set(data.map((car) => car.make))];
         setCarMakes(["None", ...makes]);
@@ -78,6 +85,21 @@ const CarInventoryGrid = () => {
     handleCloseModelMenu();
   };
 
+  const handleFilter = () => {
+    // Filter cars based on current input values
+    const filteredCars = originalCars.filter((car) => {
+      return (
+        (!selectedCarMake || car.make === selectedCarMake) &&
+        (!selectedCarModel || car.model === selectedCarModel) &&
+        (!minYear || parseInt(car.year) >= parseInt(minYear)) &&
+        (!maxYear || parseInt(car.year) <= parseInt(maxYear)) &&
+        (!minMileage || parseInt(car.mileage) >= parseInt(minMileage)) &&
+        (!maxMileage || parseInt(car.mileage) <= parseInt(maxMileage))
+      );
+    });
+    return filteredCars;
+  };
+
   const buttonStyle = {
     minWidth: "160px", // Set a constant minimum width for the buttons
   };
@@ -118,6 +140,8 @@ const CarInventoryGrid = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={minYear}
+                    onChange={(e) => setMinYear(e.target.value)}
                   />
                   <span className="mr-2 ml-2">to</span>
                   <TextField
@@ -128,6 +152,8 @@ const CarInventoryGrid = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={maxYear}
+                    onChange={(e) => setMaxYear(e.target.value)}
                   />
                 </ListItem>
               </List>
@@ -140,23 +166,27 @@ const CarInventoryGrid = () => {
                 </ListItem>
                 <ListItem>
                   <TextField
-                    id="minMilage-number"
+                    id="minMileage-number"
                     label="Min"
                     type="number"
                     size="small"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={minMileage}
+                    onChange={(e) => setMinMileage(e.target.value)}
                   />
                   <span className="mr-2 ml-2">to</span>
                   <TextField
-                    id="maxMilage-number"
+                    id="maxMileage-number"
                     label="Max"
                     type="number"
                     size="small"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={maxMileage}
+                    onChange={(e) => setMaxMileage(e.target.value)}
                   />
                 </ListItem>
               </List>
@@ -246,7 +276,11 @@ const CarInventoryGrid = () => {
                 </ListItem>
                 <ListItem></ListItem>
                 <ListItem>
-                  <Button variant="contained" sx={{ backgroundColor: "black" }}>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black" }}
+                    onClick={() => setCars(handleFilter)}
+                  >
                     Apply Filter
                   </Button>
                 </ListItem>
@@ -278,7 +312,7 @@ const CarCard = ({ car }) => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {car.model}
+          {car.make} {car.model}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Price: {car.price} <br />
