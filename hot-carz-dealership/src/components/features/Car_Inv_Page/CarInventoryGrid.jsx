@@ -283,6 +283,7 @@ const CarCard = ({ car }) => {
         <Typography variant="body2" color="text.secondary">
           Price: {car.price} <br />
           Year: {car.year} <br />
+          Mileage: {car.mileage} <br />
           Body Type: {car.body}
         </Typography>
       </CardContent>
