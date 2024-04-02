@@ -20,7 +20,7 @@ import {
 
 const drawerWidth = 240;
 
-const CarInventoryGrid = () => {
+const CarInventoryGrid = ({ searchResults }) => {
   const [makeAnchorEl, setMakeAnchorEl] = useState(null);
   const [cars, setCars] = useState([]);
   const [originalCars, setOriginalCars] = useState([]);
@@ -37,6 +37,16 @@ const CarInventoryGrid = () => {
   const [maxMileage, setMaxMileage] = useState("");
 
   useEffect(() => {
+    fetchCars();
+  }, []);
+
+  // Update cars state when search data changes
+  useEffect(() => {
+    setCars(searchResults);
+    setOriginalCars(searchResults);
+  }, [searchResults]);
+
+  const fetchCars = () => {
     fetch("http://localhost:5000/api/vehicles")
       .then((response) => response.json())
       .then((data) => {
@@ -56,7 +66,7 @@ const CarInventoryGrid = () => {
         setCarModels(models);
       })
       .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  };
 
   const handleOpenMakeMenu = (event) => {
     setMakeAnchorEl(event.currentTarget);
@@ -226,7 +236,7 @@ const CarInventoryGrid = () => {
                       ))}
                     </Menu>
 
-                    {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>}
+                    {/* {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>} */}
                   </div>
                 </ListItem>
               </List>
@@ -269,9 +279,9 @@ const CarInventoryGrid = () => {
                         ))}
                     </Menu>
 
-                    {selectedCarModel && (
+                    {/* {selectedCarModel && (
                       <p>Selected Model: {selectedCarModel}</p>
-                    )}
+                    )} */}
                   </div>
                 </ListItem>
                 <ListItem></ListItem>
