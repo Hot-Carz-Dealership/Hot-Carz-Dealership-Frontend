@@ -17,6 +17,7 @@ import {
   MenuItem,
   CardActions,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -328,11 +329,17 @@ const CarCard = ({ car }) => {
           Price: {car.price} <br />
           Year: {car.year} <br />
           Mileage: {car.mileage} <br />
-          Body Type: {car.body}
+          Body Type: {car.body} <br />
+          Color: {car.color}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" sx={{ backgroundColor: "red" }}>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "red" }}
+          component={Link}
+          to={`/cars/${car.VIN_carID}`} // Dynamically generate URL
+        >
           View details
         </Button>
       </CardActions>
