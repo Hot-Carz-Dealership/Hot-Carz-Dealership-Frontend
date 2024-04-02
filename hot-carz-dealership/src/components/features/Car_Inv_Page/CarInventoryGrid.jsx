@@ -18,6 +18,7 @@ import {
   CardActions,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../../../utilities/constants";
 
 const drawerWidth = 240;
 
@@ -48,7 +49,7 @@ const CarInventoryGrid = ({ searchResults }) => {
   }, [searchResults]);
 
   const fetchCars = () => {
-    fetch("http://localhost:5000/api/vehicles")
+    fetch(`${BASE_URL}/api/vehicles`)
       .then((response) => response.json())
       .then((data) => {
         setCars(data);
