@@ -3,6 +3,7 @@ import React from "react";
 import "./index.css";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
 import Homepage from "./pages/homepage";
 import Services from "./pages/services";
 import Cars from "./pages/cars";
@@ -11,11 +12,9 @@ import LogIn from "./pages/logIn";
 import ManagerPage from "./pages/managerPage";
 import Account from "./pages/account";
 import EditAccount from "./pages/editAccount";
+import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
+import AddNewVehicle from "./pages/AddNewVehicle";
 
-// Placeholder components
-const Placeholder = () => {
-  return <div>This page is under construction.</div>;
-};
 
 function App() {
   return (
@@ -49,6 +48,10 @@ function App() {
           <Route path="/logIn" element={<LogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
+          <Route path="/create-employee-account" element={<CreateEmployeeAccount />} />
+          <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
+
+
         </Routes>
       </div>
     </Router>

@@ -1,0 +1,87 @@
+            <Modal isOpen={modal2Open} toggle={() => setModal2Open(!modal2Open)}>
+                <h2>Bids</h2>
+                <table style={styles.table}>
+                    <thead>
+                        <tr>
+                            <th>Make</th>
+                            <th>Model</th>
+                            <th>VIN</th>
+                            <th>MSRP</th>
+                            <th>Bid Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Populate table with bid data */}
+                    </tbody>
+                </table>      </Modal>
+            <Modal isOpen={modal3Open} toggle={() => setModal3Open(!modal3Open)}>
+                <h2>Test Drives</h2>
+                <table style={styles.table}>
+                    <thead>
+                        <tr>
+                            <th>Customer Phone</th>
+                            <th>Status</th>
+                            <th>Vehicle</th>
+                            <th>Datetime</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Populate table with test drive appointment data */}
+                    </tbody>
+                </table>      </Modal>
+                <Modal isOpen={modal4Open} toggle={() => setModal4Open(!modal4Open)}>
+
+                <h2>Customers</h2>
+                <table style={styles.table}>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone #</th>
+                            <th>Email</th>
+                            <th>Zipcode</th>
+                            <th>License #</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Populate table with customer data */}
+                    </tbody>
+                </table>      </Modal>
+                <Modal isOpen={modal5Open} toggle={() => setModal5Open(!modal5Open)}>
+                    <h2>Vehicle Listings</h2>
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>Make</th>
+                                <th>Model</th>
+                                <th>Year</th>
+                                <th>VIN</th>
+                                <th>Bids (Amount)</th>
+                                <th>Views</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Populate table with vehicle listings data */}
+                        </tbody>
+                    </table>
+                </Modal>
+                <Modal isOpen={modal6Open} toggle={() => setModal6Open(!modal6Open)}>
+                    <h2>Sales Report</h2>
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Purpose</th>
+                                <th>New Balance</th>
+                                <th>Date Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Populate table with sales report data */}
+                        </tbody>
+                    </table>
+                </Modal>

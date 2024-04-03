@@ -1,9 +1,8 @@
 import React from 'react';
-import placeholderImage from '../imgs/placeholder.png';
 import engineImage from '../imgs/engine.png';
 import oilChangeImage from '../imgs/oilChange.png';
 import tiresImage from '../imgs/tires.png';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const services = () => {
   const styles = {
