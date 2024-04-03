@@ -8,7 +8,7 @@ const Cars = () => {
 
   // Function to handle search
   const handleSearch = (searchTerm) => {
-    fetch(`${BASE_URL}/api/vehicles?search_query=${searchTerm}`)
+    fetch(`${BASE_URL}/api/vehicles/search?search_query=${searchTerm}`)
       .then((response) => response.json())
       .then((data) => {
         setCars(data); // Update cars state with search results

@@ -49,7 +49,7 @@ const CarInventoryGrid = ({ searchResults }) => {
   }, [searchResults]);
 
   const fetchCars = () => {
-    fetch(`${BASE_URL}/api/vehicles`)
+    fetch(`${BASE_URL}/api/vehicles/search`)
       .then((response) => response.json())
       .then((data) => {
         setCars(data);
