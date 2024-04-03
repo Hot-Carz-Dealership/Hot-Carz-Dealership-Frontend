@@ -17,7 +17,7 @@ const services = () => {
     },
     carDisplay: {
       marginTop: '20px',
-      backgroundColor: '#f5f5f5',
+      // backgroundColor: '#f5f5f5',
       padding: '20px',
       borderRadius: '5px',
     },
@@ -76,6 +76,7 @@ const services = () => {
       backgroundColor: 'red',
       color: 'white',
       padding: '5px 10px',
+      marginBottom: '20px',
       marginTop: '10px', // Add margin to separate from other content
     },
   };
@@ -93,7 +94,6 @@ const services = () => {
             <h1 className='oilChangePrice' style={styles.price}>$40</h1>
             <h2>Oil Change Service</h2>
             <p>Oil is the lifeblood of your car's engine. A high mileage synthetic blend service and fully synthetic oil change service with 120 PT. inspection included free.</p>
-            <button className='bookApptButton' style={styles.bookApptButton}>Book Appt.</button>
           </li>
           
           {/* Engine Tune Up */}
@@ -102,7 +102,6 @@ const services = () => {
             <h1 className='enginePrice' style={styles.price}>$120</h1>
             <h2>Engine Tune Up</h2>
             <p>Get complete and comprehensive engine diagnostics and system evaluations for you vehicle. While Keeping your car running like new.</p>
-            <button className='bookApptButton' style={styles.bookApptButton}>Book Appt.</button>
           </li>
           
           {/* Tire Services */}
@@ -111,9 +110,13 @@ const services = () => {
             <h1 className='tiresPrice' style={styles.price}>$100</h1>
             <h2>Tire Services</h2>
             <p>We offer tire repair, alignments, tire balancing and tire rotation to help keep your tires healthy.</p>
-            <button className='bookApptButton' style={styles.bookApptButton}>Book Appt.</button>
           </li>
-        </ul>   
+        </ul>
+
+        <div>
+          <button className='bookApptButton' style={styles.bookApptButton}>Book Appt.</button>
+        </div>
+
         <button className='viewAppointments' style={styles.searchButton}><Link to="/account" className="button">VIEW CAR STATUS</Link></button>     
       </div>
     </div>
