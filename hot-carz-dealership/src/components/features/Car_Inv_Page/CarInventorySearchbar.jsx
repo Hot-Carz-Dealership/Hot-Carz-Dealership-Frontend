@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { InputAdornment, TextField, IconButton } from "@mui/material";
-import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 
-const CarInventorySearchbar = () => {
+const CarInventorySearchbar = ({ handleSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event) => {
@@ -11,8 +10,7 @@ const CarInventorySearchbar = () => {
   };
 
   const handleSubmit = () => {
-    // Perform search action here
-    console.log("Search submitted:", searchTerm);
+    handleSearch(searchTerm);
   };
 
   return (
