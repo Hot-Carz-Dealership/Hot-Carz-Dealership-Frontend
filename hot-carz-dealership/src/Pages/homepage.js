@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import placeholderImage from '../imgs/placeholder.png';
 import engineImage from '../imgs/engine.png';
@@ -6,6 +6,11 @@ import oilChangeImage from '../imgs/oilChange.png';
 import tiresImage from '../imgs/tires.png';
 
 const HomePage = () => {
+
+  const [user, setUser] = useState(null);
+  
+
+
   const styles = {
     homepage: {
       textAlign: 'center',

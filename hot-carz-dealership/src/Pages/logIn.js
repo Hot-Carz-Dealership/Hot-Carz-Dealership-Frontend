@@ -1,7 +1,7 @@
 import React from 'react';
 import httpClient from "../httpClient";
 import { useState } from 'react';
-
+import Homepage from "./homepage";
 
 const LogIn = () => {
 
@@ -11,12 +11,14 @@ const LogIn = () => {
 
   const logInUser = async () => {
 
-    const resp = httpClient.post("//localhost:5000/api/members/login", {
+    const resp = await httpClient.post("//localhost:5000/api/members/login", {
       "username": username,
       "password": password,
     });
-    console.log(resp.data);
 
+    if(resp.status == 200){
+      window.location.href = "/"
+    }
 
   }
 
