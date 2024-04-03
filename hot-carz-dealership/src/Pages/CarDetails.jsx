@@ -195,7 +195,6 @@ function CarDetails() {
           { label: "Color", value: vehicleInfo.color },
           { label: "Mileage", value: vehicleInfo.mileage },
           // { label: "Details", value: vehicleInfo.details },
-          ,
         ]}
         vehichleImage={vehicleInfo.pictureLibraryLink}
       />
