@@ -79,6 +79,10 @@ const HomePage = () => {
     },
   };
 
+  
+
+
+
   return (
     <div className="homepage" style={styles.homepage}>
       <h1 className='welcome' style={styles.welcome}>Welcome to Hot Carz</h1>

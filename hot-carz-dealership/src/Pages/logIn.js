@@ -1,8 +1,25 @@
 import React from 'react';
-
+import httpClient from "../httpClient";
+import { useState } from 'react';
 
 
 const LogIn = () => {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+
+  const logInUser = async () => {
+
+    const resp = httpClient.post("//localhost:5000/api/members/login", {
+      "username": username,
+      "password": password,
+    });
+    console.log(resp.data);
+
+
+  }
+
 
     const styles = {
         homepage: {
@@ -28,6 +45,10 @@ const LogIn = () => {
         },
       };
 
+
+
+
+
   return (
     <div className="LogIn" style={styles.homepage}>
       <h1 style={styles.servicesDisplayTitle}>SIGN IN</h1>
@@ -35,9 +56,9 @@ const LogIn = () => {
 
 
       <form>
-            <label for="username">Username:  </label><input type="text" id="username" name="username"/><br/>
-            <label for="password">Password:  </label><input type="text" id="password" name="password"/><br/>
-            <input type="submit" value="Submit" style={styles.bookApptButton}></input>
+            <label for="username">Username:  </label><input type="text" id="email" name="email" value={username} onChange={(e)=>setUsername(e.target.value)}/><br/>
+            <label for="password">Password:  </label><input type="text" id="password" name="password" value={password} onChange={(e)=>setPassword(e.target.value)} /> <br/>
+            <button onClick={() => logInUser()} type="button" value="Submit" style={styles.bookApptButton}>Submit</button>
       </form>
 
 
