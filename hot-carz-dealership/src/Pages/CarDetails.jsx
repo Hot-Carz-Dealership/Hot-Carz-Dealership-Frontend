@@ -1,28 +1,29 @@
 import * as React from "react";
+import { useParams } from "react-router-dom";
 
-function Header() {
-  return (
-    <header className="flex justify-center items-center self-stretch px-16 py-8 w-full tracking-wide text-center uppercase bg-black max-md:px-5 max-md:max-w-full">
-      <div className="flex gap-5 justify-between w-full max-w-[1120px] max-md:flex-wrap max-md:max-w-full">
-        <div className="flex gap-5 text-4xl font-bold leading-6 text-white">
-          <div className="my-auto">Car Dealer</div>
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/8fe785e09cb62ae398e3b43065a000a5f5389f437cc966d07fdadc9dbe18c73b?apiKey=42422271ce8c469ca584ab0aeca1e146&"
-            alt="Car Dealer Logo"
-            className="shrink-0 w-10 aspect-square fill-white"
-          />
-        </div>
-        <nav className="flex gap-5 justify-between my-auto text-xl leading-6 text-white">
-          <button>Home</button>
-          <button>Cars</button>
-          <button>Services</button>
-          <button>My Acct</button>
-        </nav>
-      </div>
-    </header>
-  );
-}
+// function Header() {
+//   return (
+//     <header className="flex justify-center items-center self-stretch px-16 py-8 w-full tracking-wide text-center uppercase bg-black max-md:px-5 max-md:max-w-full">
+//       <div className="flex gap-5 justify-between w-full max-w-[1120px] max-md:flex-wrap max-md:max-w-full">
+//         <div className="flex gap-5 text-4xl font-bold leading-6 text-white">
+//           <div className="my-auto">Car Dealer</div>
+//           <img
+//             loading="lazy"
+//             src="https://cdn.builder.io/api/v1/image/assets/TEMP/8fe785e09cb62ae398e3b43065a000a5f5389f437cc966d07fdadc9dbe18c73b?apiKey=42422271ce8c469ca584ab0aeca1e146&"
+//             alt="Car Dealer Logo"
+//             className="shrink-0 w-10 aspect-square fill-white"
+//           />
+//         </div>
+//         <nav className="flex gap-5 justify-between my-auto text-xl leading-6 text-white">
+//           <button>Home</button>
+//           <button>Cars</button>
+//           <button>Services</button>
+//           <button>My Acct</button>
+//         </nav>
+//       </div>
+//     </header>
+//   );
+// }
 
 function VehicleInfo({ vehicleFeatures }) {
   return (
@@ -150,7 +151,7 @@ function CarDetails() {
   const vehicleFeatures = [
     { label: "Vin", value: "5YFB4MDE2RP135638" },
     { label: "Color", value: "Red" },
-    { label: "Body Style", value: "Sports Coupe" },
+    { label: "Body StylLLLLLLLe", value: "Sports Coupe" },
     { label: "Transmission", value: "6-speed manual" },
   ];
 
@@ -169,11 +170,13 @@ function CarDetails() {
     console.log(`Bidding with price: ${bidPrice}`);
   };
 
+  const { id } = useParams(); // Extract VIN_carID from URL
+
   return (
     <div className="flex flex-col items-center bg-gray-200">
       {/* <Header /> */}
-      <h1 className="mt-24 text-6xl font-bold tracking-wide leading-5 text-center text-red-500 uppercase max-md:mt-10 max-md:text-4xl">
-        Vehicle Info
+      <h1 className="mt-16 text-6xl font-bold  leading-5 text-center text-red-500 uppercase max-md:mt-10 max-md:text-4xl">
+        Vehicle Info {id}
       </h1>
       <VehicleInfo vehicleFeatures={vehicleFeatures} />
       <VehicleDetails
