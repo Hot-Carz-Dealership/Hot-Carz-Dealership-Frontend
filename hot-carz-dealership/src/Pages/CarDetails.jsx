@@ -1,45 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-// function Header() {
-//   return (
-//     <header className="flex justify-center items-center self-stretch px-16 py-8 w-full tracking-wide text-center uppercase bg-black max-md:px-5 max-md:max-w-full">
-//       <div className="flex gap-5 justify-between w-full max-w-[1120px] max-md:flex-wrap max-md:max-w-full">
-//         <div className="flex gap-5 text-4xl font-bold leading-6 text-white">
-//           <div className="my-auto">Car Dealer</div>
-//           <img
-//             loading="lazy"
-//             src="replace with some image link for the steering wheel from figms"
-//             alt="Car Dealer Logo"
-//             className="shrink-0 w-10 aspect-square fill-white"
-//           />
-//         </div>
-//         <nav className="flex gap-5 justify-between my-auto text-xl leading-6 text-white">
-//           <button>Home</button>
-//           <button>Cars</button>
-//           <button>Services</button>
-//           <button>My Acct</button>
-//         </nav>
-//       </div>
-//     </header>
-//   );
-// }
-
 function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   return (
     <section className="mt-12 max-w-full w-[822px] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
         <div className="flex flex-col w-[58%] max-md:ml-0 max-md:w-full">
-          <img loading="lazy" src={vehichleImage} alt="Vehicle" className="" />
+          <img
+            loading="lazy"
+            src={vehichleImage}
+            alt="Vehicle"
+            className=" mt-20"
+          />
         </div>
         <div className="flex flex-col ml-5 w-[42%] max-md:ml-0 max-md:w-full">
           <div className="flex flex-col self-stretch px-5 my-auto text-xl font-light tracking-normal leading-8 text-black max-md:mt-10">
-            <h2 className="text-4xl font-bold tracking-wide leading-6 text-center uppercase">
+            <h2 className="text-4xl font-bold  leading-7 text-center uppercase">
               Vehicle Features
             </h2>
             {vehicleFeatures.map((feature, index) => (
-              <div key={index} className="mt-5">
-                {feature.label} <br />
+              <div key={index} className="mt-2 ">
+                <span className="font-bold">{feature.label}</span> <br />
                 <span className="">{feature.value}</span>
               </div>
             ))}
@@ -55,7 +36,7 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive }) {
     <section className="mt-16 max-w-full w-[921px] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
         <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-          <div className="flex flex-col px-5 text-4xl font-bold tracking-wide leading-6 text-center uppercase max-md:mt-10">
+          <div className="flex flex-col px-5 text-4xl font-bold  leading-6 text-center uppercase max-md:mt-10">
             <h2 className="text-black">{vehicleName}</h2>
             <div className="self-center mt-14 text-red-500 max-md:mt-10">
               {msrp} MSrP
@@ -63,8 +44,8 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive }) {
           </div>
         </div>
         <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-          <div className="flex flex-col grow px-5 tracking-wide uppercase max-md:mt-10">
-            <h2 className="text-4xl font-bold leading-6 text-center text-black">
+          <div className="flex flex-col grow px-5  uppercase max-md:mt-10">
+            <h2 className="text-4xl font-bold leading-7 text-center text-black">
               Schedule a Test Drive
             </h2>
             <button
@@ -94,7 +75,7 @@ function PurchaseOptions({ onBuyNow, onBid }) {
 
   return (
     <section className="flex gap-5 justify-between pr-12 mt-32 max-w-full w-[921px] max-md:flex-wrap max-md:pr-5 max-md:mt-10">
-      <div className="flex flex-col tracking-wide uppercase">
+      <div className="flex flex-col  uppercase">
         <h2 className="text-4xl font-bold leading-6 text-center text-black">
           Purchase At MSRP
         </h2>
@@ -106,7 +87,7 @@ function PurchaseOptions({ onBuyNow, onBid }) {
         </button>
       </div>
       <div className="flex flex-col">
-        <h2 className="self-center text-4xl font-bold tracking-wide leading-6 text-center text-black uppercase">
+        <h2 className="self-center text-4xl font-bold  leading-6 text-center text-black uppercase">
           Bid on Price
         </h2>
         <form onSubmit={handleBidSubmit} className="flex gap-px mt-8">
@@ -126,7 +107,7 @@ function PurchaseOptions({ onBuyNow, onBid }) {
           />
           <button
             type="submit"
-            className="justify-center self-start px-6 py-2 text-base font-medium tracking-wide leading-7 text-white uppercase whitespace-nowrap bg-red-700 rounded shadow-md max-md:px-5"
+            className="justify-center self-start px-6 py-2 text-base font-medium  leading-7 text-white uppercase whitespace-nowrap bg-red-700 rounded shadow-md max-md:px-5"
           >
             Bid
           </button>
@@ -202,7 +183,7 @@ function CarDetails() {
   return (
     <div className="flex flex-col items-center bg-gray-200">
       <h1 className="mt-16 text-6xl font-bold leading-5 text-center text-red-500 uppercase max-md:mt-10 max-md:text-4xl">
-        Vehicle Info {id}
+        Vehicle Info
       </h1>
       <VehicleInfo
         vehicleFeatures={[
@@ -213,7 +194,7 @@ function CarDetails() {
           { label: "Year", value: vehicleInfo.year },
           { label: "Color", value: vehicleInfo.color },
           { label: "Mileage", value: vehicleInfo.mileage },
-          { label: "Details", value: vehicleInfo.details },
+          // { label: "Details", value: vehicleInfo.details },
           ,
         ]}
         vehichleImage={vehicleInfo.pictureLibraryLink}
