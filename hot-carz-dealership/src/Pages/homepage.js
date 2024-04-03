@@ -4,10 +4,23 @@ import placeholderImage from '../imgs/placeholder.png';
 import engineImage from '../imgs/engine.png';
 import oilChangeImage from '../imgs/oilChange.png';
 import tiresImage from '../imgs/tires.png';
+import httpClient from "../httpClient";
 
 const HomePage = () => {
 
   const [user, setUser] = useState(null);
+
+  useEffect(()=> {
+    (async() => {
+      try{
+        const resp = await httpClient.get("//localhost:5000/@me");
+        setUser(resp.data);
+      } catch (error){
+        console.log("Not Authenticated")
+      }
+
+    })();
+  }, []);
   
 
 
@@ -83,9 +96,6 @@ const HomePage = () => {
       marginTop: '10px', // Add margin to separate from other content
     },
   };
-
-  
-
 
 
   return (
