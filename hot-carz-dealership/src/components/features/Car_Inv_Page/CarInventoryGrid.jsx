@@ -315,13 +315,22 @@ const CarInventoryGrid = ({ searchResults }) => {
 const CarCard = ({ car }) => {
   return (
     <Card sx={{ maxWidth: 345, margin: 2 }}>
-      <CardMedia
-        component="img"
-        height="140"
-        // image={car.pictureLibraryLink}
-        image="https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_backend/hot-carz-dealership/src/imgs/cars/supra.png?raw=true"
-        alt={car.model}
-      />
+      <div
+        style={{
+          height: 200,
+          width: 300,
+          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <CardMedia
+          component="img"
+          image={car.pictureLibraryLink}
+          alt={car.model}
+          style={{ height: "100%", width: "auto" }}
+        />
+      </div>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {car.make} {car.model}
