@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const Account = () => {
   const styles = {
@@ -104,6 +105,8 @@ const Account = () => {
         onClick={handleEditInfo}
         style={styles.bookApptButton}
         variant="contained"
+        component={Link}
+        to="/editAccount"
       >
         Edit Info
       </Button>
