@@ -9,8 +9,7 @@ import httpClient from "../httpClient";
 
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
-  // remove this line and next line whenever user is finally used
-  // eslint-disable-next-line
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {
