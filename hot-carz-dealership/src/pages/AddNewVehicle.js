@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../utilities/constants";
+
 
 const AddNewVehicle = () => {
   const [formData, setFormData] = useState({
+    VIN_carID: "",
     make: "",
     model: "",
     body: "",
@@ -11,8 +14,6 @@ const AddNewVehicle = () => {
     mileage: "",
     details: "",
     description: "",
-    inStock: "yes", // Default value
-    stockAmount: "",
     status: "new", // Default value
     price: "",
   });
@@ -24,12 +25,53 @@ const AddNewVehicle = () => {
       [name]: value,
     });
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can submit the formData to your backend API to create a new car listing
-    console.log(formData); // Just logging the form data for demonstration
+
+    // Check if any field is empty
+    if (
+      formData.VIN_carID === '' ||
+
+      formData.make === '' ||
+      formData.model === '' ||
+      formData.body === '' ||
+      formData.year === '' ||
+      formData.color === '' ||
+      formData.mileage === '' ||
+      formData.details === '' ||
+      formData.description === '' ||
+      formData.price === ''
+    ) {
+      window.alert('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/api/vehicles/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add vehicle');
+      }
+
+      const data = await response.json();
+      console.log("Vehicle added successfully:", data);
+
+      window.alert("Vehicle added successfully!");
+
+    } catch (error) {
+      console.error("Error adding vehicle:", error);
+      window.alert("Something went wrong. Please try again.");
+    }
   };
+
+
+
 
   return (
     <div style={styles.container}>
@@ -42,6 +84,21 @@ const AddNewVehicle = () => {
         <h2 style={styles.heading}>Add New Vehicle</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
+            <label htmlFor="VIN_carID" style={styles.label}>
+              Vin:
+            </label>
+            <input
+              type="text"
+              id="VIN_carID"
+              name="VIN_carID"
+              value={formData.VIN_carID}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
+          </div>
+
+          <div style={styles.formGroup}>
             <label htmlFor="make" style={styles.label}>
               Make:
             </label>
@@ -52,6 +109,7 @@ const AddNewVehicle = () => {
               value={formData.make}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -65,21 +123,30 @@ const AddNewVehicle = () => {
               value={formData.model}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
             <label htmlFor="body" style={styles.label}>
               Body:
             </label>
-            <input
-              type="text"
+            <select
               id="body"
               name="body"
               value={formData.body}
               onChange={handleChange}
               style={styles.input}
-            />
+              required
+            >
+              <option value="">Select Body Type</option>
+              <option value="sedan">Sedan</option>
+              <option value="coupe">Coupe</option>
+              <option value="hatchback">Hatchback</option>
+              <option value="convertible">Convertible</option>
+              <option value="suv">SUV</option>
+            </select>
           </div>
+
           <div style={styles.formGroup}>
             <label htmlFor="year" style={styles.label}>
               Year:
@@ -91,6 +158,7 @@ const AddNewVehicle = () => {
               value={formData.year}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -104,6 +172,7 @@ const AddNewVehicle = () => {
               value={formData.color}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -117,6 +186,7 @@ const AddNewVehicle = () => {
               value={formData.mileage}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -130,6 +200,7 @@ const AddNewVehicle = () => {
               value={formData.details}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <div style={styles.formGroup}>
@@ -142,36 +213,11 @@ const AddNewVehicle = () => {
               value={formData.description}
               onChange={handleChange}
               style={styles.textarea}
+              required
             ></textarea>
           </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="inStock" style={styles.label}>
-              In Stock:
-            </label>
-            <select
-              id="inStock"
-              name="inStock"
-              value={formData.inStock}
-              onChange={handleChange}
-              style={styles.input}
-            >
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="stockAmount" style={styles.label}>
-              Stock Amount:
-            </label>
-            <input
-              type="number"
-              id="stockAmount"
-              name="stockAmount"
-              value={formData.stockAmount}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
+
+
           <div style={styles.formGroup}>
             <label htmlFor="status" style={styles.label}>
               Status:
@@ -182,6 +228,7 @@ const AddNewVehicle = () => {
               value={formData.status}
               onChange={handleChange}
               style={styles.input}
+              required
             >
               <option value="new">New</option>
               <option value="sold">Sold</option>
@@ -200,6 +247,7 @@ const AddNewVehicle = () => {
               value={formData.price}
               onChange={handleChange}
               style={styles.input}
+              required
             />
           </div>
           <button type="submit" style={styles.submitButton}>
@@ -209,6 +257,7 @@ const AddNewVehicle = () => {
       </div>
     </div>
   );
+
 };
 
 const styles = {

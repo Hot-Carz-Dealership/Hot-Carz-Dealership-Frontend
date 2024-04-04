@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
+import { BASE_URL } from "../utilities/constants";
 
 const CreateEmployeeAccount = () => {
+    
+
+
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -19,11 +24,45 @@ const CreateEmployeeAccount = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you can submit the formData to your backend API to create a new employee
-        console.log(formData); // Just logging the form data for demonstration
+    
+        if (
+            formData.firstname === '' ||
+            formData.lastname === '' ||
+            formData.email === '' ||
+            formData.phone === '' ||
+            formData.address === ''
+        ) {
+            window.alert('Please fill in all fields.');
+            return;
+        }
+    
+        try {
+            const response = await fetch(`${BASE_URL}/api/employees/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to create employee account');
+            }
+    
+            const data = await response.json();
+            console.log("Employee account created successfully:", data);
+    
+            window.alert("Employee account created successfully!");
+    
+        } catch (error) {
+            console.error("Error creating employee account:", error);
+            window.alert("Something went wrong. Please try again.");
+        }
     };
+    
+    
 
     return (
         <div style={styles.container}>
