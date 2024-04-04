@@ -16,13 +16,14 @@ import EmployeeLogIn from "./pages/employeeLogin";
 import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
 import AddNewVehicle from "./pages/AddNewVehicle";
 
-
 function App() {
   return (
     <Router>
       <div>
         <header className="header">
-          <div className="logo">Hot Carz</div>
+          <Link to="/" className="logo">
+            Hot Carz
+          </Link>
           <nav className="nav">
             <Link to="/" className="button">
               Home
@@ -50,10 +51,11 @@ function App() {
           <Route path="/employeeLogIn" element={<EmployeeLogIn/>} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
-          <Route path="/create-employee-account" element={<CreateEmployeeAccount />} />
+          <Route
+            path="/create-employee-account"
+            element={<CreateEmployeeAccount />}
+          />
           <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
-
-
         </Routes>
       </div>
     </Router>
