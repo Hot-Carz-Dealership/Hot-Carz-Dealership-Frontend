@@ -2,15 +2,30 @@ import React, { useState, useEffect } from "react";
 import engineImage from "../imgs/engine.png";
 import oilChangeImage from "../imgs/oilChange.png";
 import tiresImage from "../imgs/tires.png";
-import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { BASE_URL } from "../utilities/constants";
+import { Link } from "react-router-dom";
+import httpClient from "../httpClient";
 
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
+  // remove this line and next line whenever user is finally used
+  // eslint-disable-next-line
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchRandomVehicles();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await httpClient.get("//localhost:5000/@me");
+        setUser(resp.data);
+      } catch (error) {
+        console.log("Not Authenticated");
+      }
+    })();
   }, []);
 
   const fetchRandomVehicles = async () => {
