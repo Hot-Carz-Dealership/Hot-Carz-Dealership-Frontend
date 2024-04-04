@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Modal from './Modal';
+import httpClient from "../httpClient";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 const styles = {
@@ -45,6 +46,21 @@ const styles = {
     },
   };
 const ManagerPage = () => {
+
+    const [user, setUser] = useState(null);
+
+    useEffect(()=> {
+        (async() => {
+          try{
+            const resp = await httpClient.get("//localhost:5000/@emp");
+            setUser(resp.data);
+          } catch (error){
+            console.log("Not Authenticated")
+          }
+    
+        })();
+      }, []);
+
     const [modal1Open, setModal1Open] = useState(false);
     const [modal2Open, setModal2Open] = useState(false);
     const [modal3Open, setModal3Open] = useState(false);

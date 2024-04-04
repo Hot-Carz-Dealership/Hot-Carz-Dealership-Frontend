@@ -1,6 +1,16 @@
 import React from 'react';
+import httpClient from '../httpClient';
 
 const Account = () => {
+
+
+  const logOutUser = async () => {
+
+    const resp = await httpClient.post("//localhost:5000/api/logout")
+
+    window.location.href = "/"
+
+  }
 
   const styles = {
     homepage: {
@@ -96,7 +106,7 @@ const Account = () => {
         <li style={styles.listAlign}>Drivers License Number: </li>
       </ul>
       <button className='bookApptButton' style={styles.bookApptButton}>Edit Info</button>
-      <button className='bookApptButton' style={styles.bookApptButton}>Log Out</button>
+      <button onClick={logOutUser} className='bookApptButton' style={styles.bookApptButton}>Log Out</button>
       <p>Modals for Test Drives and Tracker down below</p>
 
 
