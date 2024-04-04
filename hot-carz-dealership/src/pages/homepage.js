@@ -9,8 +9,7 @@ import httpClient from "../httpClient";
 
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
-  // remove this line and next line whenever user is finally used
-  // eslint-disable-next-line
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -22,6 +21,7 @@ const HomePage = () => {
       try {
         const resp = await httpClient.get("//localhost:5000/@me");
         setUser(resp.data);
+        console.log(resp.data);
       } catch (error) {
         console.log("Not Authenticated");
       }
@@ -57,6 +57,23 @@ const HomePage = () => {
       </li>
     ));
   };
+
+  const renderWelcomeMessage = () => {
+    if (user) {
+      return (
+        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
+          Welcome to Hot Carz {user.first_name}
+        </header>
+      );
+    } else {
+      return (
+        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
+          Welcome to Hot Carz{" "}
+        </header>
+      );
+    }
+  };
+
   const styles = {
     homepage: {
       textAlign: "center",
@@ -142,9 +159,8 @@ const HomePage = () => {
 
   return (
     <div className="homepage" style={styles.homepage}>
-      <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
-        Welcome to Hot Carz{" "}
-      </header>
+      {/* Header */}
+      {renderWelcomeMessage()}
 
       <div className="carDisplay" style={styles.carDisplay}>
         <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">

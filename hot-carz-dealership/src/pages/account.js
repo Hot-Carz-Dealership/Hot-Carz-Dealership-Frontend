@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import httpClient from "../httpClient";
 
 const Account = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await httpClient.get("//localhost:5000/@me");
+        setUser(resp.data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Not Authenticated");
+        setLoading(false);
+        // Redirect to login page if user is not authenticated
+        navigate("/login");
+      }
+    })();
+  }, [navigate]); // Add history to the dependency array
+
   const logOutUser = async () => {
-    const resp = await httpClient.post("//localhost:5000/api/logout");
+    await httpClient.post("//localhost:5000/api/logout");
     window.location.href = "/";
   };
+
+  if (loading) {
+    return <div></div>;
+  }
+
+  // No need to check if user is null here
+
   const styles = {
     homepage: {
       textAlign: "center",
@@ -89,22 +115,24 @@ const Account = () => {
     // Handle edit info logic here
   };
 
-  const handleLogOut = () => {
-    // Handle log out logic here
-  };
-
   return (
     <div className="account" style={styles.homepage}>
-      <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
-        Account Info{" "}
+      <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6">
+        Account Info
       </header>
-      <ul>
-        <li style={styles.listAlign}>Name: </li>
-        <li style={styles.listAlign}>Address: </li>
-        <li style={styles.listAlign}>Phone Number: </li>
-        <li style={styles.listAlign}>Email Address: </li>
-        <li style={styles.listAlign}>Drivers License Number: </li>
-      </ul>
+      {user && (
+        <ul>
+          <li style={styles.listAlign}>First Name: {user.first_name}</li>
+          <li style={styles.listAlign}>Last Name: {user.last_name}</li>
+
+          {/* <li style={styles.listAlign}>Address: {user.address}</li> */}
+          <li style={styles.listAlign}>Phone Number: {user.phone}</li>
+          <li style={styles.listAlign}>Email Address: {user.email}</li>
+          <li style={styles.listAlign}>
+            Driver's License Number: {user.driverID}
+          </li>
+        </ul>
+      )}
       <Button
         className="bookApptButton"
         onClick={handleEditInfo}
