@@ -1,76 +1,74 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import AppBar from "@mui/material/AppBar";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
-import { Button, Menu, MenuItem } from "@mui/material";
-import { CardActions } from "@mui/material";
-
-// Sample car data
-const cars = [
-  {
-    id: 1,
-    name: "Toyota Camry",
-    price: "$25,000",
-    year: 2022,
-    bodyType: "Sedan",
-    image:
-      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/engine.png?raw=true",
-  },
-  {
-    id: 2,
-    name: "Honda Civic",
-    price: "$22,500",
-    year: 2021,
-    bodyType: "Sedan",
-    image:
-      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/oilChange.png?raw=true",
-  },
-  {
-    id: 3,
-    name: "Ford Mustang",
-    price: "$23,500",
-    year: 2021,
-    bodyType: "Sport",
-    image:
-      "https://github.com/TheHungryGuy/Hot-Carz-Dealership-Frontend/blob/feature/antonio/car_inv_page/hot-carz-dealership/src/imgs/tires.png?raw=true",
-  },
-  // Add more cars as needed
-];
-
-// Example lists of car makes and models
-const carMakes = [
-  "None",
-  "Toyota",
-  "Honda",
-  "Ford",
-  "Chevrolet",
-  "BMW",
-  "Audi",
-  "Mercedes-Benz",
-];
-const carModels = {
-  Toyota: ["None", "Camry", "Corolla", "Rav4"],
-  Honda: ["None", "Civic", "Accord", "CR-V"],
-  Ford: ["None", "F-150", "Escape", "Mustang"],
-  // Add more models for other makes as needed
-};
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Drawer,
+  AppBar,
+  CssBaseline,
+  Toolbar,
+  List,
+  Typography,
+  ListItem,
+  Card,
+  CardMedia,
+  CardContent,
+  TextField,
+  Button,
+  Menu,
+  MenuItem,
+  CardActions,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import { BASE_URL } from "../../../utilities/constants";
 
 const drawerWidth = 240;
 
-const CarInventoryGrid = () => {
+const CarInventoryGrid = ({ searchResults }) => {
   const [makeAnchorEl, setMakeAnchorEl] = useState(null);
+  const [cars, setCars] = useState([]);
+  const [originalCars, setOriginalCars] = useState([]);
+  const [carMakes, setCarMakes] = useState([]);
+  const [carModels, setCarModels] = useState([]);
+
   const [selectedCarMake, setSelectedCarMake] = useState(null);
   const [modelAnchorEl, setModelAnchorEl] = useState(null);
   const [selectedCarModel, setSelectedCarModel] = useState(null);
+
+  const [minYear, setMinYear] = useState("");
+  const [maxYear, setMaxYear] = useState("");
+  const [minMileage, setMinMileage] = useState("");
+  const [maxMileage, setMaxMileage] = useState("");
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
+  // Update cars state when search data changes
+  useEffect(() => {
+    setCars(searchResults);
+    setOriginalCars(searchResults);
+  }, [searchResults]);
+
+  const fetchCars = () => {
+    fetch(`${BASE_URL}/api/vehicles/search`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCars(data);
+        setOriginalCars(data);
+        // Extract unique car makes
+        const makes = [...new Set(data.map((car) => car.make))];
+        setCarMakes(["None", ...makes]);
+        // Extract car models for each make
+        const models = {};
+        makes.forEach((make) => {
+          const makeModels = data
+            .filter((car) => car.make === make)
+            .map((car) => car.model);
+          models[make] = ["None", ...new Set(makeModels)];
+        });
+        setCarModels(models);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
 
   const handleOpenMakeMenu = (event) => {
     setMakeAnchorEl(event.currentTarget);
@@ -97,6 +95,21 @@ const CarInventoryGrid = () => {
   const handleCarModelSelect = (carModel) => {
     setSelectedCarModel(carModel === "None" ? null : carModel);
     handleCloseModelMenu();
+  };
+
+  const handleFilter = () => {
+    // Filter cars based on current input values
+    const filteredCars = originalCars.filter((car) => {
+      return (
+        (!selectedCarMake || car.make === selectedCarMake) &&
+        (!selectedCarModel || car.model === selectedCarModel) &&
+        (!minYear || parseInt(car.year) >= parseInt(minYear)) &&
+        (!maxYear || parseInt(car.year) <= parseInt(maxYear)) &&
+        (!minMileage || parseInt(car.mileage) >= parseInt(minMileage)) &&
+        (!maxMileage || parseInt(car.mileage) <= parseInt(maxMileage))
+      );
+    });
+    return filteredCars;
   };
 
   const buttonStyle = {
@@ -139,6 +152,8 @@ const CarInventoryGrid = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={minYear}
+                    onChange={(e) => setMinYear(e.target.value)}
                   />
                   <span className="mr-2 ml-2">to</span>
                   <TextField
@@ -149,6 +164,8 @@ const CarInventoryGrid = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={maxYear}
+                    onChange={(e) => setMaxYear(e.target.value)}
                   />
                 </ListItem>
               </List>
@@ -161,23 +178,27 @@ const CarInventoryGrid = () => {
                 </ListItem>
                 <ListItem>
                   <TextField
-                    id="minMilage-number"
+                    id="minMileage-number"
                     label="Min"
                     type="number"
                     size="small"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={minMileage}
+                    onChange={(e) => setMinMileage(e.target.value)}
                   />
                   <span className="mr-2 ml-2">to</span>
                   <TextField
-                    id="maxMilage-number"
+                    id="maxMileage-number"
                     label="Max"
                     type="number"
                     size="small"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={maxMileage}
+                    onChange={(e) => setMaxMileage(e.target.value)}
                   />
                 </ListItem>
               </List>
@@ -217,7 +238,7 @@ const CarInventoryGrid = () => {
                       ))}
                     </Menu>
 
-                    {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>}
+                    {/* {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>} */}
                   </div>
                 </ListItem>
               </List>
@@ -260,14 +281,18 @@ const CarInventoryGrid = () => {
                         ))}
                     </Menu>
 
-                    {selectedCarModel && (
+                    {/* {selectedCarModel && (
                       <p>Selected Model: {selectedCarModel}</p>
-                    )}
+                    )} */}
                   </div>
                 </ListItem>
                 <ListItem></ListItem>
                 <ListItem>
-                  <Button variant="contained" sx={{ backgroundColor: "black" }}>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "black" }}
+                    onClick={() => setCars(handleFilter)}
+                  >
                     Apply Filter
                   </Button>
                 </ListItem>
@@ -278,16 +303,8 @@ const CarInventoryGrid = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {/* {cars.map((car) => (
-            <CarCard key={car.id} car={car} />
-          ))} */}
-
-          {[...Array(10)].map((_, index) => (
-            <React.Fragment key={index}>
-              {cars.map((car) => (
-                <CarCard key={car.id} car={car} />
-              ))}
-            </React.Fragment>
+          {cars.map((car, index) => (
+            <CarCard key={index} car={car} />
           ))}
         </Box>
       </Box>
@@ -298,25 +315,41 @@ const CarInventoryGrid = () => {
 const CarCard = ({ car }) => {
   return (
     <Card sx={{ maxWidth: 345, margin: 2 }}>
-      <CardMedia
-        component="img"
-        // height="140"
-        image={car.image}
-        alt={car.name}
-      />
+      <div
+        style={{
+          height: 200,
+          width: 300,
+          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <CardMedia
+          component="img"
+          image={car.pictureLibraryLink}
+          alt={car.model}
+          style={{ height: "100%", width: "auto" }}
+        />
+      </div>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {car.name}
+          {car.make} {car.model}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Price: {car.price} <br />
           Year: {car.year} <br />
-          Body Type: {car.bodyType}
+          Mileage: {car.mileage} <br />
+          Body Type: {car.body} <br />
+          Color: {car.color}
         </Typography>
       </CardContent>
-      <Box sx={{ flexGrow: 1 }} />
       <CardActions>
-        <Button variant="contained" sx={{ backgroundColor: "red" }}>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "red" }}
+          component={Link}
+          to={`/cars/${car.VIN_carID}`} // Dynamically generate URL
+        >
           View details
         </Button>
       </CardActions>
