@@ -1,8 +1,13 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import httpClient from "../httpClient";
 
 const Account = () => {
+  const logOutUser = async () => {
+    const resp = await httpClient.post("//localhost:5000/api/logout");
+    window.location.href = "/";
+  };
   const styles = {
     homepage: {
       textAlign: "center",
@@ -112,7 +117,7 @@ const Account = () => {
       </Button>
       <Button
         className="bookApptButton"
-        onClick={handleLogOut}
+        onClick={logOutUser}
         style={styles.bookApptButton}
         variant="contained"
       >
