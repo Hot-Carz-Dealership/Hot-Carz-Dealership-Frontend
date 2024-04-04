@@ -1,7 +1,22 @@
 import React from "react";
 import Button from "@mui/material/Button";
+import httpClient from "../httpClient";
+import { useState } from "react";
+import Homepage from "./homepage";
 
 const LogIn = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const logInUser = async () => {
+    const resp = await httpClient.post("//localhost:5000/api/members/login", {
+      username: username,
+      password: password,
+    });
+    if (resp.status == 200) {
+      window.location.href = "/";
+    }
+  };
+
   const styles = {
     homepage: {
       textAlign: "center",
@@ -42,14 +57,26 @@ const LogIn = () => {
       </header>
       <form>
         <label for="username">Username: </label>
-        <input type="text" id="username" name="username" />
+        <input
+          type="text"
+          id="email"
+          name="email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <br />
         <label for="password">Password: </label>
-        <input type="text" id="password" name="password" />
+        <input
+          type="text"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <br />
         <Button
           variant="contained"
-          onClick={handleSubmit}
+          onClick={logInUser}
           style={styles.bookApptButton}
         >
           Log In
