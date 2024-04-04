@@ -1,27 +1,39 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import httpClient from "../httpClient";
 
 const Account = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get("//localhost:5000/@me");
         setUser(resp.data);
-        console.log(resp.data);
+        setLoading(false);
       } catch (error) {
         console.log("Not Authenticated");
+        setLoading(false);
+        // Redirect to login page if user is not authenticated
+        navigate("/login");
       }
     })();
-  }, []);
+  }, [navigate]); // Add history to the dependency array
 
   const logOutUser = async () => {
-    const resp = await httpClient.post("//localhost:5000/api/logout");
+    await httpClient.post("//localhost:5000/api/logout");
     window.location.href = "/";
   };
+
+  if (loading) {
+    return <div></div>;
+  }
+
+  // No need to check if user is null here
+
   const styles = {
     homepage: {
       textAlign: "center",
@@ -117,7 +129,7 @@ const Account = () => {
           <li style={styles.listAlign}>Phone Number: {user.phone}</li>
           <li style={styles.listAlign}>Email Address: {user.email}</li>
           <li style={styles.listAlign}>
-            Driver's License Number: {user.driversLicense}
+            Driver's License Number: {user.driverID}
           </li>
         </ul>
       )}
