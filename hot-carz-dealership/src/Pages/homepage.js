@@ -46,7 +46,9 @@ const HomePage = () => {
     homepage: {
       textAlign: "center",
       fontFamily: "Arial, sans-serif",
-      backgroundColor: "#f5f5f5", // set background color for the entire website and not chopped up
+
+      //removed the bg color for now since most of the pages have a white background
+      // backgroundColor: "#f5f5f5", // set background color for the entire website and not chopped up
     },
     welcome: {
       paddingTop: "20px",

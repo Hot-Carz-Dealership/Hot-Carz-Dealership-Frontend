@@ -179,7 +179,7 @@ function CarDetails() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-200">
+    <div className="flex flex-col items-center ">
       <h1 className="mt-16 text-6xl font-bold leading-5 text-center text-red-500 uppercase max-md:mt-10 max-md:text-4xl">
         Vehicle Info
       </h1>
