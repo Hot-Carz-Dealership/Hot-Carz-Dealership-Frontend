@@ -12,6 +12,7 @@ import LogIn from "./pages/logIn";
 import ManagerPage from "./pages/managerPage";
 import Account from "./pages/account";
 import EditAccount from "./pages/editAccount";
+import EmployeeLogIn from "./pages/employeeLogin";
 import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
 import AddNewVehicle from "./pages/AddNewVehicle";
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
+          <Route path="/employeeLogIn" element={<EmployeeLogIn/>} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
           <Route
