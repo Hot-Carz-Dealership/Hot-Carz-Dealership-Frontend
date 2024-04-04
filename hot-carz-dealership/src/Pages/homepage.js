@@ -1,12 +1,47 @@
-import React from "react";
-import placeholderImage from "../imgs/placeholder.png";
+import React, { useState, useEffect } from "react";
 import engineImage from "../imgs/engine.png";
 import oilChangeImage from "../imgs/oilChange.png";
 import tiresImage from "../imgs/tires.png";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
+import { BASE_URL } from "../utilities/constants";
 
 const HomePage = () => {
+  const [randomVehicles, setRandomVehicles] = useState([]);
+
+  useEffect(() => {
+    fetchRandomVehicles();
+  }, []);
+
+  const fetchRandomVehicles = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/vehicles/random`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch random vehicles");
+      }
+      const data = await response.json();
+      setRandomVehicles(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const renderRandomVehicles = () => {
+    return randomVehicles.map((vehicle, index) => (
+      <li key={index} style={styles.featuredCarItem}>
+        <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
+          <img
+            src={vehicle.pictureLibraryLink}
+            style={styles.featuredCarImage}
+            alt={`${vehicle.make} ${vehicle.model}`}
+          />
+          <h2
+            style={styles.vehicleName}
+          >{`${vehicle.make} ${vehicle.model}`}</h2>
+        </Link>
+      </li>
+    ));
+  };
   const styles = {
     homepage: {
       textAlign: "center",
@@ -21,7 +56,7 @@ const HomePage = () => {
       fontFamily: "Palatino",
     },
     carDisplay: {
-      marginTop: "20px",
+      marginTop: "",
       padding: "20px",
       borderRadius: "5px",
     },
@@ -40,8 +75,8 @@ const HomePage = () => {
       flex: "1",
     },
     featuredCarImage: {
-      height: "300px",
-      width: "300px",
+      height: "220px",
+      width: "340px",
       margin: "0 auto",
     },
     searchButton: {
@@ -75,36 +110,32 @@ const HomePage = () => {
       marginBottom: "20px",
       marginTop: "10px", // Add margin to separate from other content
     },
+    footer: {
+      marginTop: "32px",
+      width: "100%",
+      backgroundColor: "black",
+      minHeight: "287px",
+      maxWidth: "100%",
+    },
+    vehicleName: {
+      color: "black",
+      textDecoration: "none", // Remove underline
+    },
   };
 
   return (
     <div className="homepage" style={styles.homepage}>
-      <h1 className="welcome" style={styles.welcome}>
-        Welcome to Hot Carz
-      </h1>
+      <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
+        Welcome to Hot Carz{" "}
+      </header>
 
       <div className="carDisplay" style={styles.carDisplay}>
-        <h1 className="carDisplayTitle" style={styles.carDisplayTitle}>
+        <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
           Featured Cars
-        </h1>
+        </header>
 
         <ul className="featuredCarList" style={styles.featuredCarList}>
-          <li style={styles.featuredCarItem}>
-            <img
-              src={placeholderImage}
-              style={styles.featuredCarImage}
-              alt="Vehicle"
-            />
-            <h2>Vehicle 1</h2>
-          </li>
-          <li style={styles.featuredCarItem}>
-            <img
-              src={placeholderImage}
-              style={styles.featuredCarImage}
-              alt="Vehicle"
-            />
-            <h2>Vehicle 2</h2>
-          </li>
+          {renderRandomVehicles()}
         </ul>
 
         <Button
@@ -119,12 +150,9 @@ const HomePage = () => {
       </div>
 
       <div className="servicesDisplay" style={styles.carDisplay}>
-        <h1
-          className="servicesDisplayTitle"
-          style={styles.servicesDisplayTitle}
-        >
-          OUR SERVICES
-        </h1>
+        <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
+          Our Services
+        </header>
         <ul className="servicesList" style={styles.featuredCarList}>
           {/* Oil Change Service */}
           <li style={styles.servicesItem}>
@@ -171,11 +199,6 @@ const HomePage = () => {
             </p>
           </li>
         </ul>
-        {/* <div>
-          <button className="bookApptButton" style={styles.bookApptButton}>
-            Book Appt.
-          </button>
-        </div> */}
 
         <Button
           variant="contained"
@@ -187,6 +210,9 @@ const HomePage = () => {
           GO TO SERVICE PAGE
         </Button>
       </div>
+
+      {/* Footer */}
+      <footer className="self-stretch" style={styles.footer} />
     </div>
   );
 };

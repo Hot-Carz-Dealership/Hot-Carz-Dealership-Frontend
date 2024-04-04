@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { BASE_URL } from "../utilities/constants";
 
 function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   return (
@@ -131,15 +132,12 @@ function CarDetails() {
   useEffect(() => {
     const fetchVehicleInfo = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/vehicles?vin=${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${BASE_URL}/api/vehicles?vin=${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setVehicleInfo(data);
