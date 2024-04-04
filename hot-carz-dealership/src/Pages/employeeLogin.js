@@ -1,23 +1,23 @@
 import React from 'react';
 import httpClient from "../httpClient";
 import { useState } from 'react';
-import Homepage from "./homepage";
 
-const LogIn = () => {
 
-  const [username, setUsername] = useState("");
+const EmployeeLogIn = () => {
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
 
-  const logInUser = async () => {
+  const logInEmployee = async () => {
 
-    const resp = await httpClient.post("//localhost:5000/api/members/login", {
-      "username": username,
+    const resp = await httpClient.post("//localhost:5000/api/employees/login", {
+      "email": email,
       "password": password,
     });
 
     if(resp.status == 200){
-      window.location.href = "/"
+      window.location.href = "/managerPage"
     }
 
   }
@@ -58,9 +58,9 @@ const LogIn = () => {
 
 
       <form>
-            <label for="username">Username:  </label><input type="text" id="email" name="email" value={username} onChange={(e)=>setUsername(e.target.value)}/><br/>
+            <label for="username">Email:  </label><input type="text" id="email" name="email" value={email} onChange={(e)=>setEmail(e.target.value)}/><br/>
             <label for="password">Password:  </label><input type="text" id="password" name="password" value={password} onChange={(e)=>setPassword(e.target.value)} /> <br/>
-            <button onClick={() => logInUser()} type="button" value="Submit" style={styles.bookApptButton}>Submit</button>
+            <button onClick={() => logInEmployee()} type="button" value="Submit" style={styles.bookApptButton}>Submit</button>
       </form>
 
 
@@ -68,4 +68,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default EmployeeLogIn;

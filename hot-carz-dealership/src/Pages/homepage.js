@@ -1,12 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import placeholderImage from '../imgs/placeholder.png';
 import engineImage from '../imgs/engine.png';
 import oilChangeImage from '../imgs/oilChange.png';
 import tiresImage from '../imgs/tires.png';
-import { Link } from 'react-router-dom';
+import httpClient from "../httpClient";
 
 
 const HomePage = () => {
+
+  const [user, setUser] = useState(null);
+
+  useEffect(()=> {
+    (async() => {
+      try{
+        const resp = await httpClient.get("//localhost:5000/@me");
+        setUser(resp.data);
+      } catch (error){
+        console.log("Not Authenticated")
+      }
+
+    })();
+  }, []);
+  
+
+
   const styles = {
     homepage: {
       textAlign: 'center',
@@ -76,6 +94,7 @@ const HomePage = () => {
       marginTop: '10px', // Add margin to separate from other content
     },
   };
+
 
   return (
     <div className="homepage" style={styles.homepage}>

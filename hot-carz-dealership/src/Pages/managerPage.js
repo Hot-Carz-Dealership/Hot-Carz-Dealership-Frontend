@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState,useEffect } from 'react';
+import httpClient from "../httpClient";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { Link } from 'react-router-dom';
 
@@ -76,7 +76,22 @@ const styles = {
     };
     
 */
-    
+const [user, setUser] = useState(null);
+
+useEffect(()=> {
+    (async() => {
+      try{
+        const resp = await httpClient.get("//localhost:5000/@emp");
+        setUser(resp.data);
+      } catch (error){
+        console.log("Not Authenticated")
+      }
+
+    })();
+  }, []);    
+
+
+
     const [selectedTab, setSelectedTab] = useState(null);
 
 
