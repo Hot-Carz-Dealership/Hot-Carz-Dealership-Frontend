@@ -1,8 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import Modal from './Modal';
 import httpClient from "../httpClient";
-import React, { useState } from 'react';
-
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { Link } from 'react-router-dom';
 
