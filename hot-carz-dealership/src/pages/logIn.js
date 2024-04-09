@@ -1,96 +1,132 @@
-import React from "react";
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import httpClient from "../httpClient";
-import { useState } from "react";
-import Homepage from "./homepage";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
 
-const LogIn = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const logInUser = async () => {
-    const resp = await httpClient.post("//localhost:5000/api/members/login", {
-      username: username,
-      password: password,
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import httpClient from "../httpClient";
+import { BASE_URL } from "../utilities/constants";
+
+function Copyright(props) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" href="/">
+        Hot Carz
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
+const defaultTheme = createTheme();
+
+export default function LogIn() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      username: data.get("username"),
+      password: data.get("password"),
     });
-    if (resp.status == 200) {
-      window.location.href = "/";
+    logInUser(data);
+  };
+
+  const logInUser = async (data) => {
+    try {
+      const resp = await httpClient.post(`${BASE_URL}/api/members/login`, {
+        username: data.get("username"),
+        password: data.get("password"),
+      });
+
+      if (resp.status === 200) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Error occurred while logging in:", error);
     }
   };
 
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
-    },
-    welcome: {
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-    },
-
-    servicesDisplayTitle: {
-      color: "red",
-      fontSize: "3em",
-    },
-
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginTop: "10px", // Add margin to separate from other content
-      marginRight: "10px", // Adjust spacing as needed
-    },
-  };
-
-  const handleSubmit = () => {
-    // Handle submit logic here
-  };
-
-  const handleCreateAccount = () => {
-    // Handle create account logic here
-  };
-
   return (
-    <div className="LogIn" style={styles.homepage}>
-      <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
-        Sign In{" "}
-      </header>
-      <form>
-        <label for="username">Username: </label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <br />
-        <label for="password">Password: </label>
-        <input
-          type="text"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        <Button
-          variant="contained"
-          onClick={logInUser}
-          style={styles.bookApptButton}
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          Log In
-        </Button>
-        <Button
-          variant="contained"
-          style={styles.bookApptButton}
-          onClick={handleCreateAccount}
-        >
-          Create New Account
-        </Button>
-      </form>
-    </div>
-  );
-};
+          <Avatar sx={{ m: 1, bgcolor: "red" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
 
-export default LogIn;
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, bgcolor: "red" }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs></Grid>
+              <Grid item>
+                <Link href="/signup" variant="body2" color="inherit">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>{" "}
+              <Grid item xs></Grid>
+            </Grid>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 8, mb: 4 }} />
+      </Container>
+    </ThemeProvider>
+  );
+}

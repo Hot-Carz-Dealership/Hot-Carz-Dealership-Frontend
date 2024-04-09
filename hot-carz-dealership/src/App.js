@@ -15,6 +15,7 @@ import EditAccount from "./pages/editAccount";
 import EmployeeLogIn from "./pages/employeeLogin";
 import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
 import AddNewVehicle from "./pages/AddNewVehicle";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
@@ -48,7 +49,8 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
-          <Route path="/employeeLogIn" element={<EmployeeLogIn/>} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
           <Route

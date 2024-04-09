@@ -1,2 +1,4 @@
 // constants.js
-export const BASE_URL = "http://127.0.0.1:5000";
+
+// TODO: Replace this with a dotenv variable when uploading online
+export const BASE_URL = "http://localhost:5000";
