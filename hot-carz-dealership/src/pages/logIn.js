@@ -48,13 +48,13 @@ export default function LogIn() {
 
   const logInUser = async (data) => {
     try {
-      const resp = await httpClient.post(`${BASE_URL}/api/members/login`, {
+      const resp = await httpClient.post(`${BASE_URL}/api/login`, {
         username: data.get("username"),
         password: data.get("password"),
       });
 
       if (resp.status === 200) {
-        window.location.href = "/";
+        window.location.href = "/account";
       }
     } catch (error) {
       console.error("Error occurred while logging in:", error);
