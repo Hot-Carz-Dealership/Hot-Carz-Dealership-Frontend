@@ -10,6 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { BASE_URL } from "../utilities/constants";
 
 function Copyright(props) {
   return (
@@ -33,11 +34,11 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [fields, setFields] = React.useState({
-    firstName: false,
-    lastName: false,
+    first_name: false,
+    last_name: false,
     email: false,
     phone: false,
-    driversLicense: false,
+    driverID: false,
     username: false,
     password: false,
   });
@@ -48,7 +49,7 @@ export default function SignUp() {
     let isValid = true;
 
     // Validate first name and last name
-    if (name === "firstName" || name === "lastName") {
+    if (name === "first_name" || name === "last_name") {
       isValid = /^[a-zA-Z]+$/.test(value.trim()); // Only allow letters
     }
 
@@ -72,7 +73,7 @@ export default function SignUp() {
     }
 
     // Validate driver's license ID
-    if (name === "driversLicense") {
+    if (name === "driverID") {
       isValid = /^[a-zA-Z0-9]{1,15}$/.test(value); // Assuming driver's license ID is up to 15 characters long and alphanumeric
     }
 
@@ -82,24 +83,47 @@ export default function SignUp() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
-    const allFieldsFilled = Object.values(fields).every((field) => field);
-    if (allFieldsFilled) {
-      const data = new FormData(event.currentTarget);
 
-      console.log({
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        email: data.get("email"),
-        username: data.get("username"),
-        phone: data.get("phone"),
-        password: data.get("password"),
-        driversLicense: data.get("driversLicense"),
-      });
+    // Check if all fields are valid
+    const allFieldsValid = Object.values(fields).every((field) => field);
+
+    // If all fields are valid, submit the form
+    if (allFieldsValid) {
+      const formData = new FormData(event.currentTarget);
+      const requestData = {
+        method: "POST",
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/members/create`,
+          requestData
+        );
+        const responseData = await response.json();
+
+        // Check if the request was successful
+        if (response.ok) {
+          // Handle successful response, such as redirecting the user or displaying a success message
+          console.log("Member account created successfully:", responseData);
+        } else {
+          // Handle errors, such as displaying an error message to the user
+          console.error("Error creating member account:", responseData.error);
+        }
+      } catch (error) {
+        // Handle network errors
+        console.error("Network error:", error);
+      }
     } else {
-      //   alert("Please fill out all fields.");
+      // If any field is invalid, do not submit the form
+      // You can display an error message or handle it as per your UI requirements
+      console.log("Form has errors. Cannot submit.");
     }
   };
 
@@ -131,28 +155,28 @@ export default function SignUp() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="first_name"
                   required
                   fullWidth
-                  id="firstName"
+                  id="first_name"
                   label="First Name"
                   autoFocus
                   onChange={handleChange}
-                  error={formSubmitted && !fields.firstName}
-                  helperText={formSubmitted && !fields.firstName && "Required"}
+                  error={formSubmitted && !fields.first_name}
+                  helperText={formSubmitted && !fields.first_name && "Required"}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  id="last_name"
                   label="Last Name"
-                  name="lastName"
+                  name="last_name"
                   autoComplete="family-name"
                   onChange={handleChange}
-                  error={formSubmitted && !fields.lastName}
-                  helperText={formSubmitted && !fields.lastName && "Required"}
+                  error={formSubmitted && !fields.last_name}
+                  helperText={formSubmitted && !fields.last_name && "Required"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -190,14 +214,14 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="driversLicense"
+                  id="driverID"
                   label="Driver's License ID"
-                  name="driversLicense"
+                  name="driverID"
                   onChange={handleChange}
-                  error={formSubmitted && !fields.driversLicense}
+                  error={formSubmitted && !fields.driverID}
                   helperText={
                     formSubmitted &&
-                    !fields.driversLicense &&
+                    !fields.driverID &&
                     "Enter Valid Drivers License ID"
                   }
                 />
