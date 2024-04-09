@@ -2,17 +2,24 @@ import React from "react";
 import Button from "@mui/material/Button";
 import httpClient from "../httpClient";
 import { useState } from "react";
+import { BASE_URL } from "../utilities/constants";
 
 const LogIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const logInUser = async () => {
-    const resp = await httpClient.post("//localhost:5000/api/members/login", {
-      username: username,
-      password: password,
-    });
-    if (resp.status === 200) {
-      window.location.href = "/";
+    try {
+      const resp = await httpClient.post(`${BASE_URL}/api/members/login`, {
+        username: username,
+        password: password,
+      });
+
+      if (resp.status === 200) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Error occurred while logging in:", error);
     }
   };
 

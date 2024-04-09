@@ -19,7 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         setUser(resp.data);
         console.log(resp.data);
       } catch (error) {
