@@ -13,7 +13,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import httpClient from "../httpClient";
-import { useState } from "react";
 import { BASE_URL } from "../utilities/constants";
 
 function Copyright(props) {
