@@ -47,6 +47,16 @@ export default function SignUp() {
     const { name, value } = event.target;
     let isValid = true;
 
+    // Validate first name and last name
+    if (name === "firstName" || name === "lastName") {
+      isValid = /^[a-zA-Z]+$/.test(value.trim()); // Only allow letters
+    }
+
+    // Validate username
+    if (name === "username") {
+      isValid = /^[a-zA-Z0-9_]{3,}$/.test(value.trim()); // At least 3 characters, alphanumeric and underscores
+    }
+
     // Validate email
     if (name === "email") {
       isValid = /\S+@\S+\.\S+/.test(value);
@@ -59,6 +69,11 @@ export default function SignUp() {
         /([0-9\s\-]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/.test(
           value
         );
+    }
+
+    // Validate driver's license ID
+    if (name === "driversLicense") {
+      isValid = /^[a-zA-Z0-9]{1,15}$/.test(value); // Assuming driver's license ID is up to 15 characters long and alphanumeric
     }
 
     setFields((prevFields) => ({
@@ -181,7 +196,9 @@ export default function SignUp() {
                   onChange={handleChange}
                   error={formSubmitted && !fields.driversLicense}
                   helperText={
-                    formSubmitted && !fields.driversLicense && "Required"
+                    formSubmitted &&
+                    !fields.driversLicense &&
+                    "Enter Valid Drivers License ID"
                   }
                 />
               </Grid>
