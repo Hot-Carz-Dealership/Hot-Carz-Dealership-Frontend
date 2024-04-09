@@ -3,7 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -33,19 +32,60 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const [fields, setFields] = React.useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    phone: false,
+    driversLicense: false,
+    username: false,
+    password: false,
+  });
+  const [formSubmitted, setFormSubmitted] = React.useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    let isValid = true;
+
+    // Validate email
+    if (name === "email") {
+      isValid = /\S+@\S+\.\S+/.test(value);
+    }
+
+    // Validate phone number
+    if (name === "phone") {
+      isValid =
+        // eslint-disable-next-line
+        /([0-9\s\-]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/.test(
+          value
+        );
+    }
+
+    setFields((prevFields) => ({
+      ...prevFields,
+      [name]: value.trim() !== "" && isValid,
+    }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      username: data.get("username"),
-      phone: data.get("phone"),
-      password: data.get("password"),
-      driversLicense: data.get("driversLicense"),
-      socialSecurityNumber: data.get("socialSecurityNumber"),
-    });
+    setFormSubmitted(true);
+    const allFieldsFilled = Object.values(fields).every((field) => field);
+    if (allFieldsFilled) {
+      const data = new FormData(event.currentTarget);
+
+      console.log({
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+        email: data.get("email"),
+        username: data.get("username"),
+        phone: data.get("phone"),
+        password: data.get("password"),
+        driversLicense: data.get("driversLicense"),
+      });
+    } else {
+      //   alert("Please fill out all fields.");
+    }
   };
 
   return (
@@ -82,6 +122,9 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.firstName}
+                  helperText={formSubmitted && !fields.firstName && "Required"}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -92,6 +135,9 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.lastName}
+                  helperText={formSubmitted && !fields.lastName && "Required"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -102,6 +148,11 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.email}
+                  helperText={
+                    formSubmitted && !fields.email && "Enter valid email"
+                  }
                 />
               </Grid>
 
@@ -113,6 +164,11 @@ export default function SignUp() {
                   label="Phone Number"
                   name="phone"
                   autoComplete="tel"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.phone}
+                  helperText={
+                    formSubmitted && !fields.phone && "Enter Valid Phone"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -122,6 +178,11 @@ export default function SignUp() {
                   id="driversLicense"
                   label="Driver's License ID"
                   name="driversLicense"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.driversLicense}
+                  helperText={
+                    formSubmitted && !fields.driversLicense && "Required"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -131,6 +192,9 @@ export default function SignUp() {
                   id="username"
                   label="Username"
                   name="username"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.username}
+                  helperText={formSubmitted && !fields.username && "Required"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -142,18 +206,11 @@ export default function SignUp() {
                   name="password"
                   type="password"
                   autoComplete="new-password"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.password}
+                  helperText={formSubmitted && !fields.password && "Required"}
                 />
               </Grid>
-
-              {/* <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="socialSecurityNumber"
-                  label="Social Security Number"
-                  name="socialSecurityNumber"
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
