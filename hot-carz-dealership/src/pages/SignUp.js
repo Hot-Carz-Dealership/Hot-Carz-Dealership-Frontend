@@ -112,6 +112,11 @@ export default function SignUp() {
         if (response.ok) {
           // Handle successful response, such as redirecting the user or displaying a success message
           console.log("Member account created successfully:", responseData);
+          // Display alert
+          window.alert("Member account created successfully!");
+
+          // Redirect to /account page
+          window.location.href = "/account";
         } else {
           // Handle errors, such as displaying an error message to the user
           console.error("Error creating member account:", responseData.error);
