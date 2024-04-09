@@ -2,7 +2,6 @@ import React from "react";
 import Button from "@mui/material/Button";
 import httpClient from "../httpClient";
 import { useState } from "react";
-import Homepage from "./homepage";
 
 const LogIn = () => {
   const [username, setUsername] = useState("");
@@ -12,7 +11,7 @@ const LogIn = () => {
       username: username,
       password: password,
     });
-    if (resp.status == 200) {
+    if (resp.status === 200) {
       window.location.href = "/";
     }
   };
@@ -42,9 +41,9 @@ const LogIn = () => {
     },
   };
 
-  const handleSubmit = () => {
-    // Handle submit logic here
-  };
+  // const handleSubmit = () => {
+  //   // Handle submit logic here
+  // };
 
   const handleCreateAccount = () => {
     // Handle create account logic here
