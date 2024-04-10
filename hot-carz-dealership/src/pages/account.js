@@ -21,7 +21,7 @@ const Account = () => {
         navigate("/login");
       }
     })();
-  }, [navigate]); // Add history to the dependency array
+  }, [navigate]); // Add navigate to the dependency array
 
   const logOutUser = async () => {
     await httpClient.post("//localhost:5000/api/logout");
@@ -29,10 +29,29 @@ const Account = () => {
   };
 
   if (loading) {
-    return <div></div>;
+    return <div>...</div>;
   }
 
   // No need to check if user is null here
+
+  //Maybe we add this to a button or something
+  // Check employeeType and redirect accordingly
+  if (user.employeeType) {
+    switch (user.employeeType) {
+      case "superAdmin":
+        navigate("/superAdmin");
+        break;
+      case "Manager":
+        navigate("/managerPage");
+        break;
+      case "Technician":
+        // navigate("/managerPage");
+        break;
+      default:
+        break;
+    }
+    // return null; // Do not render anything if redirection is performed
+  }
 
   const styles = {
     homepage: {
