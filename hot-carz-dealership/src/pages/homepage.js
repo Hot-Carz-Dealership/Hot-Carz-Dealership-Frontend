@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { BASE_URL } from "../utilities/constants";
 import { Link } from "react-router-dom";
 import httpClient from "../httpClient";
+import VehicleImage from "../utilities/VehicleImage";
 
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
@@ -45,11 +46,7 @@ const HomePage = () => {
     return randomVehicles.map((vehicle, index) => (
       <li key={index} style={styles.featuredCarItem}>
         <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
-          <img
-            src={vehicle.pictureLibraryLink}
-            style={styles.featuredCarImage}
-            alt={`${vehicle.make} ${vehicle.model}`}
-          />
+          <VehicleImage vin={vehicle.VIN_carID} bodyType={vehicle.body} />
           <h2
             style={styles.vehicleName}
           >{`${vehicle.make} ${vehicle.model}`}</h2>
