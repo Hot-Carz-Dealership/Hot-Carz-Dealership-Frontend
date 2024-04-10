@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../../../utilities/constants";
+import VehicleImage from "../../../utilities/VehicleImage";
 
 const drawerWidth = 240;
 
@@ -324,11 +325,17 @@ const CarCard = ({ car }) => {
           justifyContent: "center",
         }}
       >
-        <CardMedia
+        {/* <CardMedia
           component="img"
           image={car.pictureLibraryLink}
           alt={car.model}
           style={{ height: "100%", width: "auto" }}
+        /> */}
+        {/* Replace CardMedia with VehicleImage component */}
+        <VehicleImage
+          vin={car.VIN_carID}
+          bodyType={car.body}
+          className="w-auto h-64"
         />
       </div>
       <CardContent>
