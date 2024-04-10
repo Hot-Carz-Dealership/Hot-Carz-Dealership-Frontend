@@ -14,19 +14,20 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetchRandomVehicles();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const resp = await httpClient.get(`${BASE_URL}/@me`);
-        setUser(resp.data);
-        console.log(resp.data);
+        const [randomVehiclesResponse, userResponse] = await Promise.all([
+          fetchRandomVehicles(),
+          fetchUserData(),
+        ]);
+        setRandomVehicles(randomVehiclesResponse);
+        setUser(userResponse);
       } catch (error) {
-        console.log("Not Authenticated");
+        console.error(error);
       }
-    })();
+    };
+
+    fetchData();
   }, []);
 
   const fetchRandomVehicles = async () => {
@@ -36,9 +37,21 @@ const HomePage = () => {
         throw new Error("Failed to fetch random vehicles");
       }
       const data = await response.json();
-      setRandomVehicles(data);
+      return data;
     } catch (error) {
       console.error(error);
+      return [];
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const resp = await httpClient.get(`${BASE_URL}/@me`);
+      console.log(resp.data);
+      return resp.data;
+    } catch (error) {
+      console.log("Not Authenticated");
+      return null;
     }
   };
 
