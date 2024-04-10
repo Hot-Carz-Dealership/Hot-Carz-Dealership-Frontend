@@ -84,11 +84,11 @@ const VehicleImage = ({ vin, bodyType, className }) => {
 
   // State to hold the selected image filename
   const [imageIndex, setImageIndex] = useState(0);
-
   useEffect(() => {
     // Use VIN to get a consistent index for image selection
     const index = getIndexFromVin(vin, imageMappings[bodyType].length);
     setImageIndex(index);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vin, bodyType]);
 
   // Get the selected image
