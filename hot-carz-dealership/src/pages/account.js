@@ -56,7 +56,7 @@ const Account = () => {
   const styles = {
     homepage: {
       textAlign: "center",
-      fontFamily: "Arial, sans-serif",
+      // fontFamily: "Arial, sans-serif",
     },
     welcome: {
       fontSize: "2em",
@@ -73,7 +73,6 @@ const Account = () => {
       fontSize: "1.5em",
       color: "red",
     },
-
     featuredCarList: {
       listStyle: "none",
       padding: 0,
@@ -84,19 +83,16 @@ const Account = () => {
       textAlign: "center",
       flex: "1",
     },
-
     featuredCarImage: {
       height: "300px",
       width: "300px",
       margin: "0 auto",
     },
-
     searchButton: {
       backgroundColor: "red",
       color: "white",
       padding: "5px 10px",
     },
-
     servicesItem: {
       marginLeft: "2%",
       marginRight: "2%",
@@ -133,44 +129,53 @@ const Account = () => {
   const handleEditInfo = () => {
     // Handle edit info logic here
   };
-
   return (
-    <div className="account" style={styles.homepage}>
-      <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6">
-        Account Info
-      </header>
-      {user && (
-        <ul>
-          <li style={styles.listAlign}>First Name: {user.first_name}</li>
-          <li style={styles.listAlign}>Last Name: {user.last_name}</li>
-
-          {/* <li style={styles.listAlign}>Address: {user.address}</li> */}
-          <li style={styles.listAlign}>Phone Number: {user.phone}</li>
-          <li style={styles.listAlign}>Email Address: {user.email}</li>
-          <li style={styles.listAlign}>
-            Driver's License Number: {user.driverID}
-          </li>
-        </ul>
-      )}
-      <Button
-        className="bookApptButton"
-        onClick={handleEditInfo}
-        style={styles.bookApptButton}
-        variant="contained"
-        component={Link}
-        to="/editAccount"
-      >
-        Edit Info
-      </Button>
-      <Button
-        className="bookApptButton"
-        onClick={logOutUser}
-        style={styles.bookApptButton}
-        variant="contained"
-      >
-        Log Out
-      </Button>
-      <p>Modals for Test Drives and Tracker down below</p>
+    <div className="account flex justify-center items-center h-full">
+      <section className="flex flex-col items-center px-5 mt-24 max-w-full w-[854px] max-md:mt-10">
+        <h1 className="text-6xl font-bold tracking-wide leading-5 text-center text-red-500 uppercase max-md:text-4xl">
+          Account Info
+        </h1>
+        {user && (
+          <ul className="mt-24">
+            <li className="mt-4 text-xl tracking-wide leading-6 text-center text-black uppercase max-md:mt-2.5">
+              <strong>First Name:</strong> {user.first_name}
+            </li>
+            <li className="mt-4 text-xl tracking-wide leading-6 text-center text-black uppercase max-md:mt-2.5">
+              <strong>Last Name:</strong> {user.last_name}
+            </li>
+            <li className="mt-4 text-xl tracking-wide leading-6 text-center text-black uppercase max-md:mt-2.5">
+              <strong>Phone Number:</strong> {user.phone}
+            </li>
+            <li className="mt-4 text-xl tracking-wide leading-6 text-center text-black uppercase max-md:mt-2.5">
+              <strong>Email Address:</strong> {user.email}
+            </li>
+            <li className="mt-4 text-xl tracking-wide leading-6 text-center text-black uppercase max-md:mt-2.5">
+              <strong>Driver's License Number:</strong> {user.driverID}
+            </li>
+          </ul>
+        )}
+        <div className="flex gap-5 justify-center mt-11 max-w-full text-xl tracking-wide leading-6 text-center text-black uppercase w-[579px] max-md:flex-wrap max-md:mt-10">
+          <Button
+            className="bookApptButton"
+            onClick={handleEditInfo}
+            style={styles.bookApptButton}
+            variant="contained"
+            component={Link}
+            to="/editAccount"
+          >
+            Edit Info
+          </Button>
+          <Button
+            className="bookApptButton"
+            onClick={logOutUser}
+            style={styles.bookApptButton}
+            variant="contained"
+          >
+            Log Out
+          </Button>
+        </div>
+        <p>Modals for Test Drives and Tracker down below</p>
+      </section>
     </div>
   );
 };

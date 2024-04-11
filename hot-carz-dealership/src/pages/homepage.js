@@ -16,10 +16,13 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Make both API calls simultaneously
         const [randomVehiclesResponse, userResponse] = await Promise.all([
           fetchRandomVehicles(),
           fetchUserData(),
         ]);
+
+        // Set state once both responses are received
         setRandomVehicles(randomVehiclesResponse);
         setUser(userResponse);
       } catch (error) {
