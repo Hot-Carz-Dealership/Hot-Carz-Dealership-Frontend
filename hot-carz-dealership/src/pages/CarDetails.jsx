@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
+import VehicleImage from "../utilities/VehicleImage";
 
 function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   return (
     <section className="mt-12 max-w-full w-[822px] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
         <div className="flex flex-col w-[58%] max-md:ml-0 max-md:w-full">
-          <img
+          {/* <img
             loading="lazy"
             src={vehichleImage}
             alt="Vehicle"
             className=" mt-20"
+          /> */}{" "}
+          {/* Use VehicleImage component instead of img tag */}
+          <VehicleImage
+            vin={vehicleFeatures[0].value}
+            bodyType={vehicleFeatures[3].value}
           />
         </div>
         <div className="flex flex-col ml-5 w-[42%] max-md:ml-0 max-md:w-full">
