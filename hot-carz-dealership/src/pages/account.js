@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
+import "../Account.css"; // Import the CSS file for styling
+
+const styles = {
+  bookApptButton: {
+    backgroundColor: "red",
+    color: "white",
+    padding: "5px 10px",
+    marginTop: "10px", // Add margin to separate from other content
+    marginLeft: "10px",
+    justifyContent: "center",
+  },
+};
 
 const Account = () => {
   const [user, setUser] = useState(null);
@@ -53,79 +65,6 @@ const Account = () => {
     // return null; // Do not render anything if redirection is performed
   }
 
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      // fontFamily: "Arial, sans-serif",
-    },
-    welcome: {
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-    },
-    carDisplay: {
-      marginTop: "20px",
-      backgroundColor: "#f5f5f5",
-      padding: "20px",
-      borderRadius: "5px",
-    },
-    carDisplayTitle: {
-      fontSize: "1.5em",
-      color: "red",
-    },
-    featuredCarList: {
-      listStyle: "none",
-      padding: 0,
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    featuredCarItem: {
-      textAlign: "center",
-      flex: "1",
-    },
-    featuredCarImage: {
-      height: "300px",
-      width: "300px",
-      margin: "0 auto",
-    },
-    searchButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-    },
-    servicesItem: {
-      marginLeft: "2%",
-      marginRight: "2%",
-      width: "30%",
-      textAlign: "center",
-      display: "inline-block",
-      marginBottom: "20px",
-    },
-    serviceImage: {
-      height: "200px",
-      width: "300px",
-      margin: "0 auto",
-    },
-    servicesDisplayTitle: {
-      color: "red",
-      textAlign: "center",
-      fontSize: "3em",
-    },
-    price: {
-      color: "red",
-    },
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginTop: "10px", // Add margin to separate from other content
-      marginLeft: "10px",
-      justifyContent: "center",
-    },
-    listAlign: {
-      justifyContent: "left",
-    },
-  };
   const handleEditInfo = () => {
     // Handle edit info logic here
   };
@@ -157,8 +96,8 @@ const Account = () => {
         <div className="flex gap-5 justify-center mt-11 max-w-full text-xl tracking-wide leading-6 text-center text-black uppercase w-[579px] max-md:flex-wrap max-md:mt-10">
           <Button
             className="bookApptButton"
-            onClick={handleEditInfo}
             style={styles.bookApptButton}
+            onClick={handleEditInfo}
             variant="contained"
             component={Link}
             to="/editAccount"
@@ -166,9 +105,9 @@ const Account = () => {
             Edit Info
           </Button>
           <Button
-            className="bookApptButton"
-            onClick={logOutUser}
+            className="bookApptButton "
             style={styles.bookApptButton}
+            onClick={logOutUser}
             variant="contained"
           >
             Log Out
