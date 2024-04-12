@@ -9,9 +9,9 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-start",
+    justifyContent: "flex-start", 
   },
   buttonsContainer: {
-    marginRight: "20px",
     backgroundColor: "black",
     color: "white",
     padding: "10px",
@@ -61,6 +61,12 @@ const styles = {
     cursor: "pointer",
     margin: "10px 0",
   },
+
+  selected: {
+    backgroundColor: "#007bff",
+    color: "#fff", 
+  }
+  
 };
 const ManagerPage = () => {
   const [bids, setBids] = useState([]);
@@ -165,27 +171,30 @@ const getMemberDetails = (memberID) => {
     }
   };
 
-  const [selectedTab, setSelectedTab] = useState(null);
-
+  const [selectedTab, setSelectedTab] = useState(1);
  
+  const renderTable = () => {
+    switch (selectedTab) {
+      case 1:
+        return <ServiceCenter/>
+      case 2:
+        return <BidsTable />;
+      case 3:
+        return <TestDrivesTable />;
+      case 4:
+        return <CustomersTable />;
+      case 5:
+        return <VehicleListingsTable />;
+      case 6:
+        return <SalesReportTable />;
+      default:
+        return null;
+    }
+  };
 
 
-  return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-3">
-          <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto" }}>
-            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("")}>Bids</button>
-            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("testdrives")}>Test Drives</button>
-            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("members")}>Customers</button>
-            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("vehicles/search")}>Vehicle Listings</button>
-            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("")}>Sales Report</button>
-            <Link to="/create-employee-account" className="btn btn-block btn-danger mb-3">Create Employee Acct.</Link>
-            <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
-          </div>
-        </div>
-        <div className="col-md-9">
-          <div className="table-responsive">
+  const ServiceCenter = () => (
+<div className="table-responsive">
             <h2>Service Appointments</h2>
             <table className="table table-bordered">
               <thead>
@@ -247,10 +256,188 @@ const getMemberDetails = (memberID) => {
 
 
           </div>
+  )
+
+  const BidsTable = () => (
+    <div className="table-responsive">
+      <h2>Bids</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>VIN</th>
+            <th>MSRP</th>
+            <th>Bid Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bids.map((bid, index) => (
+            <tr key={index}>
+              <td>{bid.make}</td>
+              <td>{bid.model}</td>
+              <td>{bid.VIN}</td>
+              <td>{bid.MSRP}</td>
+              <td>{bid.bidAmount}</td>
+              <td>{/* Action buttons */}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+  
+  const TestDrivesTable = () => (
+    <div className="table-responsive">
+      <h2>Test Drives</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Customer Phone</th>
+            <th>Full Name</th>
+            <th>Vehicle</th>
+            <th>Datetime</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {testDrives.map((testDrive, index) => (
+            <tr key={index}>
+              <td>{testDrive.phone}</td>
+              <td>{testDrive.fullname}</td>
+              <td>{testDrive.car_make_model}</td>
+              <td>{testDrive.appointment_date}</td>
+              <td>{/* Action buttons */}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+  
+  // Similarly, update the other table components in the same way
+  
+
+const CustomersTable = () => (
+<div className="table-responsive">
+      <h2>Customers</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone #</th>
+            <th>Email</th>
+            <th>Join Date</th>
+            <th>memberID</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {customers.map((customer, index) => (
+                  <tr key={index}>
+                    <td>{customer.first_name}</td>
+                    <td>{customer.last_name}</td>
+                    <td>{customer.phone}</td>
+                    <td>{customer.email}</td>
+                    <td>{customer.join_date}</td>
+                    <td>{customer.memberID}</td>
+                    <td>{/* Action buttons */}</td>
+                  </tr>
+                ))}        </tbody>
+      </table>
+    </div>
+  
+              );
+
+const VehicleListingsTable = () => 
+(
+<div className="table-responsive">
+      <h2>Vehicle Listings</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>VIN</th>
+            <th>Page Views</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {vehicleListings.map((vehicle, index) => (
+                  <tr key={index}>
+                    <td>{vehicle.make}</td>
+                    <td>{vehicle.model}</td>
+                    <td>{vehicle.year}</td>
+                    <td>{vehicle.VIN_carID}</td>
+                    <td>{vehicle.viewsOnPage}</td>
+                    <td>{vehicle.price}</td>
+                    <td>{vehicle.status}</td>
+                  </tr>
+                ))}        </tbody>
+      </table>
+    </div>
+    );
+
+const SalesReportTable = () => (
+<div className="table-responsive">
+      <h2>Sales Report</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Purpose</th>
+            <th>New Balance</th>
+            <th>Date Time</th>
+          </tr>
+        </thead>
+        <tbody>
+        {salesReport.map((report, index) => (
+                  <tr key={index}>
+                    <td>{report.type}</td>
+                    <td>{report.amount}</td>
+                    <td>{report.purpose}</td>
+                    <td>{report.newBalance}</td>
+                    <td>{report.dateTime}</td>
+                  </tr>
+                ))}        </tbody>
+      </table>
+    </div>
+);
+
+
+
+
+return (
+  <div>
+    <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto", position: "fixed", left: 0, display: "flex", flexDirection: "column" }}>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { fetchDataSelection(""); setSelectedTab(1); renderTable(); }}>Service Center</button>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { fetchDataSelection(""); setSelectedTab(2); renderTable(); }}>Bids</button>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { fetchDataSelection("testdrives"); setSelectedTab(3); renderTable(); }}>Test Drives</button>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { fetchDataSelection("members"); setSelectedTab(4); renderTable(); }}>Customers</button>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { fetchDataSelection("vehicles/search"); setSelectedTab(5); renderTable(); }}>Vehicle Listings</button>
+      <button className="btn btn-block btn-dark mb-3" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { fetchDataSelection(""); setSelectedTab(6); renderTable(); }}>Sales Report</button>
+      <Link to="/create-employee-account" className="btn btn-block btn-danger mb-3">Create Employee Acct.</Link>
+      <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
+    </div>
+    <div className="container" style={{ marginLeft: "250px" }}>
+      <div className="row">
+        <div >
+          {renderTable()}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
+
+
 };
 
 export default ManagerPage;

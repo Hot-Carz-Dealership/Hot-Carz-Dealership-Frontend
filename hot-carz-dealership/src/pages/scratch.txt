@@ -1,9 +1,5 @@
- const renderTable = () => {
-    {fetchServiceInfo()}
-
-
-
-
+/*
+  const renderTable = () => {
     
     switch (selectedTab) {
       case 2:
@@ -29,7 +25,7 @@
                     <td>{bid.VIN}</td>
                     <td>{bid.MSRP}</td>
                     <td>{bid.bidAmount}</td>
-                    <td>{/* Action buttons */}</td>
+                    <td>{}</td>
                   </tr>
                 ))}
               </tbody>
@@ -57,7 +53,7 @@
                     <td>{testDrive.fullname}</td>
                     <td>{testDrive.car_make_model}</td>
                     <td>{testDrive.appointment_date}</td>
-                    <td>{/* Action buttons */}</td>
+                    <td>{}</td>
                   </tr>
                 ))}
               </tbody>
@@ -89,7 +85,7 @@
                     <td>{customer.email}</td>
                     <td>{customer.join_date}</td>
                     <td>{customer.memberID}</td>
-                    <td>{/* Action buttons */}</td>
+                    <td>{}</td>
                   </tr>
                 ))}
               </tbody>
@@ -161,3 +157,5 @@
         return null;
     }
   };
+
+  */
