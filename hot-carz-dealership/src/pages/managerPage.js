@@ -3,6 +3,10 @@ import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
+import editIcon from "../imgs/icons/pencil.png";
+import deleteIcon from "../imgs/icons/redx.png";
+
+
 
 const styles = {
   container: {
@@ -65,8 +69,31 @@ const styles = {
   selected: {
     backgroundColor: "#007bff",
     color: "#fff", 
-  }
+  },
   
+  edit: {
+    background: "none",
+    border: "none",
+    padding: 0,
+    marginRight: "5px",
+    cursor: "pointer",
+  },
+  delete: {
+    background: "none",
+    border: "none",
+    padding: 0,
+    marginRight: "5px",
+    cursor: "pointer",
+  },
+  editIcon: {
+    width: "20px",
+    height: "20px",
+  },
+  deleteIcon: {
+    width: "20px",
+    height: "20px",
+  }
+
 };
 const ManagerPage = () => {
   const [bids, setBids] = useState([]);
@@ -298,7 +325,6 @@ const getMemberDetails = (memberID) => {
             <th>Full Name</th>
             <th>Vehicle</th>
             <th>Datetime</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -308,7 +334,6 @@ const getMemberDetails = (memberID) => {
               <td>{testDrive.fullname}</td>
               <td>{testDrive.car_make_model}</td>
               <td>{testDrive.appointment_date}</td>
-              <td>{/* Action buttons */}</td>
             </tr>
           ))}
         </tbody>
@@ -331,7 +356,6 @@ const CustomersTable = () => (
             <th>Email</th>
             <th>Join Date</th>
             <th>memberID</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -343,7 +367,6 @@ const CustomersTable = () => (
                     <td>{customer.email}</td>
                     <td>{customer.join_date}</td>
                     <td>{customer.memberID}</td>
-                    <td>{/* Action buttons */}</td>
                   </tr>
                 ))}        </tbody>
       </table>
