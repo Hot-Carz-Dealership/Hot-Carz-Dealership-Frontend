@@ -69,20 +69,74 @@ const ManagerPage = () => {
   const [vehicleListings, setVehicleListings] = useState([]);
   const [salesReport, setSalesReport] = useState([]);
 
+
+  const [serviceAppointments, setServiceAppointments] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [employees, setEmployees] = useState([]);
+
+
+
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@emp");
+        const resp = await fetch('${BASE_URL}/@emp');
         setUser(resp.data);
+        // Fetch service appointments and members data
+        fetchData();
       } catch (error) {
         console.log("Not Authenticated");
       }
     })();
   }, []);
+  
 
-  const fetchData = async (type) => {
+  const fetchData = async () => {
+    try {
+      // Fetch service appointments
+      const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
+      const appointmentsData = await appointmentsResponse.json();
+      console.log("Service Appointments fetched successfully:", appointmentsData);
+  
+      // Fetch members
+      const membersResponse = await fetch(`${BASE_URL}/api/members`);
+      const membersData = await membersResponse.json();
+      console.log("Members fetched successfully:", membersData);
+  
+      //Fetch Employees
+      const employeeResponse = await fetch(`${BASE_URL}/api/employees`)
+      const employeeData = await employeeResponse.json();
+      console.log("Employees fetched successfully" , employeeData)
+      // Update state variables with fetched data
+
+      setEmployees(employeeData);
+      setServiceAppointments(appointmentsData);
+      setMembers(membersData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+// Function to get member details by memberID
+const getMemberDetails = (memberID) => {
+  const member = members.find((member) => member.memberID === memberID);
+  return member
+    ? {
+        memberID: member.memberID,
+        first_name: member.first_name,
+        last_name: member.last_name,
+        email: member.email,
+        phone: member.phone,
+        address: member.address,
+        state: member.state,
+        zipcode: member.zipcode,
+        join_date: member.join_date,
+      }
+    : null;
+};
+
+  const fetchDataSelection = async (type) => {
     try {
       const response = await fetch(`${BASE_URL}/api/${type}`);
       console.log("Response received:", response);
@@ -113,221 +167,88 @@ const ManagerPage = () => {
 
   const [selectedTab, setSelectedTab] = useState(null);
 
-  const renderTable = () => {
-    switch (selectedTab) {
-      case 2:
-        return (
-          <div style={styles.tableContainer}>
-            <h2>Bids</h2>
-            <table style={styles.table}>
+ 
+
+
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-md-3">
+          <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto" }}>
+            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("")}>Bids</button>
+            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("testdrives")}>Test Drives</button>
+            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("members")}>Customers</button>
+            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("vehicles/search")}>Vehicle Listings</button>
+            <button className="btn btn-block btn-dark mb-3" onClick={() => fetchData("")}>Sales Report</button>
+            <Link to="/create-employee-account" className="btn btn-block btn-danger mb-3">Create Employee Acct.</Link>
+            <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
+          </div>
+        </div>
+        <div className="col-md-9">
+          <div className="table-responsive">
+            <h2>Service Appointments</h2>
+            <table className="table table-bordered">
               <thead>
                 <tr>
-                  <th>Make</th>
-                  <th>Model</th>
-                  <th>VIN</th>
-                  <th>MSRP</th>
-                  <th>Bid Amount</th>
-                  <th>Action</th>
+                  <th>Appointment ID</th>
+                  <th>Member ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Appointment Date</th>
+                  <th>Service Name</th>
                 </tr>
               </thead>
               <tbody>
-                {bids.map((bid, index) => (
-                  <tr key={index}>
-                    <td>{bid.make}</td>
-                    <td>{bid.model}</td>
-                    <td>{bid.VIN}</td>
-                    <td>{bid.MSRP}</td>
-                    <td>{bid.bidAmount}</td>
-                    <td>{/* Action buttons */}</td>
+                {serviceAppointments.map(appointment => (
+                  <tr key={appointment.appointment_id}>
+                    <td>{appointment.appointment_id}</td>
+                    <td>{appointment.memberID}</td>
+                    <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
+                    <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
+                    <td>{getMemberDetails(appointment.memberID)?.email}</td>
+                    <td>{getMemberDetails(appointment.memberID)?.phone}</td>
+                    <td>{appointment.appointment_date}</td>
+                    <td>{appointment.service_name}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        );
-      case 3:
-        return (
-          <div style={styles.tableContainer}>
-            <h2>Test Drives</h2>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th>Customer Phone</th>
-                  <th>Full Name</th>
-                  <th>Vehicle</th>
-                  <th>Datetime</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {testDrives.map((testDrive, index) => (
-                  <tr key={index}>
-                    <td>{testDrive.phone}</td>
-                    <td>{testDrive.fullname}</td>
-                    <td>{testDrive.car_make_model}</td>
-                    <td>{testDrive.appointment_date}</td>
-                    <td>{/* Action buttons */}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      case 4:
-        return (
-          <div style={styles.tableContainer}>
-            <h2>Customers</h2>
-            <table style={styles.table}>
+
+            <h2>Technicians Management</h2>
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th>First Name</th>
                   <th>Last Name</th>
-                  <th>Phone #</th>
                   <th>Email</th>
-                  <th>Join Date</th>
-                  <th>memberID</th>
+                  <th>Employee ID</th>
+                  <th>Assigned Apointment</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {customers.map((customer, index) => (
-                  <tr key={index}>
-                    <td>{customer.first_name}</td>
-                    <td>{customer.last_name}</td>
-                    <td>{customer.phone}</td>
-                    <td>{customer.email}</td>
-                    <td>{customer.join_date}</td>
-                    <td>{customer.memberID}</td>
-                    <td>{/* Action buttons */}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      case 5:
-        return (
-          <div style={styles.tableContainer}>
-            <h2>Vehicle Listings</h2>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th>Make</th>
-                  <th>Model</th>
-                  <th>Year</th>
-                  <th>VIN</th>
-                  <th>Page Views</th>
-                  <th>Price</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vehicleListings.map((vehicle, index) => (
-                  <tr key={index}>
-                    <td>{vehicle.make}</td>
-                    <td>{vehicle.model}</td>
-                    <td>{vehicle.year}</td>
-                    <td>{vehicle.VIN_carID}</td>
-                    <td>{vehicle.viewsOnPage}</td>
-                    <td>{vehicle.price}</td>
-                    <td>{vehicle.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      case 6:
-        return (
-          <div style={styles.tableContainer}>
-            <h2>Sales Report</h2>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Purpose</th>
-                  <th>New Balance</th>
-                  <th>Date Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {salesReport.map((report, index) => (
-                  <tr key={index}>
-                    <td>{report.type}</td>
-                    <td>{report.amount}</td>
-                    <td>{report.purpose}</td>
-                    <td>{report.newBalance}</td>
-                    <td>{report.dateTime}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  {employees
+    .filter(employee => employee.employeeType === 'Technician')
+    .map(employee => (
+      <tr key={employee.employeeID}>
+        <td>{employee.firstname}</td>
+        <td>{employee.lastname}</td>
+        <td>{employee.email}</td>
+        <td>{employee.employeeID}</td>
+        <td>{/* Assigned Appointment */}</td>
+        <td>{/* Action */}</td>
+      </tr>
+    ))}
+</tbody>
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.buttonsContainer}>
-        <button
-          style={styles.modalButton}
-          onClick={() => {
-            setSelectedTab(2);
-            fetchData("");
-          }}
-        >
-          Bids
-        </button>
-        <button
-          style={styles.modalButton}
-          onClick={() => {
-            setSelectedTab(3);
-            fetchData("testdrives");
-          }}
-        >
-          Test Drives
-        </button>
-        <button
-          style={styles.modalButton}
-          onClick={() => {
-            setSelectedTab(4);
-            fetchData("members");
-          }}
-        >
-          Customers
-        </button>
-        <button
-          style={styles.modalButton}
-          onClick={() => {
-            setSelectedTab(5);
-            fetchData("vehicles/search");
-          }}
-        >
-          Vehicle Listings
-        </button>
-        <button
-          style={styles.modalButton}
-          onClick={() => {
-            setSelectedTab(6);
-            fetchData("");
-          }}
-        >
-          Sales Report
-        </button>
-        <Link to="/create-employee-account" style={styles.creationButton}>
-          Create Employee Acct.
-        </Link>
-        <br></br>
-        <Link to="/add-new-vehicle" style={styles.creationButton}>
-          Add new Vehicle
-        </Link>
+            </table>
+
+
+          </div>
+        </div>
       </div>
-      {renderTable()}
     </div>
   );
 };
