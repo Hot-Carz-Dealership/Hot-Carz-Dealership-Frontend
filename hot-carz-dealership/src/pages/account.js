@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import "../Account.css"; // Import the CSS file for styling
+import { BASE_URL } from "../utilities/constants";
 
 const styles = {
   bookApptButton: {
@@ -23,7 +24,7 @@ const Account = () => {
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         setUser(resp.data);
         setLoading(false);
       } catch (error) {
@@ -36,7 +37,7 @@ const Account = () => {
   }, [navigate]); // Add navigate to the dependency array
 
   const logOutUser = async () => {
-    await httpClient.post("//localhost:5000/api/logout");
+    await httpClient.post(`${BASE_URL}/api/logout`);
     window.location.href = "/";
   };
 
