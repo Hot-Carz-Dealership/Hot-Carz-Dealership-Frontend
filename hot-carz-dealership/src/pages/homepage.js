@@ -14,12 +14,15 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    let abortController; // Define abortController variable outside useEffect
+
     const fetchData = async () => {
+      abortController = new AbortController(); // Initialize abortController
       try {
         // Make both API calls simultaneously
         const [randomVehiclesResponse, userResponse] = await Promise.all([
-          fetchRandomVehicles(),
-          fetchUserData(),
+          fetchRandomVehicles(abortController),
+          fetchUserData(abortController),
         ]);
 
         // Set state once both responses are received
@@ -31,29 +34,37 @@ const HomePage = () => {
     };
 
     fetchData();
+
+    // Cleanup function to abort requests when component unmounts
+    return () => {
+      if (abortController) {
+        // Abort any ongoing requests
+        abortController.abort();
+      }
+    };
   }, []);
 
-  const fetchRandomVehicles = async () => {
+  const fetchRandomVehicles = async (abortController) => {
     try {
-      const response = await fetch(`${BASE_URL}/api/vehicles/random`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch random vehicles");
-      }
-      const data = await response.json();
-      return data;
+      const response = await httpClient.get(`${BASE_URL}/api/vehicles/random`, {
+        signal: abortController.signal,
+      });
+      return response.data;
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch random vehicles:", error);
       return [];
     }
   };
 
-  const fetchUserData = async () => {
+  const fetchUserData = async (abortController) => {
     try {
-      const resp = await httpClient.get(`${BASE_URL}/@me`);
-      console.log(resp.data);
-      return resp.data;
+      const response = await httpClient.get(`${BASE_URL}/@me`, {
+        signal: abortController.signal,
+      });
+      console.log("User data:", response.data);
+      return response.data;
     } catch (error) {
-      console.log("Not Authenticated");
+      console.error("Failed to fetch user data:", error);
       return null;
     }
   };
