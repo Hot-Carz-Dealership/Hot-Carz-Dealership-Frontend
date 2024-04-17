@@ -62,8 +62,13 @@ const HomePage = () => {
     return randomVehicles.map((vehicle, index) => (
       <li key={index} style={styles.featuredCarItem}>
         <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
-          <VehicleImage vin={vehicle.VIN_carID} bodyType={vehicle.body} />
+          <VehicleImage
+            className="pr-4"
+            vin={vehicle.VIN_carID}
+            bodyType={vehicle.body}
+          />
           <h2
+            className="flex justify-center items-center h-24  text-4xl  leading-6 "
             style={styles.vehicleName}
           >{`${vehicle.make} ${vehicle.model}`}</h2>
         </Link>
@@ -180,7 +185,10 @@ const HomePage = () => {
           Featured Cars
         </header>
 
-        <ul className="featuredCarList" style={styles.featuredCarList}>
+        <ul
+          className="featuredCarList ml-24 mr-20"
+          style={styles.featuredCarList}
+        >
           {renderRandomVehicles()}
         </ul>
 
