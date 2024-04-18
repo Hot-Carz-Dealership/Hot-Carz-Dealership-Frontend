@@ -231,116 +231,118 @@ const ManagerPage = () => {
     }
   };
 
-  const handleSelectionChange = (appointmentId, event) => {
-     const selectedTechnicianId = event.target.value;
+  const ServiceCenter = () => {
+    // Function to handle selection change in the dropdown
+    const handleSelectionChange = (appointmentId) => (event) => {
+
+      console.log("APP: " + appointmentId);
+      console.log("EMPL: " + event.target.value);
+      // Get the selected technician ID from the dropdown
+      const selectedTechnicianId = event.target.value;
   
-     assignTechnician(appointmentId, selectedTechnicianId);
-  };
-  
-  // Function to assign a technician to an appointment
-  const assignTechnician = (appointmentId, technicianId) => {
-    // Create a JSON object with appointment_id and employee_id
-    const data = {
-      appointment_id: appointmentId,
-      employee_id: technicianId
+      // Call the assignTechnician function with appointment ID and selected technician ID
+      assignTechnician(appointmentId, selectedTechnicianId);
     };
   
-     fetch('/api/manager/assign-service-appointments', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to assign technician to appointment');
-      }
-      // Handle success response here if needed
-      console.log('Technician assigned successfully');
-    })
-    .catch(error => {
-      // Handle error here
-      console.error('Error assigning technician:', error.message);
-    });
-  };
-
-
-  const ServiceCenter = () => (
-    <div className="table-responsive">
-      <h2>Service Appointments</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Appointment ID</th>
-            <th>Member ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Appointment Date</th>
-            <th>Technician Assigned</th>
-          </tr>
-        </thead>
-        <tbody>
-        {serviceAppointments.map(appointment => (
-  <tr key={appointment.appointment_id}>
-    <td>{appointment.appointment_id}</td>
-    <td>{appointment.memberID}</td>
-    <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
-    <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
-    <td>{getMemberDetails(appointment.memberID)?.email}</td>
-    <td>{getMemberDetails(appointment.memberID)?.phone}</td>
-    <td>{appointment.appointment_date}</td>
-    <td>
-      {/* Select box for technician assignment */}
-      <select onChange={(event) => handleSelectionChange(appointment.appointment_id, event)}>
-  <option value="-" key="default">-</option>
-  {employees.map((technician, index) => (
-    <option key={`technician_${technician.employee_id}_${index}`} value={technician.employee_id}>
-      {technician.first_name} {technician.last_name}
-    </option>
-  ))}
-</select>
-
-
-    </td>
-  </tr>
-))}
-        </tbody>
-      </table>
-
-      <h2>Technicians Management</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Employee ID</th>
-            <th>Assigned Apointment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees
-            .filter(employee => employee.employeeType === 'Technician')
-            .map(employee => (
-              <tr key={employee.employeeID}>
-                <td>{employee.first_name}</td>
-                <td>{employee.last_name}</td>
-                <td>{employee.email}</td>
-                <td>{employee.employeeID}</td>
-                <td>{/* Assigned Appointment */}</td>
+    // Function to assign a technician to an appointment
+    const assignTechnician = (appointmentId, technicianId) => {
+      // Create a JSON object with appointment_id and employee_id
+      const data = {
+        appointment_id: appointmentId,
+        employee_id: technicianId
+      };
+  
+      fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to assign technician to appointment');
+          }
+          // Handle success response here if needed
+          console.log('Technician assigned successfully');
+        })
+        .catch(error => {
+          // Handle error here
+          console.error('Error assigning technician:', error.message);
+        });
+    };
+  
+    return (
+      <div className="table-responsive">
+        <h2>Service Appointments</h2>
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>Appointment ID</th>
+              <th>Member ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Appointment Date</th>
+              <th>Technician Assigned</th>
+            </tr>
+          </thead>
+          <tbody>
+            {serviceAppointments.map(appointment => (
+              <tr key={appointment.appointment_id}>
+                <td>{appointment.appointment_id}</td>
+                <td>{appointment.memberID}</td>
+                <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
+                <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
+                <td>{getMemberDetails(appointment.memberID)?.email}</td>
+                <td>{getMemberDetails(appointment.memberID)?.phone}</td>
+                <td>{appointment.appointment_date}</td>
+                <td>
+                  {/* Select box for technician assignment */}
+                  <select onChange={handleSelectionChange(appointment.appointment_id)}>
+                    <option value="-" key="default">-</option>
+                    {employees.map((technician, index) => (
+                      <option key={`technician_${technician.employee_id}_${index}`} value={technician.employeeID}>
+                        {technician.first_name} {technician.last_name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
               </tr>
             ))}
-        </tbody>
-
-      </table>
-
-
-    </div>
-  )
-
+          </tbody>
+        </table>
+  
+        <h2>Technicians Management</h2>
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Employee ID</th>
+              <th>Assigned Appointment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees
+              .filter(employee => employee.employeeType === 'Technician')
+              .map(employee => (
+                <tr key={employee.employeeID}>
+                  <td>{employee.first_name}</td>
+                  <td>{employee.last_name}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.employeeID}</td>
+                  <td>{/* Assigned Appointment */}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+  
   const BidsTable = () => (
     <div className="table-responsive">
       <h2>Bids</h2>
