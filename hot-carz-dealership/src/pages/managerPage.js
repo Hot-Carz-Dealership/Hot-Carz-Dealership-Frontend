@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import editIcon from "../imgs/icons/pencil.png";
 import deleteIcon from "../imgs/icons/redx.png";
@@ -123,20 +123,34 @@ const ManagerPage = () => {
 
 
   const [user, setUser] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await fetch(`${BASE_URL}/@emp`);
-        setUser(resp.data);
+        const resp = await httpClient.get("//localhost:5000/@me");
+        const user = resp.data;
+
+        // Check if user role is either "Manager" or "superAdmin"
+        if (user.employeeType !== "Manager" && user.employeeType !== "superAdmin") {
+          throw new Error("Unauthorized access");
+        }
+
+        setUser(user);
+        // Store the session ID
+        setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
+
         // Fetch service appointments and members data
         fetchData();
       } catch (error) {
-        console.log("Not Authenticated");
+        console.log("Not Authenticated or Unauthorized");
+        navigate("/login");
       }
     })();
-  }, []);
-
+  }, [navigate]);
+  
 
   const fetchData = async () => {
     try {
@@ -233,44 +247,52 @@ const ManagerPage = () => {
 
   const ServiceCenter = () => {
     // Function to handle selection change in the dropdown
-    const handleSelectionChange = (appointmentId) => (event) => {
-
+    const handleSelectionChange = (appointmentId) => async (event) => {
       console.log("APP: " + appointmentId);
       console.log("EMPL: " + event.target.value);
       // Get the selected technician ID from the dropdown
       const selectedTechnicianId = event.target.value;
-  
-      // Call the assignTechnician function with appointment ID and selected technician ID
-      assignTechnician(appointmentId, selectedTechnicianId);
+    
+      // Call the assignTechnician function with appointment ID, selected technician ID, and session ID
+      try {
+        await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
+      } catch (error) {
+        console.error('Error assigning technician:', error.message);
+      }
     };
+    
   
     // Function to assign a technician to an appointment
-    const assignTechnician = (appointmentId, technicianId) => {
-      // Create a JSON object with appointment_id and employee_id
-      const data = {
-        appointment_id: appointmentId,
-        employee_id: technicianId
-      };
+// Function to assign a technician to an appointment
+const assignTechnician = (appointmentId, technicianId, sessionId) => {
+  // Create a JSON object with appointment_id, employee_id, and session_id
+  const data = {
+    appointment_id: appointmentId,
+    employee_id: technicianId,
+  };
+
+  fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include', // Include cookies in the request
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to assign technician to appointment');
+    }
+    // Handle success response here if needed
+    console.log('Technician assigned successfully');
+  })
+  .catch(error => {
+    // Handle error here
+    console.error('Error assigning technician:', error.message);
+  });
   
-      fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to assign technician to appointment');
-          }
-          // Handle success response here if needed
-          console.log('Technician assigned successfully');
-        })
-        .catch(error => {
-          // Handle error here
-          console.error('Error assigning technician:', error.message);
-        });
-    };
+};
+
   
     return (
       <div className="table-responsive">
