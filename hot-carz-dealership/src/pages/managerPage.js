@@ -18,6 +18,16 @@ import deleteIcon from "../imgs/icons/redx.png";
 
 
 const styles = {
+  tablespacing:{
+    marginTop: '20px',
+  },
+  centering: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh" // Optional: Adjust the height of the container
+  },
+
   container: {
     display: "flex",
     flexDirection: "row",
@@ -101,7 +111,14 @@ const styles = {
   deleteIcon: {
     width: "20px",
     height: "20px",
-  }
+  },
+  tableWrapper: {
+    border: "1px solid #ddd", 
+    borderRadius: "5px", 
+    marginBottom: "20px",
+    padding: "10px",
+    backgroundColor: "rgba(128, 128, 128, 0.1)"   },
+  
 
 };
 const ManagerPage = () => {
@@ -119,6 +136,7 @@ const ManagerPage = () => {
   const [serviceAppointments, setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [technicians, setTechnicians] = useState([]);
 
 
 
@@ -170,6 +188,30 @@ const ManagerPage = () => {
       console.log("Employees fetched successfully", employeeData)
       // Update state variables with fetched data
 
+      // Fetch Technicians
+      const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
+      const techniciansData = await technicianResponse.json();
+      console.log("Technicians fetched successfully:", techniciansData);
+
+            // Fetch Bids
+            const bidsResponse = await fetch(`${FINAN_URL}/api/current-bids`);
+            const bidsData = await bidsResponse.json();
+            console.log("Bids fetched successfully:", bidsData);
+            setBids(bidsData);
+      
+            // Fetch Test Drives
+            const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
+            const testDrivesData = await testDrivesResponse.json();
+            console.log("Test Drives fetched successfully:", testDrivesData);
+            setTestDrives(testDrivesData);
+      
+            // Fetch Vehicle Listings
+            const vehicleListingsResponse = await fetch(`${BASE_URL}/api/vehicles/search`);
+            const vehicleListingsData = await vehicleListingsResponse.json();
+            console.log("Vehicle Listings fetched successfully:", vehicleListingsData);
+            setVehicleListings(vehicleListingsData);
+      
+      setTechnicians(techniciansData);
       setEmployees(employeeData);
       setServiceAppointments(appointmentsData);
       setMembers(membersData);
@@ -195,56 +237,76 @@ const ManagerPage = () => {
       : null;
   };
 
-  const fetchDataSelection = async (type) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/${type}`);
-      console.log("Response received:", response);
-      const data = await response.json();
-      console.log("Data fetched successfully:", data);
 
-      // Update the state variables based on the type of data
-      switch (type) {
-        case "bids":
-          setBids(data);
-          break;
-        case "testdrives":
-          setTestDrives(data);
-          break;
-        case "members":
-          setCustomers(data);
-          break;
-        case "vehicles/search":
-          setVehicleListings(data);
-          break;
-        default:
-          console.error("Unknown data type:", type);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const renderTable = () => {
     switch (selectedTab) {
-      case 1:
-        return <ServiceCenter />
+      case 0: // If "ALL" is selected, render all tables with borders
+        return (
+          <>
+            <div style={styles.tableWrapper}>
+              <ServiceCenter />
+            </div>
+            <div style={styles.tableWrapper}>
+              <BidsTable />
+            </div>
+            <div style={styles.tableWrapper}>
+              <TestDrivesTable />
+            </div>
+            <div style={styles.tableWrapper}>
+              <CustomersTable />
+            </div>
+            <div style={styles.tableWrapper}>
+              <VehicleListingsTable />
+            </div>
+            <div style={styles.tableWrapper}>
+              <SalesReportTable />
+            </div>
+          </>
+        );
+      case 1: // Render selected table with border
+        return (
+          <div style={styles.tableWrapper}>
+            <ServiceCenter />
+          </div>
+        );
       case 2:
-        return <BidsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <BidsTable />
+          </div>
+        );
       case 3:
-        return <TestDrivesTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <TestDrivesTable />
+          </div>
+        );
       case 4:
-        return <CustomersTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <CustomersTable />
+          </div>
+        );
       case 5:
-        return <VehicleListingsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <VehicleListingsTable />
+          </div>
+        );
       case 6:
-        return <SalesReportTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <SalesReportTable />
+          </div>
+        );
       default:
         return null;
     }
   };
-
+  
+  
   const ServiceCenter = () => {
     // Function to handle selection change in the dropdown
     const handleSelectionChange = (appointmentId) => async (event) => {
@@ -297,8 +359,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
     return (
       <div className="table-responsive">
         <h2>Service Appointments</h2>
-        <table className="table table-bordered">
-          <thead>
+        <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
             <tr>
               <th>Appointment ID</th>
               <th>Member ID</th>
@@ -323,13 +385,13 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
                 <td>
                   {/* Select box for technician assignment */}
                   <select onChange={handleSelectionChange(appointment.appointment_id)}>
-                    <option value="-" key="default">-</option>
-                    {employees.map((technician, index) => (
-                      <option key={`technician_${technician.employee_id}_${index}`} value={technician.employeeID}>
-                        {technician.first_name} {technician.last_name}
-                      </option>
-                    ))}
-                  </select>
+                <option value="-" key="default">-</option>
+                {technicians.map(technician => (
+                  <option key={technician.employeeID} value={technician.employeeID}>
+                    {technician.first_name} {technician.last_name}
+                  </option>
+                ))}
+              </select>
                 </td>
               </tr>
             ))}
@@ -337,8 +399,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
         </table>
   
         <h2>Technicians Management</h2>
-        <table className="table table-bordered">
-          <thead>
+        <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
@@ -348,17 +410,15 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
             </tr>
           </thead>
           <tbody>
-            {employees
-              .filter(employee => employee.employeeType === 'Technician')
-              .map(employee => (
-                <tr key={employee.employeeID}>
-                  <td>{employee.first_name}</td>
-                  <td>{employee.last_name}</td>
-                  <td>{employee.email}</td>
-                  <td>{employee.employeeID}</td>
-                  <td>{/* Assigned Appointment */}</td>
-                </tr>
-              ))}
+          {technicians.map(technician => (
+          <tr key={technician.employeeID}>
+            <td>{technician.first_name}</td>
+            <td>{technician.last_name}</td>
+            <td>{technician.email}</td>
+            <td>{technician.employeeID}</td>
+            <td>{/* Assigned Appointment */}</td>
+          </tr>
+        ))}
           </tbody>
         </table>
       </div>
@@ -368,8 +428,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
   const BidsTable = () => (
     <div className="table-responsive">
       <h2>Bids</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
           <tr>
             <th>Make</th>
             <th>Model</th>
@@ -398,8 +458,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
   const TestDrivesTable = () => (
     <div className="table-responsive">
       <h2>Test Drives</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
           <tr>
             <th>Customer Phone</th>
             <th>Full Name</th>
@@ -427,8 +487,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
   const CustomersTable = () => (
     <div className="table-responsive">
       <h2>Customers</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -458,8 +518,8 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
   (
     <div className="table-responsive">
       <h2>Vehicle Listings</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped"> {/* Added table-striped class */}
+        <thead className="thead-dark">
           <tr>
             <th>Make</th>
             <th>Model</th>
@@ -480,8 +540,13 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
               <td>{vehicle.VIN_carID}</td>
               <td>{vehicle.viewsOnPage}</td>
               <td>{vehicle.price}</td>
-              <td><img src={vehicle.pictureLibraryLink} alt="Vehicle" /></td>
-            </tr>
+              <td>
+  <img
+    src={vehicle.pictureLibraryLink}
+    alt="Vehicle"
+    style={{ width: '150px', height: '100px' }}
+  />
+</td>            </tr>
           ))}        </tbody>
       </table>
     </div>
@@ -612,23 +677,24 @@ const assignTechnician = (appointmentId, technicianId, sessionId) => {
   return (
     <div>
       <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto", position: "fixed", left: 0, display: "flex", flexDirection: "column" }}>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { fetchDataSelection(""); setSelectedTab(1); renderTable(); }}>Service Center</button>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { fetchDataSelection(""); setSelectedTab(2); renderTable(); }}>Bids</button>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { fetchDataSelection("testdrives"); setSelectedTab(3); renderTable(); }}>Test Drives</button>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { fetchDataSelection("members"); setSelectedTab(4); renderTable(); }}>Customers</button>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { fetchDataSelection("vehicles/search"); setSelectedTab(5); renderTable(); }}>Vehicle Listings</button>
-        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); renderTable(); }}>Sales Report</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); }}>ALL</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { setSelectedTab(1); }}>Service Center</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { setSelectedTab(2); }}>Bids</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { setSelectedTab(3); }}>Test Drives</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { setSelectedTab(4); }}>Customers</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { setSelectedTab(5); }}>Vehicle Listings</button>
+        <button className="btn btn-block btn-dark mb-3" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); }}>Sales Report</button>
         <Link to="/create-employee-account" className="btn btn-block btn-danger mb-3">Create Employee Acct.</Link>
         <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
       </div>
-      <div className="container" style={{ marginLeft: "250px" }}>
-        <div className="row">
-          <div >
-            {renderTable()}
-          </div>
+      <div className="container-fluid">
+      <div className="row justify-content-center">
+        <div className="col-lg-8 col-md-10"> {/* Adjust width for different screen sizes */}
+          {renderTable()}
         </div>
       </div>
     </div>
+  </div>
   );
 
 
