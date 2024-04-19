@@ -74,7 +74,7 @@ const ManagerPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@emp");
+        const resp = await httpClient.get("//localhost:5000/@me");
         setUser(resp.data);
       } catch (error) {
         console.log("Not Authenticated");
