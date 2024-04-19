@@ -531,8 +531,9 @@ const ManagerPage = () => {
                   vin={vehicle.VIN_carID}
                   bodyType={vehicle.body}
                 />
-              </td>            </tr>
-          ))}        </tbody>
+              </td>
+              </tr>
+          ))}</tbody>
       </table>
     </div>
   );
