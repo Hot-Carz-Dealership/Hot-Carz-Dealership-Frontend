@@ -37,10 +37,12 @@ import pickupTruckImage2 from "../imgs/hot_wheels/pickup_truck2.png";
 import pickupTruckImage3 from "../imgs/hot_wheels/pickup_truck3.png";
 import pickupTruckImage4 from "../imgs/hot_wheels/pickup_truck4.png";
 
+import questionMarkHotWheel from "../imgs/hot_wheels/QuestionMarkHotWheels.png";
+
 const VehicleImage = ({ vin, bodyType, className }) => {
   // Define the mapping between body types and image filenames
   const imageMappings = {
-    sedan: [sedanImage1, sedanImage2, sedanImage3, sedanImage4],
+    Sedan: [sedanImage1, sedanImage2, sedanImage3, sedanImage4],
     SUV: [suvImage1, suvImage2, suvImage3, suvImage4],
     Hatchback: [
       hatchbackImage1,
@@ -48,15 +50,15 @@ const VehicleImage = ({ vin, bodyType, className }) => {
       hatchbackImage3,
       hatchbackImage4,
     ],
-    van: [vanImage1, vanImage2, vanImage3, vanImage4],
+    Van: [vanImage1, vanImage2, vanImage3, vanImage4],
     Coupe: [coupe, coupe2, coupe3, coupe4],
-    convertible: [
+    Convertible: [
       convertibleImage1,
       convertibleImage2,
       convertibleImage3,
       convertibleImage4,
     ],
-    pickup_truck: [
+    "Pickup Truck": [
       pickupTruckImage1,
       pickupTruckImage2,
       pickupTruckImage3,
@@ -85,14 +87,23 @@ const VehicleImage = ({ vin, bodyType, className }) => {
   // State to hold the selected image filename
   const [imageIndex, setImageIndex] = useState(0);
   useEffect(() => {
+    // Check if the body type is supported
+    if (!imageMappings[bodyType]) {
+      console.error(`Unsupported body type: ${bodyType}`);
+      // If body type is unsupported, set a default image
+      setImageIndex(0);
+      return;
+    }
+
     // Use VIN to get a consistent index for image selection
     const index = getIndexFromVin(vin, imageMappings[bodyType].length);
     setImageIndex(index);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vin, bodyType]);
 
-  // Get the selected image
-  const selectedImage = imageMappings[bodyType][imageIndex];
+  // Get the selected image or use a default if body type is unsupported
+  const selectedImage = imageMappings[bodyType]
+    ? imageMappings[bodyType][imageIndex]
+    : questionMarkHotWheel;
 
   return <img src={selectedImage} alt={bodyType} className={className} />;
 };
