@@ -98,6 +98,7 @@ const VehicleImage = ({ vin, bodyType, className }) => {
     // Use VIN to get a consistent index for image selection
     const index = getIndexFromVin(vin, imageMappings[bodyType].length);
     setImageIndex(index);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vin, bodyType]);
 
   // Get the selected image or use a default if body type is unsupported
