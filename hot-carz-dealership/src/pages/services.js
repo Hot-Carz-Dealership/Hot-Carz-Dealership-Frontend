@@ -139,8 +139,8 @@ const services = () => {
             variant="contained"
             id="bookApptButton"
             style={styles.searchButton}
-            // component={Link}
-            // to="/cars"
+            component={Link}
+            to="/bookAppt"
           >
             Book Appointment{" "}
           </Button>
