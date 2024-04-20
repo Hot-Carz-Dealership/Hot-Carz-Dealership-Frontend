@@ -6,15 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import "../Account.css"; // Import the CSS file for styling
 
-// to-do
-//delete_service_appointment
-//edit_service_menu()
-//assign_service_appointments
-
-//technician
-//technician_view_service_appointments
-//technician edit
-
 const styles = {
   container: {
     display: "flex",
@@ -195,7 +186,7 @@ const Account = () => {
 
   // const [selectedTab, setSelectedTab] = useState(1);
 
-  const renderTable = () => {
+  const renderSection = () => {
     switch (selectedTab) {
       case 1:
         return <AccountInfo />;
@@ -524,9 +515,9 @@ const Account = () => {
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 1 ? styles.selected : {}}
           onClick={() => {
-            fetchDataSelection("");
+            // fetchDataSelection("");
             setSelectedTab(1);
-            renderTable();
+            renderSection();
           }}
         >
           Account Info
@@ -535,9 +526,9 @@ const Account = () => {
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 2 ? styles.selected : {}}
           onClick={() => {
-            fetchDataSelection("");
+            // fetchDataSelection("");
             setSelectedTab(2);
-            renderTable();
+            renderSection();
           }}
         >
           Bids
@@ -546,9 +537,9 @@ const Account = () => {
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 3 ? styles.selected : {}}
           onClick={() => {
-            fetchDataSelection("testdrives");
+            // fetchDataSelection("testdrives");
             setSelectedTab(3);
-            renderTable();
+            renderSection();
           }}
         >
           Test Drives
@@ -557,9 +548,9 @@ const Account = () => {
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 4 ? styles.selected : {}}
           onClick={() => {
-            fetchDataSelection("members");
+            // fetchDataSelection("members");
             setSelectedTab(4);
-            renderTable();
+            renderSection();
           }}
         >
           Customers
@@ -568,9 +559,9 @@ const Account = () => {
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 5 ? styles.selected : {}}
           onClick={() => {
-            fetchDataSelection("vehicles/search");
+            // fetchDataSelection("vehicles/search");
             setSelectedTab(5);
-            renderTable();
+            renderSection();
           }}
         >
           Vehicle Listings
@@ -580,7 +571,7 @@ const Account = () => {
           style={selectedTab === 6 ? styles.selected : {}}
           onClick={() => {
             setSelectedTab(6);
-            renderTable();
+            renderSection();
           }}
         >
           Sales Report
@@ -597,7 +588,7 @@ const Account = () => {
       </div>
       <div className="container" style={{ marginLeft: "250px" }}>
         <div className="row">
-          <div>{renderTable()}</div>
+          <div>{renderSection()}</div>
         </div>
       </div>
     </div>
