@@ -64,12 +64,6 @@ const VehicleImage = ({ vin, bodyType, className }) => {
       pickupTruckImage3,
       pickupTruckImage4,
     ],
-    Pickup_truck: [
-      pickupTruckImage1,
-      pickupTruckImage2,
-      pickupTruckImage3,
-      pickupTruckImage4,
-    ],
   };
 
   // Generate a hash from the VIN to use as an index
