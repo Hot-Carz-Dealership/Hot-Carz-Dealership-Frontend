@@ -531,8 +531,9 @@ const ManagerPage = () => {
                   vin={vehicle.VIN_carID}
                   bodyType={vehicle.body}
                 />
-              </td>            </tr>
-          ))}        </tbody>
+              </td>
+              </tr>
+          ))}</tbody>
       </table>
     </div>
   );
@@ -684,8 +685,9 @@ const ManagerPage = () => {
           <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); }}>Sales Report</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
-        </div>
+        {user && (user.employeeType === "superAdmin") && (
+                <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
+            )}        </div>
         <div>
           <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
         </div>
