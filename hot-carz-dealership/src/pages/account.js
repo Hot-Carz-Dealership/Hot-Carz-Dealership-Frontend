@@ -269,18 +269,7 @@ const Account = () => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-          {bids.map((bid, index) => (
-            <tr key={index}>
-              <td>{bid.make}</td>
-              <td>{bid.model}</td>
-              <td>{bid.VIN}</td>
-              <td>{bid.MSRP}</td>
-              <td>{bid.bidAmount}</td>
-              <td>{/* Action buttons */}</td>
-            </tr>
-          ))}
-        </tbody>
+        <tbody> TODO: idk replace this later</tbody>
       </table>
     </div>
   );
@@ -297,16 +286,7 @@ const Account = () => {
             <th>Datetime</th>
           </tr>
         </thead>
-        <tbody>
-          {testDrives.map((testDrive, index) => (
-            <tr key={index}>
-              <td>{testDrive.phone}</td>
-              <td>{testDrive.fullname}</td>
-              <td>{testDrive.car_make_model}</td>
-              <td>{testDrive.appointment_date}</td>
-            </tr>
-          ))}
-        </tbody>
+        <tbody>TODO: idk replace this later</tbody>
       </table>
     </div>
   );
@@ -327,18 +307,7 @@ const Account = () => {
             <th>memberID</th>
           </tr>
         </thead>
-        <tbody>
-          {customers.map((customer, index) => (
-            <tr key={index}>
-              <td>{customer.first_name}</td>
-              <td>{customer.last_name}</td>
-              <td>{customer.phone}</td>
-              <td>{customer.email}</td>
-              <td>{customer.join_date}</td>
-              <td>{customer.memberID}</td>
-            </tr>
-          ))}{" "}
-        </tbody>
+        <tbody>TODO: idk replace this later</tbody>
       </table>
     </div>
   );
@@ -359,21 +328,7 @@ const Account = () => {
             <th>Image</th>
           </tr>
         </thead>
-        <tbody>
-          {vehicleListings.map((vehicle, index) => (
-            <tr key={index}>
-              <td>{vehicle.make}</td>
-              <td>{vehicle.model}</td>
-              <td>{vehicle.year}</td>
-              <td>{vehicle.VIN_carID}</td>
-              <td>{vehicle.viewsOnPage}</td>
-              <td>{vehicle.price}</td>
-              <td>
-                <img src={vehicle.pictureLibraryLink} alt="Vehicle" />
-              </td>
-            </tr>
-          ))}{" "}
-        </tbody>
+        <tbody>TODO: idk replace this later</tbody>
       </table>
     </div>
   );
