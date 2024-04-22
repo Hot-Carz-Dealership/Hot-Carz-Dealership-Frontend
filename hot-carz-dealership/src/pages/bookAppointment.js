@@ -24,6 +24,7 @@ const BookAppointment = () => {
             setUser(resp.data);
           } catch (error) {
             console.log("Not Authenticated");
+            window.location.href = "/signIn"
           }
         })();
       }, []);
