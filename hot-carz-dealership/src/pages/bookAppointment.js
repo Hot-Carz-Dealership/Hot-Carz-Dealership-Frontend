@@ -59,7 +59,7 @@ const BookAppointment = () => {
         
         const response = await fetch(`${BASE_URL}/api/member/book-service-appointment`, requestData);
         const responseData = await response.json();
-
+        window.location.href = "/account";
         
 
     }
