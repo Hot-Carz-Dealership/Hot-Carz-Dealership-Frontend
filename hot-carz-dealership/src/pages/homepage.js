@@ -14,12 +14,18 @@ const HomePage = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    let abortController; // Define abortController variable outside useEffect
+
     const fetchData = async () => {
+      abortController = new AbortController(); // Initialize abortController
       try {
+        // Make both API calls simultaneously
         const [randomVehiclesResponse, userResponse] = await Promise.all([
-          fetchRandomVehicles(),
-          fetchUserData(),
+          fetchRandomVehicles(abortController),
+          fetchUserData(abortController),
         ]);
+
+        // Set state once both responses are received
         setRandomVehicles(randomVehiclesResponse);
         setUser(userResponse);
       } catch (error) {
@@ -28,29 +34,37 @@ const HomePage = () => {
     };
 
     fetchData();
+
+    // Cleanup function to abort requests when component unmounts
+    return () => {
+      if (abortController) {
+        // Abort any ongoing requests
+        abortController.abort();
+      }
+    };
   }, []);
 
-  const fetchRandomVehicles = async () => {
+  const fetchRandomVehicles = async (abortController) => {
     try {
-      const response = await fetch(`${BASE_URL}/api/vehicles/random`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch random vehicles");
-      }
-      const data = await response.json();
-      return data;
+      const response = await httpClient.get(`${BASE_URL}/api/vehicles/random`, {
+        signal: abortController.signal,
+      });
+      return response.data;
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch random vehicles:", error);
       return [];
     }
   };
 
-  const fetchUserData = async () => {
+  const fetchUserData = async (abortController) => {
     try {
-      const resp = await httpClient.get(`${BASE_URL}/@me`);
-      console.log(resp.data);
-      return resp.data;
+      const response = await httpClient.get(`${BASE_URL}/@me`, {
+        signal: abortController.signal,
+      });
+      console.log("User data:", response.data);
+      return response.data;
     } catch (error) {
-      console.log("Not Authenticated");
+      console.error("Failed to fetch user data:", error);
       return null;
     }
   };
@@ -59,8 +73,13 @@ const HomePage = () => {
     return randomVehicles.map((vehicle, index) => (
       <li key={index} style={styles.featuredCarItem}>
         <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
-          <VehicleImage vin={vehicle.VIN_carID} bodyType={vehicle.body} />
+          <VehicleImage
+            className="pr-4"
+            vin={vehicle.VIN_carID}
+            bodyType={vehicle.body}
+          />
           <h2
+            className="flex justify-center items-center h-24  text-4xl  leading-6 "
             style={styles.vehicleName}
           >{`${vehicle.make} ${vehicle.model}`}</h2>
         </Link>
@@ -177,7 +196,10 @@ const HomePage = () => {
           Featured Cars
         </header>
 
-        <ul className="featuredCarList" style={styles.featuredCarList}>
+        <ul
+          className="featuredCarList ml-24 mr-20"
+          style={styles.featuredCarList}
+        >
           {renderRandomVehicles()}
         </ul>
 
