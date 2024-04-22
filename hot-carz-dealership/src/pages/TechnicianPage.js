@@ -2,13 +2,26 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import { BASE_URL } from "../utilities/constants";
 import { useNavigate } from "react-router-dom";
-
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 const styles = {
     tablespacing: {
       marginTop: '20px',
     },
-  
+    modal:{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    },
     table: {
       borderCollapse: "collapse",
       width: "100%",
@@ -87,7 +100,9 @@ const styles = {
       fontSize: "1.2em",
     },
     largeTextStyle: {
-      fontSize: "2.5em",
+      fontSize: "2em",
+    },
+    paper: {
     },
   };
 
@@ -210,6 +225,7 @@ const styles = {
                   <td>{new Date(appointment.appointment_date).toLocaleString()}</td>
                   <td>{appointment.service_name}</td>
                   <td>{appointment.status}</td>
+                  <td><button value={appointment.appointment_id} onClick={() => handleOpen(appointment.appointment_id,appointment.VIN_carID,appointment.appointment_date,appointment.service_name,appointment.status,appointment.comments)}>Edit Appointment</button></td>
                 </tr>
               ))}
             </tbody>
@@ -217,7 +233,138 @@ const styles = {
         </div>
       );
     };
-  
+
+
+    const [apptID, setApptID] = React.useState(null);
+    const [apptVIN, setApptVIN] = React.useState(null);
+    const [apptDate, setApptDate] = React.useState(null);
+    const [apptName, setApptName] = React.useState(null);
+    const [apptStatus, setApptStatus] = React.useState(null);
+    const [apptComment, setApptComment] = React.useState(null);
+
+    const [newStatus, setNewStatus] = React.useState(null);
+
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = (apptID,apptVIN,apptDate,apptName,apptStatus,apptComment) => {
+      setApptID(apptID);
+      setApptVIN(apptVIN);
+      setApptDate(apptDate);
+      setApptName(apptName);
+      setApptStatus(apptStatus);
+      setApptComment(apptComment);
+      setOpen(true);
+    };
+    
+    const handleClose = () => setOpen(false);
+
+
+    const ValueModal = ({ open, aptID, aptVIN, aptDate, aptName, aptStatus, aptComment, onClose }) => {
+    
+      const [value, setValue] = useState('');
+
+      return (
+        <Modal
+          open={open}
+          onClose={onClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <Box sx={styles.modal}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Info for appointment {aptID}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Car Vin: {aptVIN}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Appointment Date: {new Date(aptDate).toLocaleString()}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Appointment Name: {aptName}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Appointment Status: {aptStatus}
+          </Typography>
+          {aptStatus != "Done" ? (
+            <div>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Update Appointment:
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Update Status:
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <select id="newStatus">
+                  <option value={"Scheduled"}>Scheduled</option>
+                  <option value={"Done"}>Done</option>
+                  <option value={"Cancelled"}>Cancelled</option>
+                </select>
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Comment:
+              </Typography>
+              <textarea id="comment" name="comment" rows="4" cols="40" placeholder={aptComment}>
+              </textarea>
+        
+    
+    
+    
+    
+              <Button onClick={() => handleUpdateSubmit(value)}>Update Appointment</Button>
+              </div>
+          ):(
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Comment: {aptComment}
+            </Typography>
+            
+          )}
+          
+          <Button onClick={onClose}>Close</Button>
+        </Box>
+        </Modal>
+      );
+    };
+    const handleStatusChange = (e) =>{
+      setNewStatus(e.target.value)
+    }
+
+    const handleUpdateSubmit = async () =>{
+      var x = document.getElementById("newStatus");
+      var stat = x.value;
+
+      var y = document.getElementById("comment");
+      var comSub = y.value;
+      //value = new appt status
+
+
+      console.log({apptID});
+
+      const data = {
+        appointment_id:apptID,
+        comment:comSub,
+        status: stat,
+      }
+      const requestData = {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Include cookies in the request
+        body: JSON.stringify(data)
+      }
+      const response = await fetch(`${BASE_URL}/api/technician-view-service-appointments/technician-edit`, requestData);
+      const responseData = await response.json();
+    }
+
+
+
+
+
+
+
+
+
     const assignTechnician = (appointmentId, technicianId, sessionId) => {
       const data = {
         appointment_id: appointmentId,
@@ -255,7 +402,7 @@ const styles = {
       <div style={{ minHeight: "80vh" }}> {/* Adjusted minHeight */}
         <div style={{ marginLeft: "", width: "100%", paddingTop: "20vh" }}> {/* Adjusted marginLeft, width, and paddingTop */}
           <div className="container-fluid">
-]            <div className="row justify-content-center">
+            <div className="row justify-content-center">
               <div className="col-lg-10 col-md-12">
               <h1>{user && user.first_name}, today is {currentDate}. Below are your assigned appointments: </h1> 
                 {showTable ? (
@@ -270,7 +417,15 @@ const styles = {
                   </div>
                 )}
               </div>
+
+              <ValueModal open={open} aptID={apptID} aptVIN={apptVIN} aptDate={apptDate} aptName={apptName} aptStatus={apptStatus} aptComment={apptComment} onClose={handleClose} />
+
             </div>
+
+            
+
+
+
           </div>
         </div>
       </div>
