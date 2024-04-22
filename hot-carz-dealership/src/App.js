@@ -17,6 +17,7 @@ import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
 import AddNewVehicle from "./pages/AddNewVehicle";
 import SignUp from "./pages/SignUp";
 import BookAppointment from "./pages/bookAppointment";
+import TechnicianPage from "./pages/TechnicianPage";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
+          <Route path="/TechnicianPage" element={<TechnicianPage/>}/>
           <Route
             path="/create-employee-account"
             element={<CreateEmployeeAccount />}
