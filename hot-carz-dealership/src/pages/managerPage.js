@@ -702,6 +702,8 @@ const ManagerPage = () => {
               ) : (
                 <div style={styles.welcomeScreen}>
                   <h1 style={styles.welcomeScreenHeading}>Hi {user && user.first_name}.</h1>
+                  <img src="logo512.png" alt="Logo" style={{ width: "200px", margin: "0 auto" }} />
+                  <br/>
                   <p style={styles.welcomeScreenText}>Click the button below to get started as {user && user.employeeType}.</p>
                   <button onClick={handleGetStarted} style={styles.welcomeScreenButton} className="btn btn-primary">Get Started</button>
                 </div>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -36,25 +36,32 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function LogIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
-    logInUser(data);
-  };
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  // const [error, setError] = useState("");
 
-  const logInUser = async (data) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     try {
-      const resp = await httpClient.post(`${BASE_URL}/api/login`, {
-        username: data.get("username"),
-        password: data.get("password"),
-      });
+      console.log(username);
+      console.log(password);
+      const loginData = {
+        username,
+        password,
+        // Any additional required fields
+      };
+
+      const resp = await httpClient.post(`${BASE_URL}/api/login`, loginData);
 
       if (resp.status === 200) {
-        window.location.href = "/";
+        // Assuming the backend sets a session or token that needs to be handled
+        // This could be setting a cookie or storing a token in local storage
+        // Example: localStorage.setItem('token', resp.data.token);
+        window.location.href = "/account";
+      } else {
+        // Handle non-200 responses, such as displaying an error message
+        console.error("Login failed:", resp.data);
       }
     } catch (error) {
       console.error("Error occurred while logging in:", error);
@@ -94,6 +101,8 @@ export default function LogIn() {
               name="username"
               autoComplete="username"
               autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -104,6 +113,8 @@ export default function LogIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <Button
