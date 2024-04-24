@@ -543,7 +543,7 @@ const Account = () => {
             renderSection();
           }}
         >
-          Sales Report
+          Past Invoices
         </button>
         <Link to="/add-member-vehicle" className="btn btn-block btn-danger">
           Add new Vehicle

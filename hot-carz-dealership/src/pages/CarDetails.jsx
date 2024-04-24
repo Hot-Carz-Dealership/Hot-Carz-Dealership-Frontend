@@ -244,8 +244,9 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) 
       credentials: 'include', // Include cookies in the request
       body: JSON.stringify(data)
     }
-    //const response = await fetch("endpoint for booking testdrive", requestData);
-    //const responseData = await response.json();
+    const response = await fetch("//localhost:5000/api/member/book-test-drive", requestData);
+    const responseData = await response.json();
+    window.location.href = "/account";
   }
 
 
