@@ -2,6 +2,117 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
+import httpClient from "../httpClient";
+import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dateFormat from 'dateformat';
+
+const styles = {
+  tablespacing: {
+    marginTop: '20px',
+  },
+  modal:{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  },
+  table: {
+    borderCollapse: "collapse",
+    width: "100%",
+    border: "2px solid black",
+  },
+  th: {
+    border: "2px solid black",
+    padding: "8px",
+    textAlign: "left",
+  },
+  td: {
+    border: "2px solid black",
+    padding: "8px",
+    textAlign: "left",
+  },
+  creationButton: {
+    display: "inline-block",
+    padding: "10px 20px",
+    backgroundColor: "red",
+    color: "white",
+    borderRadius: "20px",
+    border: "none",
+    textDecoration: "none",
+    cursor: "pointer",
+    margin: "10px 0",
+  },
+  selected: {
+    backgroundColor: "#007bff",
+    color: "#fff",
+  },
+  edit: {
+    background: "none",
+    border: "none",
+    padding: 0,
+    marginRight: "5px",
+    cursor: "pointer",
+  },
+  delete: {
+    background: "none",
+    border: "none",
+    padding: 0,
+    marginRight: "5px",
+    cursor: "pointer",
+  },
+  editIcon: {
+    width: "20px",
+    height: "20px",
+  },
+  deleteIcon: {
+    width: "20px",
+    height: "20px",
+  },
+  tableWrapper: {
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+    marginBottom: "20px",
+    padding: "10px",
+    backgroundColor: "rgba(128, 128, 128, 0.1)"
+  },
+  welcomeScreen: {
+    textAlign: "center",
+    marginTop: "100px", // Adjust as needed
+    padding: "50px",
+    backgroundColor: "#f0f0f0",
+    borderRadius: "10px",
+  },
+  welcomeScreenHeading: {
+    fontSize: "2.5em",
+    marginBottom: "20px",
+  },
+  welcomeScreenText: {
+    fontSize: "1.2em",
+    marginBottom: "30px",
+  },
+  welcomeScreenButton: {
+    fontSize: "1.2em",
+  },
+  largeTextStyle: {
+    fontSize: "2em",
+  },
+  paper: {
+  },
+};
+
 
 function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   return (
@@ -38,7 +149,109 @@ function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   );
 }
 
-function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive }) {
+function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) {
+
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+  const tomorrow = dayjs().add(1, 'day').set('hour', 9).startOf('hour');
+
+  const [date, setDate] = React.useState(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await httpClient.get("//localhost:5000/@me");
+        const user = resp.data;
+
+        setUser(user);
+        setSessionId(user.employeeID);
+        setLoggedIn(true);
+      } catch (error) {
+        console.log("Not Authenticated or Unauthorized");
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
+
+
+
+
+  const handleOpen = (vehicleVIN) => {
+    if(loggedIn == false){
+      navigate("/login");
+    }
+    setOpen(true);
+    console.log({vehicleVIN});
+    console.log(user.memberID);
+  }
+
+  const ValueModal = ({ open, onClose }) => {
+    
+    const [value, setValue] = useState('');
+    const [newValue, setNewValue] = useState(null);
+
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Box sx={styles.modal}>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Select Date and Time for Test Drive:
+            </Typography>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimePicker name="date" id="date" onChange={(newValue) => setNewValue(newValue)}
+            defaultValue={tomorrow}
+            minDate={tomorrow}
+            views={['year', 'month', 'day', 'hours', 'minutes']}
+          /> 
+        </LocalizationProvider>
+
+          <div>  
+            <Button onClick={() => handleTestdriveSubmit(newValue)}>Submit Test Drive</Button>
+          </div>
+        
+        <Button onClick={onClose}>Close</Button>
+      </Box>
+      </Modal>
+    );
+  };
+  const handleTestdriveSubmit = async (value) =>{
+    var x = document.getElementById("date");
+    var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
+
+    console.log(tdDate);
+    console.log(vehicleVIN);
+
+
+    const data = {
+      VIN_carID: vehicleVIN,
+      appointment_date: tdDate,
+    }
+    const requestData = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Include cookies in the request
+      body: JSON.stringify(data)
+    }
+    const response = await fetch("//localhost:5000/api/member/book-test-drive", requestData);
+    const responseData = await response.json();
+    window.location.href = "/account";
+  }
+
+
+
+
   return (
     <section className="mt-16 max-w-full w-[921px] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -56,17 +269,19 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive }) {
               Schedule a Test Drive
             </h2>
             <button
-              onClick={onScheduleTestDrive}
+              onClick={() => handleOpen(vehicleVIN)}
               className="justify-center self-center px-6 py-2 mt-12 text-base font-medium leading-7 text-white whitespace-nowrap bg-red-700 rounded shadow-md max-md:px-5 max-md:mt-10"
             >
               Schedule
             </button>
+            <ValueModal open={open} onClose={handleClose}/>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 function PurchaseOptions({ onBuyNow, onBid }) {
   const [bidPrice, setBidPrice] = React.useState("");
@@ -134,6 +349,9 @@ function CarDetails() {
   const [vehicleInfo, setVehicleInfo] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  
+
+
 
   useEffect(() => {
     const fetchVehicleInfo = async () => {
@@ -206,6 +424,7 @@ function CarDetails() {
         vehicleName={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
         msrp={`$${vehicleInfo.price}`}
         onScheduleTestDrive={handleScheduleTestDrive}
+        vehicleVIN={vehicleInfo.VIN_carID}
       />
       <PurchaseOptions onBuyNow={handleBuyNow} onBid={handleBid} />
       <Footer />

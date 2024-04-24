@@ -105,6 +105,7 @@ const Account = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Initialize useNavigate
   const [selectedTab, setSelectedTab] = useState(1);
+  const [vehicleListings, setVehicleListings] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -112,6 +113,22 @@ const Account = () => {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         setUser(resp.data);
         setLoading(false);
+        
+        const requestData = {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+        }
+  
+        // Fetch Vehicle Listings
+        const vehicleListingsResponse = await fetch(`${BASE_URL}/api/member/vehicles`, requestData);
+        const vehicleListingsData = await vehicleListingsResponse.json();
+        console.log("Member Vehicle Listings fetched successfully:", vehicleListingsData);
+        setVehicleListings(vehicleListingsData);
+
+
       } catch (error) {
         console.log("Not Authenticated");
         setLoading(false);
@@ -143,7 +160,7 @@ const Account = () => {
         navigate("/managerPage");
         break;
       case "Technician":
-        // navigate("/managerPage");
+        navigate("/technicianpage");
         break;
       default:
         break;
@@ -250,7 +267,6 @@ const Account = () => {
             Log Out
           </Button>
         </div>
-        <p>Modals for Test Drives and Tracker down below</p>
       </section>
     </div>
   );
@@ -320,15 +336,24 @@ const Account = () => {
           <tr>
             <th>Make</th>
             <th>Model</th>
+            <th>Color</th>
             <th>Year</th>
             <th>VIN</th>
-            <th>Page Views</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Image</th>
+            <th>Mileage</th>
           </tr>
         </thead>
-        <tbody>TODO: idk replace this later</tbody>
+        <tbody>
+        {vehicleListings.map(vehicle => (
+                <tr key={vehicle.VIN_carID}>
+                  <td>{vehicle.make}</td>
+                  <td>{vehicle.model}</td>
+                  <td>{vehicle.color}</td>
+                  <td>{vehicle.year}</td>
+                  <td>{vehicle.VIN_carID}</td>
+                  <td>{vehicle.mileage}</td>
+                </tr>
+              ))}
+        </tbody>
       </table>
     </div>
   );
@@ -497,18 +522,7 @@ const Account = () => {
             renderSection();
           }}
         >
-          Test Drives
-        </button>
-        <button
-          className="btn btn-block btn-dark mb-3"
-          style={selectedTab === 4 ? styles.selected : {}}
-          onClick={() => {
-            // fetchDataSelection("members");
-            setSelectedTab(4);
-            renderSection();
-          }}
-        >
-          Customers
+          Service Appointments
         </button>
         <button
           className="btn btn-block btn-dark mb-3"
@@ -529,15 +543,9 @@ const Account = () => {
             renderSection();
           }}
         >
-          Sales Report
+          Past Invoices
         </button>
-        <Link
-          to="/create-employee-account"
-          className="btn btn-block btn-danger mb-3"
-        >
-          Create Employee Acct.
-        </Link>
-        <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
+        <Link to="/add-member-vehicle" className="btn btn-block btn-danger">
           Add new Vehicle
         </Link>
       </div>
