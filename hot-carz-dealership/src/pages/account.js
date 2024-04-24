@@ -545,7 +545,7 @@ const Account = () => {
         >
           Sales Report
         </button>
-        <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
+        <Link to="/add-member-vehicle" className="btn btn-block btn-danger">
           Add new Vehicle
         </Link>
       </div>
