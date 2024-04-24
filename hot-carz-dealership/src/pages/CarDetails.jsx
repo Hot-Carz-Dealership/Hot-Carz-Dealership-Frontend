@@ -280,6 +280,15 @@ function VehicleDetails({
 
 function PurchaseOptions({ onBuyNow, onBid }) {
   const [bidPrice, setBidPrice] = React.useState("");
+  const [financingModalOpen, setFinancingModalOpen] = useState(false);
+
+  const handleOpenFinancingModal = () => {
+    setFinancingModalOpen(true);
+  };
+
+  const handleCloseFinancingModal = () => {
+    setFinancingModalOpen(false);
+  };
 
   const handleBidPriceChange = (event) => {
     setBidPrice(event.target.value);
@@ -297,7 +306,7 @@ function PurchaseOptions({ onBuyNow, onBid }) {
           Purchase At MSRP
         </h2>
         <button
-          onClick={onBuyNow}
+          onClick={handleOpenFinancingModal}
           className="justify-center self-center px-6 py-2 mt-8 text-base font-medium leading-7 text-white bg-red-700 rounded shadow-md max-md:px-5"
         >
           Buy Now
@@ -330,9 +339,43 @@ function PurchaseOptions({ onBuyNow, onBid }) {
           </button>
         </form>
       </div>
+      <FinancingModal
+        open={financingModalOpen}
+        onClose={handleCloseFinancingModal}
+      />
     </section>
   );
 }
+
+const FinancingModal = ({ open, onClose }) => {
+  const navigate = useNavigate();
+  const vehicleVIN = 619;
+  const vehiclePrice = 420.69;
+
+  const userWantsFinancing = () => {
+    console.log("User wants financing");
+    navigate(`/apply-financing?VIN_carID=${vehicleVIN}&price=${vehiclePrice}`);
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+    >
+      <Box sx={styles.modal}>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Do you want financing?
+        </Typography>
+        <div>
+          <Button onClick={userWantsFinancing}>Yes</Button>
+          <Button onClick={onClose}>No</Button>
+        </div>
+      </Box>
+    </Modal>
+  );
+};
 
 function Footer() {
   return (
