@@ -278,7 +278,7 @@ function VehicleDetails({
   );
 }
 
-function PurchaseOptions({ onBuyNow, onBid }) {
+function PurchaseOptions({ onBuyNow, onBid, VIN, price }) {
   const [bidPrice, setBidPrice] = React.useState("");
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
 
@@ -342,19 +342,19 @@ function PurchaseOptions({ onBuyNow, onBid }) {
       <FinancingModal
         open={financingModalOpen}
         onClose={handleCloseFinancingModal}
+        VIN={VIN}
+        price={price}
       />
     </section>
   );
 }
 
-const FinancingModal = ({ open, onClose }) => {
+const FinancingModal = ({ open, onClose, VIN, price }) => {
   const navigate = useNavigate();
-  const vehicleVIN = 619;
-  const vehiclePrice = 420.69;
 
   const userWantsFinancing = () => {
     console.log("User wants financing");
-    navigate(`/apply-financing?VIN_carID=${vehicleVIN}&price=${vehiclePrice}`);
+    navigate(`/apply-financing?VIN_carID=${VIN}&price=${price}`);
   };
 
   return (
@@ -366,7 +366,7 @@ const FinancingModal = ({ open, onClose }) => {
     >
       <Box sx={styles.modal}>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Do you want financing?
+          Do you want to apply for financing?
         </Typography>
         <div>
           <Button onClick={userWantsFinancing}>Yes</Button>
@@ -461,7 +461,12 @@ function CarDetails() {
         onScheduleTestDrive={handleScheduleTestDrive}
         vehicleVIN={vehicleInfo.VIN_carID}
       />
-      <PurchaseOptions onBuyNow={handleBuyNow} onBid={handleBid} />
+      <PurchaseOptions
+        onBuyNow={handleBuyNow}
+        onBid={handleBid}
+        VIN={vehicleInfo.VIN_carID}
+        price={vehicleInfo.price}
+      />
       <Footer />
     </div>
   );

@@ -19,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import BookAppointment from "./pages/bookAppointment";
 import TechnicianPage from "./pages/TechnicianPage";
 import AddMemberVehicle from "./pages/addMemberVehicle";
+import ApplyFinancing from "./pages/ApplyFinancing";
 
 function App() {
   return (
@@ -56,15 +57,15 @@ function App() {
           <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
-          <Route path="/TechnicianPage" element={<TechnicianPage/>}/>
+          <Route path="/TechnicianPage" element={<TechnicianPage />} />
           <Route
             path="/create-employee-account"
             element={<CreateEmployeeAccount />}
           />
           <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
           <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
-          <Route path="/bookAppt" element={<BookAppointment />}/>
-          
+          <Route path="/bookAppt" element={<BookAppointment />} />
+          <Route path="/apply-financing" element={<ApplyFinancing />} />
         </Routes>
       </div>
     </Router>
