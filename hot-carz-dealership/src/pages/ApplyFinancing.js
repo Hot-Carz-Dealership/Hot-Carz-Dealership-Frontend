@@ -1,26 +1,6 @@
-// import React from "react";
-// import { useLocation } from "react-router-dom";
+//ApplyFinancing.js
 
-// const ApplyFinancing = () => {
-//   // Retrieve price and VIN from local storage
-//   const location = useLocation();
-//   const queryParams = new URLSearchParams(location.search);
-//   const price = queryParams.get("price");
-//   const VIN_carID = queryParams.get("VIN_carID");
-
-//   return (
-//     <div>
-//       <h2>Apply for Financing</h2>
-//       <p>Price: {price}</p>
-//       <p>VIN: {VIN_carID}</p>
-//       {/* Additional form elements for financing */}
-//     </div>
-//   );
-// };
-
-// export default ApplyFinancing;
-
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -31,6 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BASE_URL } from "../utilities/constants";
 import { useLocation } from "react-router-dom";
@@ -56,6 +37,19 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function ApplyFinancing() {
+  const [financingModalOpen, setFinancingModalOpen] = useState(false);
+  const [financingTerms, setFinancingTerms] = useState(null);
+
+  const handleAccept = () => {
+    // Handle accepting financing terms...
+    setFinancingModalOpen(false);
+  };
+
+  const handleDeny = () => {
+    // Handle denying financing terms...
+    setFinancingModalOpen(false);
+  };
+
   const [fields, setFields] = React.useState({
     first_name: false,
     last_name: false,
@@ -86,6 +80,10 @@ export default function ApplyFinancing() {
       name === "state_code"
     ) {
       isValid = /^[a-zA-Z]+$/.test(value.trim()); // Only allow letters
+    } else if (name === "email") {
+      isValid = /\S+@\S+\.\S+/.test(value.trim()); // Email validation
+    } else if (name === "phone") {
+      isValid = /^\d{10}$/.test(value.trim()); // Phone number validation
     } else if (name === "address") {
       isValid = value.trim() !== "";
     } else if (name === "zip_code") {
@@ -120,34 +118,79 @@ export default function ApplyFinancing() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       };
 
       try {
         const response = await fetch(
-          `${BASE_URL}/api/financing/apply`,
+          `${BASE_URL}/api/members/update`,
           requestData
         );
         const responseData = await response.json();
 
         // Check if the request was successful
         if (response.ok) {
-          // Handle successful response, such as redirecting the user or displaying a success message
-          console.log(
-            "Financing application submitted successfully:",
-            responseData
-          );
-          // Display alert
-          window.alert("Financing application submitted successfully!");
+          // Handle successful member update response
+          console.log("Member account updated successfully:", responseData);
+
+          // If member account updated successfully, call financing endpoint
+          try {
+            const financingResponse = await fetch(
+              `${BASE_URL}/api/vehicle-purchase/apply-for-financing`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  Vin_carID: queryParams.get("VIN_carID"),
+                  down_payment: formData.get("down_payment"),
+                  monthly_income: formData.get("monthly_income"),
+                  vehicle_cost: queryParams.get("price"),
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "include",
+              }
+            );
+            const financingData = await financingResponse.json();
+
+            // Check if the financing request was successful
+            if (financingResponse.ok) {
+              // Handle successful financing response
+              console.log("Financing terms received:", financingData);
+              // Display modal with financing terms
+              // You can use a state variable to control the visibility of the modal
+              // and another state variable to store the financing terms to be displayed in the modal
+              setFinancingTerms(financingData.financing_terms);
+              setFinancingModalOpen(true);
+            } else {
+              // Handle financing errors
+              console.error(
+                "Error applying for financing:",
+                financingData.message
+              );
+              window.alert(financingData.message);
+              // Display modal with financing error message
+              // setFinancingModalOpen(true);
+              // setFinancingErrorMessage(financingData.message);
+            }
+          } catch (error) {
+            // Handle financing network errors
+            console.error("Financing network error:", error);
+            // Display modal with financing network error message
+            // setFinancingModalOpen(true);
+            // setFinancingErrorMessage("Network error. Please try again later.");
+          }
         } else {
-          // Handle errors, such as displaying an error message to the user
-          console.error(
-            "Error submitting financing application:",
-            responseData.error
-          );
+          // Handle member update errors
+          console.error("Error updating member account:", responseData.error);
+          // Display alert or error message to the user
+          // Example: window.alert("Error updating member account. Please try again.");
         }
       } catch (error) {
         // Handle network errors
         console.error("Network error:", error);
+        // Display alert or error message to the user
+        // Example: window.alert("Network error. Please try again later.");
       }
     } else {
       // If any field is invalid, do not submit the form
@@ -174,6 +217,7 @@ export default function ApplyFinancing() {
           <Typography component="h1" variant="h5">
             Apply for Financing
           </Typography>
+
           <Box
             component="form"
             noValidate
@@ -206,6 +250,39 @@ export default function ApplyFinancing() {
                   onChange={handleChange}
                   error={formSubmitted && !fields.last_name}
                   helperText={formSubmitted && !fields.last_name && "Required"}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.email}
+                  helperText={
+                    formSubmitted &&
+                    !fields.email &&
+                    "Enter a valid email address"
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phone"
+                  label="Phone Number"
+                  name="phone"
+                  onChange={handleChange}
+                  error={formSubmitted && !fields.phone}
+                  helperText={
+                    formSubmitted &&
+                    !fields.phone &&
+                    "Enter a valid 10-digit phone number"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -356,6 +433,73 @@ export default function ApplyFinancing() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+      {/* Financing modal */}
+      <Modal
+        open={financingModalOpen}
+        onClose={() => setFinancingModalOpen(false)}
+        aria-labelledby="financing-modal-title"
+        aria-describedby="financing-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" id="financing-modal-title" gutterBottom>
+            Financing Terms
+          </Typography>
+          {financingTerms && (
+            <div>
+              <Typography variant="body1">
+                Member Yearly Income: ${financingTerms.income.toFixed(2)}
+              </Typography>
+
+              <Typography variant="body1">
+                Down Payment: ${financingTerms.down_payment.toFixed(2)}
+              </Typography>
+              <Typography variant="body1">
+                Financed Amount: ${financingTerms.financed_amount.toFixed(2)}
+              </Typography>
+
+              <Typography variant="body1">
+                Interest Total: ${financingTerms.interest_total.toFixed(2)}
+              </Typography>
+              <Typography variant="body1">
+                Loan Total: ${financingTerms.loan_total.toFixed(2)}
+              </Typography>
+              <Typography variant="body1">
+                Percentage: {financingTerms.percentage}%
+              </Typography>
+              <Typography variant="body1">
+                Remaining Months: {financingTerms.remaining_months}
+              </Typography>
+              <Typography variant="body1">
+                Monthly Payment: $
+                {financingTerms.monthly_payment_sum.toFixed(2)}
+              </Typography>
+            </div>
+          )}
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <Button fullWidth onClick={handleAccept} variant="contained">
+                Accept
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button fullWidth onClick={handleDeny} variant="contained">
+                Deny
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
     </ThemeProvider>
   );
 }
