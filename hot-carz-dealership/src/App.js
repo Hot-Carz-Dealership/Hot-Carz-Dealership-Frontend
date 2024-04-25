@@ -64,7 +64,6 @@ function App() {
             path="/PurchaseConfirmation"
             element={<PurchaseConfirmation />}
           />
-          =========
           <Route
             path="/create-employee-account"
             element={<CreateEmployeeAccount />}
