@@ -15,6 +15,7 @@ import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BASE_URL } from "../utilities/constants";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -56,7 +57,9 @@ export default function ApplyFinancing() {
     }));
   };
 
-  const handleAccept = () => {
+  const navigate = useNavigate();
+
+  const handleAccept = async () => {
     // Check if the entered names match the ones entered before
     // Retrieve entered first name and last name from form data
 
@@ -78,6 +81,53 @@ export default function ApplyFinancing() {
       window.alert(
         "Entered names don't match the ones entered before. Please enter your name again."
       );
+    }
+
+    try {
+      // Make a POST request to your Flask endpoint to insert financing information
+      const response = await fetch(
+        `${BASE_URL}/api/vehicle-purchase/insert-financing`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+
+          body: JSON.stringify({
+            VIN_carID: queryParams.get("VIN_carID"),
+            income: financingTerms.income,
+            credit_score: financingTerms.credit_score,
+            loan_total: financingTerms.loan_total,
+            down_payment: financingTerms.down_payment,
+            percentage: financingTerms.percentage,
+            monthly_payment_sum: financingTerms.monthly_payment_sum,
+            remaining_months: financingTerms.remaining_months,
+          }),
+        }
+      );
+
+      // Check if the request was successful
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(
+          "Financing information inserted successfully:",
+          responseData.message
+        );
+        setFinancingModalOpen(false);
+        navigate(`/addons`);
+      } else {
+        // Handle error response
+        const errorData = await response.json();
+        console.error(
+          "Error inserting financing information:",
+          errorData.message
+        );
+        // Handle errors, display an error message or handle as needed
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      // Handle network errors, display an error message or handle as needed
     }
   };
 
@@ -502,11 +552,14 @@ export default function ApplyFinancing() {
             p: 4,
           }}
         >
-          <Typography variant="h6" id="financing-modal-title" gutterBottom>
+          <Typography variant="h5" id="financing-modal-title" gutterBottom>
             Financing Terms
           </Typography>
           {financingTerms && (
             <div>
+              <Typography variant="body1">
+                Credit Score: {financingTerms.credit_score}
+              </Typography>
               <Typography variant="body1">
                 Member Yearly Income: ${financingTerms.income.toFixed(2)}
               </Typography>
@@ -517,7 +570,9 @@ export default function ApplyFinancing() {
               <Typography variant="body1">
                 Financed Amount: ${financingTerms.financed_amount.toFixed(2)}
               </Typography>
-
+              <Typography variant="body1">
+                VIN: {financingTerms.Vin_carID}
+              </Typography>
               <Typography variant="body1">
                 Interest Total: ${financingTerms.interest_total.toFixed(2)}
               </Typography>
