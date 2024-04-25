@@ -106,6 +106,7 @@ const Account = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [selectedTab, setSelectedTab] = useState(1);
   const [vehicleListings, setVehicleListings] = useState([]);
+  const [serviceAppointments, setServiceAppointments] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -128,6 +129,9 @@ const Account = () => {
         console.log("Member Vehicle Listings fetched successfully:", vehicleListingsData);
         setVehicleListings(vehicleListingsData);
 
+        const serviceResponse = await fetch(`${BASE_URL}/api/members/service-appointments`, requestData);
+        const serviceData = await serviceResponse.json();
+        setServiceAppointments(serviceData);
 
       } catch (error) {
         console.log("Not Authenticated");
@@ -212,7 +216,7 @@ const Account = () => {
       case 3:
         return <TestDrivesTable />;
       case 4:
-        return <CustomersTable />;
+        return <ServiceAppointmentsTable />;
       case 5:
         return <VehicleListingsTable />;
       case 6:
@@ -309,21 +313,32 @@ const Account = () => {
 
   // Similarly, update the other table components in the same way
 
-  const CustomersTable = () => (
+  const ServiceAppointmentsTable = () => (
     <div className="table-responsive">
-      <h2>Customers</h2>
+      <h2>Service Appointments</h2>
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone #</th>
-            <th>Email</th>
-            <th>Join Date</th>
-            <th>memberID</th>
+            <th>Appointment ID</th>
+            <th>Car Vin</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Comment</th>
+            <th>Status</th>
           </tr>
         </thead>
-        <tbody>TODO: idk replace this later</tbody>
+        <tbody>
+        {serviceAppointments.map(appt => (
+                <tr key={appt.appointment_id}>
+                  <td>{appt.appointment_id}</td>
+                  <td>{appt.VIN_carID}</td>
+                  <td>{appt.service_name}</td>
+                  <td>{appt.appointment_date}</td>
+                  <td>{appt.comments}</td>
+                  <td>{appt.status}</td>
+                </tr>
+              ))}
+        </tbody>
       </table>
     </div>
   );
@@ -522,8 +537,17 @@ const Account = () => {
             renderSection();
           }}
         >
-          Service Appointments
+          Test Drives
         </button>
+        <button
+          className="btn btn-block btn-dark mb-3"
+          style={selectedTab === 5 ? styles.selected : {}}
+          onClick={() => {
+            // fetchDataSelection("vehicles/search");
+            setSelectedTab(4);
+            renderSection();
+          }}
+        >Service Appointments</button>
         <button
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 5 ? styles.selected : {}}
