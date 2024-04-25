@@ -40,9 +40,40 @@ export default function ApplyFinancing() {
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
   const [financingTerms, setFinancingTerms] = useState(null);
 
+  const [customerName, setCustomerName] = useState({
+    firstName: "",
+    lastName: "",
+  });
+
+  const handleNameChange = (event) => {
+    const { name, value } = event.target;
+    setCustomerName((prevNames) => ({
+      ...prevNames,
+      [name]: value,
+    }));
+  };
+
   const handleAccept = () => {
-    // Handle accepting financing terms...
-    setFinancingModalOpen(false);
+    // Check if the entered names match the ones entered before
+    if (
+      customerName.firstName === fields.first_name &&
+      customerName.lastName === fields.last_name
+    ) {
+      // Names match, proceed with accepting financing terms
+      // You can perform further actions here
+      console.log(
+        "Financing terms accepted by:",
+        customerName.firstName,
+        customerName.lastName
+      );
+      setFinancingModalOpen(false);
+    } else {
+      // Names don't match, display an error message or handle as needed
+      console.error("Entered names don't match the ones entered before");
+      window.alert(
+        "Entered names don't match the ones entered before. Please enter your name again."
+      );
+    }
   };
 
   const handleDeny = () => {
@@ -486,6 +517,28 @@ export default function ApplyFinancing() {
               </Typography>
             </div>
           )}
+          <TextField
+            required
+            fullWidth
+            id="first_name"
+            label="First Name"
+            name="first_name"
+            onChange={handleNameChange}
+            value={customerName.firstName}
+            error={formSubmitted && !customerName.firstName}
+            helperText={formSubmitted && !customerName.firstName && "Required"}
+          />
+          <TextField
+            required
+            fullWidth
+            id="last_name"
+            label="Last Name"
+            name="last_name"
+            onChange={handleNameChange}
+            value={customerName.lastName}
+            error={formSubmitted && !customerName.lastName}
+            helperText={formSubmitted && !customerName.lastName && "Required"}
+          />
           <Grid container spacing={2} sx={{ mt: 2 }}>
             <Grid item xs={6}>
               <Button fullWidth onClick={handleAccept} variant="contained">
