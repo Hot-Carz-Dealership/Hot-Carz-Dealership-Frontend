@@ -45,6 +45,9 @@ export default function ApplyFinancing() {
     lastName: "",
   });
 
+  const [firstName, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+
   const handleNameChange = (event) => {
     const { name, value } = event.target;
     setCustomerName((prevNames) => ({
@@ -52,25 +55,22 @@ export default function ApplyFinancing() {
       [name]: value,
     }));
   };
+
   const handleAccept = () => {
+    // Check if the entered names match the ones entered before
+    // Retrieve entered first name and last name from form data
+
     console.log("Entered First Name:", customerName.firstName);
     console.log("Entered Last Name:", customerName.lastName);
-    console.log("Stored First Name:", fields.first_name);
-    console.log("Stored Last Name:", fields.last_name);
+    console.log("Stored First Name:", firstName);
+    console.log("Stored Last Name:", lastname);
     // Check if the entered names match the ones entered before
     if (
-      customerName.firstName.trim() === "" || // Check if first name is empty
-      customerName.lastName.trim() === "" || // Check if last name is empty
-      (customerName.firstName.trim() === fields.first_name &&
-        customerName.lastName.trim() === fields.last_name)
+      firstName.trim() === customerName.firstName.trim() &&
+      lastname.trim() === customerName.lastName.trim()
     ) {
       // Names match or are empty, proceed with accepting financing terms
-      // You can perform further actions here
-      console.log(
-        "Financing terms accepted by:",
-        customerName.firstName,
-        customerName.lastName
-      );
+      console.log("Financing terms accepted by:", firstName, lastname);
       setFinancingModalOpen(false);
     } else {
       // Names don't match, display an error message or handle as needed
@@ -148,6 +148,9 @@ export default function ApplyFinancing() {
     // If all fields are valid, submit the form
     if (allFieldsValid) {
       const formData = new FormData(event.currentTarget);
+      setFirstName(formData.get("first_name"));
+      setLastName(formData.get("last_name"));
+
       const requestData = {
         method: "POST",
         body: JSON.stringify({
@@ -527,36 +530,50 @@ export default function ApplyFinancing() {
               <Typography variant="body1">
                 Remaining Months: {financingTerms.remaining_months}
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" gutterBottom>
                 Monthly Payment: $
                 {financingTerms.monthly_payment_sum.toFixed(2)}
               </Typography>
             </div>
           )}
-          <TextField
-            required
-            fullWidth
-            id="first_name"
-            label="First Name"
-            name="firstName"
-            onChange={handleNameChange}
-            value={customerName.firstName}
-            error={formSubmitted && !customerName.firstName}
-            helperText={formSubmitted && !customerName.firstName && "Required"}
-          />
-          <TextField
-            required
-            fullWidth
-            id="last_name"
-            label="Last Name"
-            name="lastName"
-            onChange={handleNameChange}
-            value={customerName.lastName}
-            error={formSubmitted && !customerName.lastName}
-            helperText={formSubmitted && !customerName.lastName && "Required"}
-          />
+          <div>
+            <Typography variant="caption">
+              By Typing you name below this will act as a signature for which
+              you agree to the listed terms
+            </Typography>
+          </div>
 
           <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="first_name"
+                label="First Name"
+                name="firstName"
+                onChange={handleNameChange}
+                value={customerName.firstName}
+                error={formSubmitted && !customerName.firstName}
+                helperText={
+                  formSubmitted && !customerName.firstName && "Required"
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="last_name"
+                label="Last Name"
+                name="lastName"
+                onChange={handleNameChange}
+                value={customerName.lastName}
+                error={formSubmitted && !customerName.lastName}
+                helperText={
+                  formSubmitted && !customerName.lastName && "Required"
+                }
+              />
+            </Grid>
             <Grid item xs={6}>
               <Button fullWidth onClick={handleAccept} variant="contained">
                 Accept
