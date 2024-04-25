@@ -4,28 +4,28 @@ import { BASE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
 import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import dayjs from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dateFormat from 'dateformat';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import dayjs from "dayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dateFormat from "dateformat";
 
 const styles = {
   tablespacing: {
-    marginTop: '20px',
+    marginTop: "20px",
   },
-  modal:{
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
+    bgcolor: "background.paper",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   },
@@ -86,7 +86,7 @@ const styles = {
     borderRadius: "5px",
     marginBottom: "20px",
     padding: "10px",
-    backgroundColor: "rgba(128, 128, 128, 0.1)"
+    backgroundColor: "rgba(128, 128, 128, 0.1)",
   },
   welcomeScreen: {
     textAlign: "center",
@@ -109,37 +109,30 @@ const styles = {
   largeTextStyle: {
     fontSize: "2em",
   },
-  paper: {
-  },
+  paper: {},
 };
 
-
-function VehicleInfo({ vehicleFeatures, vehichleImage }) {
+function VehicleInfo({ vehicleFeatures, vehicleImage }) {
   return (
     <section className="mt-12 max-w-full w-[822px] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
-        <div className="flex flex-col w-[58%] max-md:ml-0 max-md:w-full">
-          {/* <img
-            loading="lazy"
-            src={vehichleImage}
-            alt="Vehicle"
-            className=" mt-20"
-          /> */}{" "}
+        <div className="flex items-center w-[58%] max-md:ml-0 max-md:w-full">
           {/* Use VehicleImage component instead of img tag */}
           <VehicleImage
             vin={vehicleFeatures[0].value}
             bodyType={vehicleFeatures[3].value}
+            className="mx-auto"
           />
         </div>
         <div className="flex flex-col ml-5 w-[42%] max-md:ml-0 max-md:w-full">
-          <div className="flex flex-col self-stretch px-5 my-auto text-xl font-light tracking-normal leading-8 text-black max-md:mt-10">
-            <h2 className="text-4xl font-bold  leading-7 text-center uppercase">
+          <div className="flex flex-col px-5 text-xl font-light tracking-normal leading-8 text-black max-md:mt-10">
+            <h2 className="text-4xl font-bold leading-7 text-center uppercase">
               Vehicle Features
             </h2>
             {vehicleFeatures.map((feature, index) => (
-              <div key={index} className="mt-2 ">
+              <div key={index} className="mt-2">
                 <span className="font-bold">{feature.label}</span> <br />
-                <span className="">{feature.value}</span>
+                <span>{feature.value}</span>
               </div>
             ))}
           </div>
@@ -149,18 +142,21 @@ function VehicleInfo({ vehicleFeatures, vehichleImage }) {
   );
 }
 
-function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) {
-
+function VehicleDetails({
+  vehicleName,
+  msrp,
+  onScheduleTestDrive,
+  vehicleVIN,
+}) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
-  const tomorrow = dayjs().add(1, 'day').set('hour', 9).startOf('hour');
+  const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
 
   const [date, setDate] = React.useState(null);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,23 +173,24 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) 
     };
 
     fetchData();
-  }, [navigate]);
-
-
-
+  }, []);
 
   const handleOpen = (vehicleVIN) => {
-    if(loggedIn == false){
+    if (!loggedIn) {
       navigate("/login");
+      return; // Stop execution if not logged in
     }
     setOpen(true);
-    console.log({vehicleVIN});
-    console.log(user.memberID);
-  }
+    console.log({ vehicleVIN });
+    if (user) {
+      console.log(user.memberID);
+    } else {
+      console.log("User not available");
+    }
+  };
 
   const ValueModal = ({ open, onClose }) => {
-    
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState("");
     const [newValue, setNewValue] = useState(null);
 
     return (
@@ -204,53 +201,57 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) 
         aria-describedby="simple-modal-description"
       >
         <Box sx={styles.modal}>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Select Date and Time for Test Drive:
-            </Typography>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateTimePicker name="date" id="date" onChange={(newValue) => setNewValue(newValue)}
-            defaultValue={tomorrow}
-            minDate={tomorrow}
-            views={['year', 'month', 'day', 'hours', 'minutes']}
-          /> 
-        </LocalizationProvider>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Select Date and Time for Test Drive:
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              name="date"
+              id="date"
+              onChange={(newValue) => setNewValue(newValue)}
+              defaultValue={tomorrow}
+              minDate={tomorrow}
+              views={["year", "month", "day", "hours", "minutes"]}
+            />
+          </LocalizationProvider>
 
-          <div>  
-            <Button onClick={() => handleTestdriveSubmit(newValue)}>Submit Test Drive</Button>
+          <div>
+            <Button onClick={() => handleTestdriveSubmit(newValue)}>
+              Submit Test Drive
+            </Button>
           </div>
-        
-        <Button onClick={onClose}>Close</Button>
-      </Box>
+
+          <Button onClick={onClose}>Close</Button>
+        </Box>
       </Modal>
     );
   };
-  const handleTestdriveSubmit = async (value) =>{
+  const handleTestdriveSubmit = async (value) => {
     var x = document.getElementById("date");
     var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
 
     console.log(tdDate);
     console.log(vehicleVIN);
 
-
     const data = {
       VIN_carID: vehicleVIN,
       appointment_date: tdDate,
-    }
+    };
     const requestData = {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      credentials: 'include', // Include cookies in the request
-      body: JSON.stringify(data)
-    }
-    const response = await fetch("//localhost:5000/api/member/book-test-drive", requestData);
+      credentials: "include", // Include cookies in the request
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(
+      "//localhost:5000/api/member/book-test-drive",
+      requestData
+    );
     const responseData = await response.json();
     window.location.href = "/account";
-  }
-
-
-
+  };
 
   return (
     <section className="mt-16 max-w-full w-[921px] max-md:mt-10">
@@ -274,7 +275,7 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) 
             >
               Schedule
             </button>
-            <ValueModal open={open} onClose={handleClose}/>
+            <ValueModal open={open} onClose={handleClose} />
           </div>
         </div>
       </div>
@@ -282,9 +283,42 @@ function VehicleDetails({ vehicleName, msrp, onScheduleTestDrive , vehicleVIN}) 
   );
 }
 
-
-function PurchaseOptions({ onBuyNow, onBid }) {
+function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   const [bidPrice, setBidPrice] = React.useState("");
+  const [loggedIn, setLoggedIn] = React.useState("");
+  const [financingModalOpen, setFinancingModalOpen] = useState(false);
+  const navigate = useNavigate();
+  // const loggedIn = null;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await httpClient.get("//localhost:5000/@me");
+        const user = resp.data;
+
+        setLoggedIn(true);
+      } catch (error) {
+        console.log("Not Authenticated or Unauthorized");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleOpenFinancingModal = () => {
+    // Check if the user is logged in
+    if (!loggedIn) {
+      // If not logged in, redirect to the login page
+      navigate("/login");
+      return;
+    }
+
+    setFinancingModalOpen(true);
+  };
+
+  const handleCloseFinancingModal = () => {
+    setFinancingModalOpen(false);
+  };
 
   const handleBidPriceChange = (event) => {
     setBidPrice(event.target.value);
@@ -302,7 +336,7 @@ function PurchaseOptions({ onBuyNow, onBid }) {
           Purchase At MSRP
         </h2>
         <button
-          onClick={onBuyNow}
+          onClick={handleOpenFinancingModal}
           className="justify-center self-center px-6 py-2 mt-8 text-base font-medium leading-7 text-white bg-red-700 rounded shadow-md max-md:px-5"
         >
           Buy Now
@@ -335,9 +369,71 @@ function PurchaseOptions({ onBuyNow, onBid }) {
           </button>
         </form>
       </div>
+      <FinancingModal
+        open={financingModalOpen}
+        onClose={handleCloseFinancingModal}
+        VIN={VIN}
+        price={price}
+        vehicleName={vehicleName}
+      />
     </section>
   );
 }
+
+const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
+  const navigate = useNavigate();
+
+  const userWantsFinancing = () => {
+    console.log("User wants financing");
+    navigate(`/apply-financing?VIN_carID=${VIN}&price=${price}`);
+  };
+
+  const userNoFinancing = async () => {
+    console.log("User got money");
+    try {
+      const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies in the request
+        body: JSON.stringify({
+          item_name: vehicleName,
+          item_price: price,
+          VIN_carID: VIN,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add item to cart");
+      }
+
+      // Item added to cart successfully, navigate to addons page
+      navigate("/addons");
+    } catch (error) {
+      console.error("Error adding item to cart:", error.message);
+      // Handle error here, show error message to the user, etc.
+    }
+  };
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+    >
+      <Box sx={styles.modal}>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Do you want to apply for financing?
+        </Typography>
+        <div>
+          <Button onClick={userWantsFinancing}>Yes</Button>
+          <Button onClick={userNoFinancing}>No</Button>
+        </div>
+      </Box>
+    </Modal>
+  );
+};
 
 function Footer() {
   return (
@@ -349,9 +445,6 @@ function CarDetails() {
   const [vehicleInfo, setVehicleInfo] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
-  
-
-
 
   useEffect(() => {
     const fetchVehicleInfo = async () => {
@@ -426,7 +519,13 @@ function CarDetails() {
         onScheduleTestDrive={handleScheduleTestDrive}
         vehicleVIN={vehicleInfo.VIN_carID}
       />
-      <PurchaseOptions onBuyNow={handleBuyNow} onBid={handleBid} />
+      <PurchaseOptions
+        onBuyNow={handleBuyNow}
+        onBid={handleBid}
+        VIN={vehicleInfo.VIN_carID}
+        price={vehicleInfo.price}
+        vehicleName={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+      />
       <Footer />
     </div>
   );
