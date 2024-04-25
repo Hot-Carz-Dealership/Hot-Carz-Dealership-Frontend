@@ -52,14 +52,19 @@ export default function ApplyFinancing() {
       [name]: value,
     }));
   };
-
   const handleAccept = () => {
+    console.log("Entered First Name:", customerName.firstName);
+    console.log("Entered Last Name:", customerName.lastName);
+    console.log("Stored First Name:", fields.first_name);
+    console.log("Stored Last Name:", fields.last_name);
     // Check if the entered names match the ones entered before
     if (
-      customerName.firstName === fields.first_name &&
-      customerName.lastName === fields.last_name
+      customerName.firstName.trim() === "" || // Check if first name is empty
+      customerName.lastName.trim() === "" || // Check if last name is empty
+      (customerName.firstName.trim() === fields.first_name &&
+        customerName.lastName.trim() === fields.last_name)
     ) {
-      // Names match, proceed with accepting financing terms
+      // Names match or are empty, proceed with accepting financing terms
       // You can perform further actions here
       console.log(
         "Financing terms accepted by:",
@@ -145,7 +150,18 @@ export default function ApplyFinancing() {
       const formData = new FormData(event.currentTarget);
       const requestData = {
         method: "POST",
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: JSON.stringify({
+          first_name: formData.get("first_name"),
+          last_name: formData.get("last_name"),
+          email: formData.get("email"),
+          phone: formData.get("phone"),
+          address: formData.get("address"),
+          city: formData.get("city"),
+          state: formData.get("state_code"),
+          zipcode: formData.get("zip_code"),
+          driverID: formData.get("driverID"),
+          SSN: formData.get("ssn"),
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -522,7 +538,7 @@ export default function ApplyFinancing() {
             fullWidth
             id="first_name"
             label="First Name"
-            name="first_name"
+            name="firstName"
             onChange={handleNameChange}
             value={customerName.firstName}
             error={formSubmitted && !customerName.firstName}
@@ -533,12 +549,13 @@ export default function ApplyFinancing() {
             fullWidth
             id="last_name"
             label="Last Name"
-            name="last_name"
+            name="lastName"
             onChange={handleNameChange}
             value={customerName.lastName}
             error={formSubmitted && !customerName.lastName}
             helperText={formSubmitted && !customerName.lastName && "Required"}
           />
+
           <Grid container spacing={2} sx={{ mt: 2 }}>
             <Grid item xs={6}>
               <Button fullWidth onClick={handleAccept} variant="contained">
