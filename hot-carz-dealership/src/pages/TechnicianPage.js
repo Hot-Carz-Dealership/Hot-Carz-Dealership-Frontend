@@ -159,6 +159,13 @@ const styles = {
       fetchData();
     }, [navigate]);
   
+
+    
+  const logOutUser = async () => {
+    await httpClient.post(`${BASE_URL}/api/logout`);
+    window.location.href = "/";
+  };
+
     const handleSelectionChange = (appointmentId) => async (event) => {
       const selectedTechnicianId = event.target.value;
   
@@ -404,7 +411,14 @@ const styles = {
           <div className="container-fluid">
             <div className="row justify-content-center">
               <div className="col-lg-10 col-md-12">
-              <h1>{user && user.first_name}, today is {currentDate}. Below are your assigned appointments: </h1> 
+              <h1>{user && user.first_name}, today is {currentDate}. Below are your assigned appointments:          <Button
+            className="btn btn-block btn-danger "
+            style={styles.bookApptButton}
+            onClick={logOutUser}
+            variant="contained"
+          >
+            Log Out
+          </Button></h1> 
                 {showTable ? (
                   renderTable()
                 ) : (
