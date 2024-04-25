@@ -173,15 +173,20 @@ function VehicleDetails({
     };
 
     fetchData();
-  }, [navigate]);
+  }, []);
 
   const handleOpen = (vehicleVIN) => {
-    if (loggedIn == false) {
+    if (!loggedIn) {
       navigate("/login");
+      return; // Stop execution if not logged in
     }
     setOpen(true);
     console.log({ vehicleVIN });
-    console.log(user.memberID);
+    if (user) {
+      console.log(user.memberID);
+    } else {
+      console.log("User not available");
+    }
   };
 
   const ValueModal = ({ open, onClose }) => {
@@ -278,11 +283,36 @@ function VehicleDetails({
   );
 }
 
-function PurchaseOptions({ onBuyNow, onBid, VIN, price }) {
+function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   const [bidPrice, setBidPrice] = React.useState("");
+  const [loggedIn, setLoggedIn] = React.useState("");
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
+  const navigate = useNavigate();
+  // const loggedIn = null;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await httpClient.get("//localhost:5000/@me");
+        const user = resp.data;
+
+        setLoggedIn(true);
+      } catch (error) {
+        console.log("Not Authenticated or Unauthorized");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleOpenFinancingModal = () => {
+    // Check if the user is logged in
+    if (!loggedIn) {
+      // If not logged in, redirect to the login page
+      navigate("/login");
+      return;
+    }
+
     setFinancingModalOpen(true);
   };
 
@@ -344,12 +374,13 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price }) {
         onClose={handleCloseFinancingModal}
         VIN={VIN}
         price={price}
+        vehicleName={vehicleName}
       />
     </section>
   );
 }
 
-const FinancingModal = ({ open, onClose, VIN, price }) => {
+const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
   const navigate = useNavigate();
 
   const userWantsFinancing = () => {
@@ -357,6 +388,33 @@ const FinancingModal = ({ open, onClose, VIN, price }) => {
     navigate(`/apply-financing?VIN_carID=${VIN}&price=${price}`);
   };
 
+  const userNoFinancing = async () => {
+    console.log("User got money");
+    try {
+      const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies in the request
+        body: JSON.stringify({
+          item_name: vehicleName,
+          item_price: price,
+          VIN_carID: VIN,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add item to cart");
+      }
+
+      // Item added to cart successfully, navigate to addons page
+      navigate("/addons");
+    } catch (error) {
+      console.error("Error adding item to cart:", error.message);
+      // Handle error here, show error message to the user, etc.
+    }
+  };
   return (
     <Modal
       open={open}
@@ -370,7 +428,7 @@ const FinancingModal = ({ open, onClose, VIN, price }) => {
         </Typography>
         <div>
           <Button onClick={userWantsFinancing}>Yes</Button>
-          <Button onClick={onClose}>No</Button>
+          <Button onClick={userNoFinancing}>No</Button>
         </div>
       </Box>
     </Modal>
@@ -466,6 +524,7 @@ function CarDetails() {
         onBid={handleBid}
         VIN={vehicleInfo.VIN_carID}
         price={vehicleInfo.price}
+        vehicleName={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
       />
       <Footer />
     </div>
