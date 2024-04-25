@@ -8,7 +8,7 @@ function Payment() {
         <div className="text-center">
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Payment</h2>
-            <hr className="border-t-2 border-black-300 mb-4" /> {/* Horizontal line */}
+            <hr className="border-t-2 border-black-300 mb-4" /> 
           </div>
           <div className="mb-4">
             <label htmlFor="routingNumber" className="block mb-1"  >Routing Number:</label>
@@ -23,7 +23,7 @@ function Payment() {
             <input type="text" id="signature" className="border border-gray-300 rounded-md p-2 w-full" style={{ width: '50%' }} placeholder="Type your name here" />
           </div>
           <button className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md mb-6">Pay USD</button>
-          <hr className="border-t-2 border-black-300 mb-4" /> {/* Horizontal line */}
+          <hr className="border-t-2 border-black-300 mb-4" /> 
   
           <p className="text-sm text-gray-600">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
         </div>
@@ -37,9 +37,9 @@ function Payment() {
   function Cart({ services, subtotal, taxes, total }) {
     return (
       <section className="flex justify-center items-center text-center bg-gray-100 p-6 border border-gray-300 rounded-lg shadow-md" style={{ width: '30%' }}>
-        <div className="w-full"> {/* Added w-full class to make the section full width */}
+        <div className="w-full">
           <h2 className="text-lg font-semibold mb-6">Order Summary</h2>
-          <hr className="border-t-2 border-gray-300 mb-4" /> {/* Horizontal line */}
+          <hr className="border-t-2 border-gray-300 mb-4" />
           <ul className="mb-6">
             {services.map((service, index) => (
               <li key={index} className="mb-4">
@@ -47,7 +47,7 @@ function Payment() {
                 <p className="text-sm text-gray-600 mb-1">{service.subtitle}</p>
                 <p className="text-base">${service.price}</p>
                 <p className="text-base">Quantity: {service.quantity}</p>
-                <hr className="border-t-2 border-black-300 mb-4" /> {/* Horizontal line */}
+                <hr className="border-t-2 border-black-300 mb-4" /> 
               </li>
             ))}
             {services.length === 0 && <li className="text-sm text-gray-600">No services in cart</li>}
@@ -66,6 +66,8 @@ function Payment() {
   
   
   function PurchaseCheckout() {
+
+    //MOCK DATA
     const services = [
       { title: "Service 1", subtitle: "Service 1 description", price: 50, quantity: 1 },
       { title: "Service 2", subtitle: "Service 2 description", price: 75, quantity: 2 },
