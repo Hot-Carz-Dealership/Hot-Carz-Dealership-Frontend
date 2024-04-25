@@ -19,7 +19,7 @@ import SignUp from "./pages/SignUp";
 import BookAppointment from "./pages/bookAppointment";
 import TechnicianPage from "./pages/TechnicianPage";
 import PurchaseCheckout from "./pages/PurchaseCheckout";
-import PurchaseConfirmation from "./pages/PurchaseConfirmation"
+import PurchaseConfirmation from "./pages/PurchaseConfirmation";
 import AddMemberVehicle from "./pages/addMemberVehicle";
 import ApplyFinancing from "./pages/ApplyFinancing";
 
@@ -51,7 +51,6 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/cars" element={<Cars />} />
           <Route path="/cars/:id" element={<CarDetails />} />
-
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
@@ -59,10 +58,12 @@ function App() {
           <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
-          <Route path="/TechnicianPage" element={<TechnicianPage/>}/>
-          <Route path="/PurchaseCheckout" element={<PurchaseCheckout/>}/>
-          <Route path="/PurchaseConfirmation" element={<PurchaseConfirmation/>}/>
-
+          <Route path="/TechnicianPage" element={<TechnicianPage />} />
+          <Route path="/PurchaseCheckout" element={<PurchaseCheckout />} />
+          <Route
+            path="/PurchaseConfirmation"
+            element={<PurchaseConfirmation />}
+          />
           <Route
             path="/create-employee-account"
             element={<CreateEmployeeAccount />}

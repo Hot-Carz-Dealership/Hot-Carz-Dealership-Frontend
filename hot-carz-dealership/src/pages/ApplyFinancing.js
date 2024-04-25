@@ -15,6 +15,7 @@ import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BASE_URL } from "../utilities/constants";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -45,6 +46,9 @@ export default function ApplyFinancing() {
     lastName: "",
   });
 
+  const [firstName, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+
   const handleNameChange = (event) => {
     const { name, value } = event.target;
     setCustomerName((prevNames) => ({
@@ -53,19 +57,23 @@ export default function ApplyFinancing() {
     }));
   };
 
-  const handleAccept = () => {
+  const navigate = useNavigate();
+
+  const handleAccept = async () => {
+    // Check if the entered names match the ones entered before
+    // Retrieve entered first name and last name from form data
+
+    console.log("Entered First Name:", customerName.firstName);
+    console.log("Entered Last Name:", customerName.lastName);
+    console.log("Stored First Name:", firstName);
+    console.log("Stored Last Name:", lastname);
     // Check if the entered names match the ones entered before
     if (
-      customerName.firstName === fields.first_name &&
-      customerName.lastName === fields.last_name
+      firstName.trim() === customerName.firstName.trim() &&
+      lastname.trim() === customerName.lastName.trim()
     ) {
-      // Names match, proceed with accepting financing terms
-      // You can perform further actions here
-      console.log(
-        "Financing terms accepted by:",
-        customerName.firstName,
-        customerName.lastName
-      );
+      // Names match or are empty, proceed with accepting financing terms
+      console.log("Financing terms accepted by:", firstName, lastname);
       setFinancingModalOpen(false);
     } else {
       // Names don't match, display an error message or handle as needed
@@ -73,6 +81,53 @@ export default function ApplyFinancing() {
       window.alert(
         "Entered names don't match the ones entered before. Please enter your name again."
       );
+    }
+
+    try {
+      // Make a POST request to your Flask endpoint to insert financing information
+      const response = await fetch(
+        `${BASE_URL}/api/vehicle-purchase/insert-financing`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+
+          body: JSON.stringify({
+            VIN_carID: queryParams.get("VIN_carID"),
+            income: financingTerms.income,
+            credit_score: financingTerms.credit_score,
+            loan_total: financingTerms.loan_total,
+            down_payment: financingTerms.down_payment,
+            percentage: financingTerms.percentage,
+            monthly_payment_sum: financingTerms.monthly_payment_sum,
+            remaining_months: financingTerms.remaining_months,
+          }),
+        }
+      );
+
+      // Check if the request was successful
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(
+          "Financing information inserted successfully:",
+          responseData.message
+        );
+        setFinancingModalOpen(false);
+        navigate(`/addons`);
+      } else {
+        // Handle error response
+        const errorData = await response.json();
+        console.error(
+          "Error inserting financing information:",
+          errorData.message
+        );
+        // Handle errors, display an error message or handle as needed
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      // Handle network errors, display an error message or handle as needed
     }
   };
 
@@ -143,9 +198,23 @@ export default function ApplyFinancing() {
     // If all fields are valid, submit the form
     if (allFieldsValid) {
       const formData = new FormData(event.currentTarget);
+      setFirstName(formData.get("first_name"));
+      setLastName(formData.get("last_name"));
+
       const requestData = {
         method: "POST",
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: JSON.stringify({
+          first_name: formData.get("first_name"),
+          last_name: formData.get("last_name"),
+          email: formData.get("email"),
+          phone: formData.get("phone"),
+          address: formData.get("address"),
+          city: formData.get("city"),
+          state: formData.get("state_code"),
+          zipcode: formData.get("zip_code"),
+          driverID: formData.get("driverID"),
+          SSN: formData.get("ssn"),
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -483,11 +552,14 @@ export default function ApplyFinancing() {
             p: 4,
           }}
         >
-          <Typography variant="h6" id="financing-modal-title" gutterBottom>
+          <Typography variant="h5" id="financing-modal-title" gutterBottom>
             Financing Terms
           </Typography>
           {financingTerms && (
             <div>
+              <Typography variant="body1">
+                Credit Score: {financingTerms.credit_score}
+              </Typography>
               <Typography variant="body1">
                 Member Yearly Income: ${financingTerms.income.toFixed(2)}
               </Typography>
@@ -498,7 +570,9 @@ export default function ApplyFinancing() {
               <Typography variant="body1">
                 Financed Amount: ${financingTerms.financed_amount.toFixed(2)}
               </Typography>
-
+              <Typography variant="body1">
+                VIN: {financingTerms.Vin_carID}
+              </Typography>
               <Typography variant="body1">
                 Interest Total: ${financingTerms.interest_total.toFixed(2)}
               </Typography>
@@ -511,35 +585,50 @@ export default function ApplyFinancing() {
               <Typography variant="body1">
                 Remaining Months: {financingTerms.remaining_months}
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" gutterBottom>
                 Monthly Payment: $
                 {financingTerms.monthly_payment_sum.toFixed(2)}
               </Typography>
             </div>
           )}
-          <TextField
-            required
-            fullWidth
-            id="first_name"
-            label="First Name"
-            name="first_name"
-            onChange={handleNameChange}
-            value={customerName.firstName}
-            error={formSubmitted && !customerName.firstName}
-            helperText={formSubmitted && !customerName.firstName && "Required"}
-          />
-          <TextField
-            required
-            fullWidth
-            id="last_name"
-            label="Last Name"
-            name="last_name"
-            onChange={handleNameChange}
-            value={customerName.lastName}
-            error={formSubmitted && !customerName.lastName}
-            helperText={formSubmitted && !customerName.lastName && "Required"}
-          />
+          <div>
+            <Typography variant="caption">
+              By Typing you name below this will act as a signature for which
+              you agree to the listed terms
+            </Typography>
+          </div>
+
           <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="first_name"
+                label="First Name"
+                name="firstName"
+                onChange={handleNameChange}
+                value={customerName.firstName}
+                error={formSubmitted && !customerName.firstName}
+                helperText={
+                  formSubmitted && !customerName.firstName && "Required"
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                required
+                fullWidth
+                id="last_name"
+                label="Last Name"
+                name="lastName"
+                onChange={handleNameChange}
+                value={customerName.lastName}
+                error={formSubmitted && !customerName.lastName}
+                helperText={
+                  formSubmitted && !customerName.lastName && "Required"
+                }
+              />
+            </Grid>
             <Grid item xs={6}>
               <Button fullWidth onClick={handleAccept} variant="contained">
                 Accept
@@ -570,5 +659,192 @@ const states = [
     value: "AZ",
     label: "Arizona",
   },
-  // Add other states as needed
+  {
+    value: "AR",
+    label: "Arkansas",
+  },
+  {
+    value: "CA",
+    label: "California",
+  },
+  {
+    value: "CO",
+    label: "Colorado",
+  },
+  {
+    value: "CT",
+    label: "Connecticut",
+  },
+  {
+    value: "DE",
+    label: "Delaware",
+  },
+  {
+    value: "FL",
+    label: "Florida",
+  },
+  {
+    value: "GA",
+    label: "Georgia",
+  },
+  {
+    value: "HI",
+    label: "Hawaii",
+  },
+  {
+    value: "ID",
+    label: "Idaho",
+  },
+  {
+    value: "IL",
+    label: "Illinois",
+  },
+  {
+    value: "IN",
+    label: "Indiana",
+  },
+  {
+    value: "IA",
+    label: "Iowa",
+  },
+  {
+    value: "KS",
+    label: "Kansas",
+  },
+  {
+    value: "KY",
+    label: "Kentucky",
+  },
+  {
+    value: "LA",
+    label: "Louisiana",
+  },
+  {
+    value: "ME",
+    label: "Maine",
+  },
+  {
+    value: "MD",
+    label: "Maryland",
+  },
+  {
+    value: "MA",
+    label: "Massachusetts",
+  },
+  {
+    value: "MI",
+    label: "Michigan",
+  },
+  {
+    value: "MN",
+    label: "Minnesota",
+  },
+  {
+    value: "MS",
+    label: "Mississippi",
+  },
+  {
+    value: "MO",
+    label: "Missouri",
+  },
+  {
+    value: "MT",
+    label: "Montana",
+  },
+  {
+    value: "NE",
+    label: "Nebraska",
+  },
+  {
+    value: "NV",
+    label: "Nevada",
+  },
+  {
+    value: "NH",
+    label: "New Hampshire",
+  },
+  {
+    value: "NJ",
+    label: "New Jersey",
+  },
+  {
+    value: "NM",
+    label: "New Mexico",
+  },
+  {
+    value: "NY",
+    label: "New York",
+  },
+  {
+    value: "NC",
+    label: "North Carolina",
+  },
+  {
+    value: "ND",
+    label: "North Dakota",
+  },
+  {
+    value: "OH",
+    label: "Ohio",
+  },
+  {
+    value: "OK",
+    label: "Oklahoma",
+  },
+  {
+    value: "OR",
+    label: "Oregon",
+  },
+  {
+    value: "PA",
+    label: "Pennsylvania",
+  },
+  {
+    value: "RI",
+    label: "Rhode Island",
+  },
+  {
+    value: "SC",
+    label: "South Carolina",
+  },
+  {
+    value: "SD",
+    label: "South Dakota",
+  },
+  {
+    value: "TN",
+    label: "Tennessee",
+  },
+  {
+    value: "TX",
+    label: "Texas",
+  },
+  {
+    value: "UT",
+    label: "Utah",
+  },
+  {
+    value: "VT",
+    label: "Vermont",
+  },
+  {
+    value: "VA",
+    label: "Virginia",
+  },
+  {
+    value: "WA",
+    label: "Washington",
+  },
+  {
+    value: "WV",
+    label: "West Virginia",
+  },
+  {
+    value: "WI",
+    label: "Wisconsin",
+  },
+  {
+    value: "WY",
+    label: "Wyoming",
+  },
 ];
