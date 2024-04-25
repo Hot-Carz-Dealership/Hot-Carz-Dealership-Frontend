@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
+import Button from "@mui/material/Button";
 
 
 // to-do
@@ -156,7 +157,10 @@ const ManagerPage = () => {
     setShowTable(true);
   };
 
-
+  const logOutUser = async () => {
+    await httpClient.post(`${BASE_URL}/api/logout`);
+    window.location.href = "/";
+  };
   const fetchData = async () => {
     try {
       // Fetch service appointments
@@ -1095,7 +1099,18 @@ const ManagerPage = () => {
           )}        </div>
         <div>
           <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
+
         </div>
+
+        <Button
+            className="btn btn-block btn-danger "
+            style={styles.bookApptButton}
+            onClick={logOutUser}
+            variant="contained"
+          >
+            Log Out
+          </Button>
+          
       </div>
 
       <div style={{ marginLeft: "200px", width: "calc(100% - 200px)" }}>
