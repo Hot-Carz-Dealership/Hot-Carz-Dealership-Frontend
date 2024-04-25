@@ -51,7 +51,6 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/cars" element={<Cars />} />
           <Route path="/cars/:id" element={<CarDetails />} />
-
           <Route path="/services" element={<Services />} />
           <Route path="/account" element={<Account />} />
           <Route path="/logIn" element={<LogIn />} />
@@ -59,14 +58,13 @@ function App() {
           <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
           <Route path="/managerPage" element={<ManagerPage />} />
           <Route path="/editAccount" element={<EditAccount />} />
-
           <Route path="/TechnicianPage" element={<TechnicianPage />} />
           <Route path="/PurchaseCheckout" element={<PurchaseCheckout />} />
           <Route
             path="/PurchaseConfirmation"
             element={<PurchaseConfirmation />}
           />
-
+          =========
           <Route
             path="/create-employee-account"
             element={<CreateEmployeeAccount />}
