@@ -20,6 +20,7 @@ import BookAppointment from "./pages/bookAppointment";
 import TechnicianPage from "./pages/TechnicianPage";
 import PurchaseCheckout from "./pages/PurchaseCheckout";
 import PurchaseConfirmation from "./pages/PurchaseConfirmation"
+import AddMemberVehicle from "./pages/addMemberVehicle";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
             element={<CreateEmployeeAccount />}
           />
           <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
+          <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
           <Route path="/bookAppt" element={<BookAppointment />}/>
           
         </Routes>
