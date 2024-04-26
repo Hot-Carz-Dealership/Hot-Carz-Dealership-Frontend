@@ -2,6 +2,36 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
+
+const getcart = () => {
+  //this gets the items from the cart
+
+
+  fetch(`${BASE_URL}/member/cart`,{
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+
+    }
+
+  })
+
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
 function Payment() {
     return (
       <section className="flex justify-center items-center" style={{ flex: '1', marginRight: '10%', marginLeft: '10%' }}>
