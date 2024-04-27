@@ -184,62 +184,6 @@ useEffect(() => {
     
 };
 
-const styles = {
-    container: {
-        display: 'flex',
-    },
-    sidebar: {
-        flex: '0 0 200px',
-        backgroundColor: '#f4f4f4',
-        padding: '20px',
-    },
-    sidebarButton: {
-        display: 'block',
-        padding: '10px 20px',
-        backgroundColor: '#333',
-        color: 'white',
-        borderRadius: '5px',
-        textDecoration: 'none',
-        marginBottom: '10px',
-    },
-    mainContent: {
-        flex: '1',
-        padding: '20px',
-    },
-    heading: {
-        marginBottom: '20px',
-        fontSize: '24px',
-        fontWeight: 'bold',
-    },
-    form: {
-        width: '100%',
-        maxWidth: '400px',
-    },
-    formGroup: {
-        marginBottom: '20px',
-    },
-    label: {
-        display: 'block',
-        marginBottom: '5px',
-        fontWeight: 'bold',
-    },
-    input: {
-        width: '100%',
-        padding: '10px',
-        fontSize: '16px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-        boxSizing: 'border-box',
-    },
-    submitButton: {
-        backgroundColor: '#333',
-        color: 'white',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '16px',
-    },
-};
+
 
 export default CreateEmployeeAccount;
