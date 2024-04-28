@@ -16,7 +16,6 @@ import dateFormat from "dateformat";
 
 import styles from "../css/cars.css";
 
-
 function VehicleInfo({ vehicleFeatures, vehicleImage }) {
   return (
     <section className="mt-12 max-w-full w-[822px] max-md:mt-10">
@@ -66,7 +65,7 @@ function VehicleDetails({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
         setUser(user);
@@ -151,7 +150,7 @@ function VehicleDetails({
       body: JSON.stringify(data),
     };
     const response = await fetch(
-      "//localhost:5000/api/member/book-test-drive",
+      `${BASE_URL}/api/member/book-test-drive`,
       requestData
     );
     const responseData = await response.json();
@@ -198,7 +197,7 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
         setLoggedIn(true);
@@ -314,7 +313,7 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
       }
 
       // Item added to cart successfully, navigate to addons page
-      navigate("/PurchaseCheckout");
+      navigate("/addons");
     } catch (error) {
       console.error("Error adding item to cart:", error.message);
       // Handle error here, show error message to the user, etc.

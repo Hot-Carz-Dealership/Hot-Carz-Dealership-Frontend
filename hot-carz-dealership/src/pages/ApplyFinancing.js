@@ -115,8 +115,7 @@ export default function ApplyFinancing() {
           responseData.message
         );
         setFinancingModalOpen(false);
-        navigate(`/PurchaseCheckout`); //CHANGE THIS BACK
-      } else {
+        navigate(`/addons`);
         // Handle error response
         const errorData = await response.json();
         console.error(

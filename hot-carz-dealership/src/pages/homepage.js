@@ -10,7 +10,6 @@ import VehicleImage from "../utilities/VehicleImage";
 
 import styles from "../css/loginhome.css";
 
-
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
 
@@ -74,54 +73,48 @@ const HomePage = () => {
 
   const renderRandomVehicles = () => {
     return randomVehicles.map((vehicle, index) => (
-      <li key={index} style={styles.featuredCarItem}>
-        <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
-          <VehicleImage
-            className="pr-4"
-            vin={vehicle.VIN_carID}
-            bodyType={vehicle.body}
-          />
-          <h2
-            className="flex justify-center items-center h-24  text-4xl  leading-6 "
-            style={styles.vehicleName}
-          >{`${vehicle.make} ${vehicle.model}`}</h2>
+      <li key={index} className="text-center">
+        <Link
+          to={`/cars/${vehicle.VIN_carID}`}
+          className="block text-black no-underline"
+        >
+          <div className="flex flex-col items-center">
+            <div className="h-auto w-auto mb-2">
+              <VehicleImage
+                className="w-full  "
+                vin={vehicle.VIN_carID}
+                bodyType={vehicle.body}
+              />
+            </div>
+            <h2 className="text-xl font-semibold mt-auto">{`${vehicle.make} ${vehicle.model}`}</h2>
+          </div>
         </Link>
       </li>
     ));
   };
 
   const renderWelcomeMessage = () => {
-    if (user) {
-      return (
-        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
-          Welcome to Hot Carz {user.first_name}
-        </header>
-      );
-    } else {
-      return (
-        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
-          Welcome to Hot Carz{" "}
-        </header>
-      );
-    }
+    const welcomeText = user
+      ? `Welcome to Hot Carz ${user.first_name}`
+      : `Welcome to Hot Carz`;
+    return (
+      <header className="flex justify-center items-center h-24 text-4xl font-bold leading-6 ">
+        {welcomeText}
+      </header>
+    );
   };
-
-
 
   return (
     <div className="homepage" style={styles.homepage}>
       {/* Header */}
       {renderWelcomeMessage()}
 
-      <div className="carDisplay" style={styles.carDisplay}>
+      <div className="carDisplay p-4" style={styles.carDisplay}>
         <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
           Featured Cars
         </header>
 
-        <ul
-          className="featuredCarList ml-24 mr-20"
-          style={styles.featuredCarList}
-        >
+        <ul className="featuredCarList grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {renderRandomVehicles()}
         </ul>
 
