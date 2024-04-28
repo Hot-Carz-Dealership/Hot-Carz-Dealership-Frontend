@@ -254,7 +254,7 @@ const Account = () => {
 
   const VehicleListingsTable = () => (
     <div className="table-responsive">
-      <h2>Vehicle Listings</h2>
+      <h2>Owned Vehicles</h2>
       <table className="table table-bordered">
         <thead>
           <tr>
@@ -466,7 +466,7 @@ const Account = () => {
             renderSection();
           }}
         >
-          Vehicle Listings
+          Owned Vehicles
         </button>
         <button
           className="btn btn-block btn-dark mb-3"
