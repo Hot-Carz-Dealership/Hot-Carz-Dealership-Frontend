@@ -14,6 +14,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import httpClient from "../httpClient";
 import { BASE_URL } from "../utilities/constants";
+import styles from "../css/loginhome.css";
+
 
 function Copyright(props) {
   return (

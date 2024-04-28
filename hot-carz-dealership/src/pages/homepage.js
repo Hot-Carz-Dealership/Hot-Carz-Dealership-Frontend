@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 import httpClient from "../httpClient";
 import VehicleImage from "../utilities/VehicleImage";
 
+import styles from "../css/loginhome.css";
+
+
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
 
@@ -103,88 +106,7 @@ const HomePage = () => {
     }
   };
 
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
 
-      //removed the bg color for now since most of the pages have a white background
-      // backgroundColor: "#f5f5f5", // set background color for the entire website and not chopped up
-    },
-    welcome: {
-      paddingTop: "20px",
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-      fontFamily: "Palatino",
-    },
-    carDisplay: {
-      marginTop: "",
-      padding: "20px",
-      borderRadius: "5px",
-    },
-    carDisplayTitle: {
-      fontSize: "1.5em",
-      color: "red",
-    },
-    featuredCarList: {
-      listStyle: "none",
-      padding: 0,
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    featuredCarItem: {
-      textAlign: "center",
-      flex: "1",
-    },
-    featuredCarImage: {
-      height: "220px",
-      width: "340px",
-      margin: "0 auto",
-    },
-    searchButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-    },
-    servicesItem: {
-      marginLeft: "2%",
-      marginRight: "2%",
-      width: "30%",
-      textAlign: "center",
-      display: "inline-block",
-      marginBottom: "20px",
-    },
-    serviceImage: {
-      height: "200px",
-      width: "300px",
-      margin: "0 auto",
-    },
-    servicesDisplayTitle: {
-      color: "red",
-    },
-    price: {
-      color: "red",
-    },
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginBottom: "20px",
-      marginTop: "10px", // Add margin to separate from other content
-    },
-    footer: {
-      marginTop: "32px",
-      width: "100%",
-      backgroundColor: "black",
-      minHeight: "287px",
-      maxWidth: "100%",
-    },
-    vehicleName: {
-      color: "black",
-      textDecoration: "none", // Remove underline
-    },
-  };
 
   return (
     <div className="homepage" style={styles.homepage}>

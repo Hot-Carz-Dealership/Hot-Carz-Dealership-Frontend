@@ -5,84 +5,12 @@ import httpClient from "../httpClient";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL, FINANCE_URL } from "../utilities/constants";
 
+import styles from "../css/editaccount.css";
+
+
 const EditAccount = () => {
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
-    },
-    welcome: {
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-    },
-    carDisplay: {
-      marginTop: "20px",
-      backgroundColor: "#f5f5f5",
-      padding: "20px",
-      borderRadius: "5px",
-    },
-    carDisplayTitle: {
-      fontSize: "1.5em",
-      color: "red",
-    },
-
-    featuredCarList: {
-      listStyle: "none",
-      padding: 0,
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    featuredCarItem: {
-      textAlign: "center",
-      flex: "1",
-    },
-
-    featuredCarImage: {
-      height: "300px",
-      width: "300px",
-      margin: "0 auto",
-    },
-
-    searchButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-    },
-
-    servicesItem: {
-      marginLeft: "2%",
-      marginRight: "2%",
-      width: "30%",
-      textAlign: "center",
-      display: "inline-block",
-      marginBottom: "20px",
-    },
-    serviceImage: {
-      height: "200px",
-      width: "300px",
-      margin: "0 auto",
-    },
-    servicesDisplayTitle: {
-      color: "red",
-      textAlign: "center",
-      fontSize: "3em",
-    },
-    price: {
-      color: "red",
-    },
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginTop: "10px", // Add margin to separate from other content
-      marginLeft: "10px",
-      justifyContent: "center",
-    },
-    listAlign: {
-      justifyContent: "left",
-    },
-  };
+  
+  
 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Initialize useNavigate

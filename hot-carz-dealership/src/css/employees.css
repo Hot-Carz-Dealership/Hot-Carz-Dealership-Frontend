@@ -1,0 +1,112 @@
+.tablespacing {
+    marginTop: 20px;
+  }
+  
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 2px solid black;
+  }
+  
+  .th {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .td {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .creationButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 10px 0;
+  }
+  
+  .selected {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .edit {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .delete {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .editIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .deleteIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .tableWrapper {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+  
+  .welcomeScreen {
+    text-align: center;
+    margin-top: 100px;
+    padding: 50px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+  }
+  
+  .welcomeScreenHeading {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  
+  .welcomeScreenText {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+  }
+  
+  .welcomeScreenButton {
+    font-size: 1.2em;
+  }
+  
+  .largeTextStyle {
+    font-size: 2em;
+  }
+  
+  .paper {}
+  
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    border: 2px solid #000;
+    box-shadow: 24;
+    padding: 4px;
+  }
+  

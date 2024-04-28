@@ -5,6 +5,9 @@ import { BASE_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import styles from "../css/creation.css";
+
+
 const AddMemberVehicle = () => {
 
   const [user, setUser] = useState(null);
@@ -569,64 +572,6 @@ useEffect(() => {
     </div>
   );
 
-};
-
-const styles = {
-  container: {
-    display: "flex",
-  },
-  sidebar: {
-    flex: "0 0 200px",
-    backgroundColor: "#f4f4f4",
-    padding: "20px",
-  },
-  sidebarButton: {
-    display: "block",
-    padding: "10px 20px",
-    backgroundColor: "#333",
-    color: "white",
-    borderRadius: "5px",
-    textDecoration: "none",
-    marginBottom: "10px",
-  },
-  mainContent: {
-    flex: "1",
-    padding: "20px",
-  },
-  heading: {
-    marginBottom: "20px",
-    fontSize: "24px",
-    fontWeight: "bold",
-  },
-  form: {
-    width: "100%",
-    maxWidth: "400px",
-    margin: "0 auto",
-  },
-  formGroup: {
-    marginBottom: "20px",
-  },
-  label: {
-    display: "block",
-    marginBottom: "5px",
-    fontWeight: "bold",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-  submitButton: {
-    display: "block",
-    width: "100%",
-    padding: "10px",
-    backgroundColor: "#333",
-    color: "white",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-  },
 };
 
 export default AddMemberVehicle;
