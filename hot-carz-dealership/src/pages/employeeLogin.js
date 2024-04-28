@@ -2,6 +2,9 @@ import React from "react";
 import httpClient from "../httpClient";
 import { useState } from "react";
 
+import styles from "../css/loginhome.css";
+
+
 const EmployeeLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,30 +18,6 @@ const EmployeeLogIn = () => {
     if (resp.status === 200) {
       window.location.href = "/managerPage";
     }
-  };
-
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
-    },
-    welcome: {
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-    },
-
-    servicesDisplayTitle: {
-      color: "red",
-      fontSize: "3em",
-    },
-
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginTop: "10px", // Add margin to separate from other content
-    },
   };
 
   return (
