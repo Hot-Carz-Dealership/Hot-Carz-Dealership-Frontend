@@ -6,100 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import "../Account.css"; // Import the CSS file for styling
 
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-  },
-  buttonsContainer: {
-    backgroundColor: "black",
-    color: "white",
-    padding: "10px",
-    height: "100vh",
-    overflowY: "auto",
-  },
-  modalContainer: {
-    flex: 1,
-  },
-  modalButton: {
-    display: "block",
-    marginBottom: "10px",
-    backgroundColor: "black",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    padding: "10px",
-  },
-  tableContainer: {
-    flex: 1,
-    width: "100%",
-  },
-  table: {
-    borderCollapse: "collapse",
-    width: "100%",
-    border: "2px solid black",
-  },
-  th: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
-  td: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
+import styles from "../css/employees.css";
 
-  creationButton: {
-    display: "inline-block",
-    padding: "10px 20px",
-    backgroundColor: "red",
-    color: "white",
-    borderRadius: "20px",
-    border: "none",
-    textDecoration: "none",
-    cursor: "pointer",
-    margin: "10px 0",
-  },
 
-  selected: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-  },
-
-  edit: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  delete: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  editIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  deleteIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  bookApptButton: {
-    backgroundColor: "red",
-    color: "white",
-    padding: "5px 10px",
-    marginTop: "10px", // Add margin to separate from other content
-    marginLeft: "10px",
-    justifyContent: "center",
-  },
-};
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -158,7 +67,7 @@ const Account = () => {
   if (user.employeeType) {
     switch (user.employeeType) {
       case "superAdmin":
-        navigate("/superAdmin");
+        navigate("/managerPage");
         break;
       case "Manager":
         navigate("/managerPage");

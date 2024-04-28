@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import httpClient from "../httpClient";
 import VehicleImage from "../utilities/VehicleImage";
 
+import styles from "../css/loginhome.css";
+
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
 
@@ -71,119 +73,35 @@ const HomePage = () => {
 
   const renderRandomVehicles = () => {
     return randomVehicles.map((vehicle, index) => (
-      <li key={index} style={styles.featuredCarItem}>
-        <Link to={`/cars/${vehicle.VIN_carID}`} style={styles.vehicleName}>
-          <VehicleImage
-            className="pr-4"
-            vin={vehicle.VIN_carID}
-            bodyType={vehicle.body}
-          />
-          <h2
-            className="flex justify-center items-center h-24  text-4xl  leading-6 "
-            style={styles.vehicleName}
-          >{`${vehicle.make} ${vehicle.model}`}</h2>
+      <li key={index} className="text-center">
+        <Link
+          to={`/cars/${vehicle.VIN_carID}`}
+          className="block text-black no-underline"
+        >
+          <div className="flex flex-col items-center">
+            <div className="h-auto w-auto mb-2">
+              <VehicleImage
+                className="w-full  "
+                vin={vehicle.VIN_carID}
+                bodyType={vehicle.body}
+              />
+            </div>
+            <h2 className="text-xl font-semibold mt-auto">{`${vehicle.make} ${vehicle.model}`}</h2>
+          </div>
         </Link>
       </li>
     ));
   };
 
   const renderWelcomeMessage = () => {
-    if (user) {
-      return (
-        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
-          Welcome to Hot Carz {user.first_name}
-        </header>
-      );
-    } else {
-      return (
-        <header className="flex justify-center items-center h-24  text-4xl font-bold leading-6 ">
-          Welcome to Hot Carz{" "}
-        </header>
-      );
-    }
-  };
-
-  const styles = {
-    homepage: {
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif",
-
-      //removed the bg color for now since most of the pages have a white background
-      // backgroundColor: "#f5f5f5", // set background color for the entire website and not chopped up
-    },
-    welcome: {
-      paddingTop: "20px",
-      fontSize: "2em",
-      color: "black",
-      fontWeight: "bold",
-      fontFamily: "Palatino",
-    },
-    carDisplay: {
-      marginTop: "",
-      padding: "20px",
-      borderRadius: "5px",
-    },
-    carDisplayTitle: {
-      fontSize: "1.5em",
-      color: "red",
-    },
-    featuredCarList: {
-      listStyle: "none",
-      padding: 0,
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    featuredCarItem: {
-      textAlign: "center",
-      flex: "1",
-    },
-    featuredCarImage: {
-      height: "220px",
-      width: "340px",
-      margin: "0 auto",
-    },
-    searchButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-    },
-    servicesItem: {
-      marginLeft: "2%",
-      marginRight: "2%",
-      width: "30%",
-      textAlign: "center",
-      display: "inline-block",
-      marginBottom: "20px",
-    },
-    serviceImage: {
-      height: "200px",
-      width: "300px",
-      margin: "0 auto",
-    },
-    servicesDisplayTitle: {
-      color: "red",
-    },
-    price: {
-      color: "red",
-    },
-    bookApptButton: {
-      backgroundColor: "red",
-      color: "white",
-      padding: "5px 10px",
-      marginBottom: "20px",
-      marginTop: "10px", // Add margin to separate from other content
-    },
-    footer: {
-      marginTop: "32px",
-      width: "100%",
-      backgroundColor: "black",
-      minHeight: "287px",
-      maxWidth: "100%",
-    },
-    vehicleName: {
-      color: "black",
-      textDecoration: "none", // Remove underline
-    },
+    const welcomeText = user
+      ? `Welcome to Hot Carz ${user.first_name}`
+      : `Welcome to Hot Carz`;
+    return (
+      <header className="flex justify-center items-center h-24 text-4xl font-bold leading-6 ">
+        {welcomeText}
+      </header>
+    );
   };
 
   return (
@@ -191,15 +109,12 @@ const HomePage = () => {
       {/* Header */}
       {renderWelcomeMessage()}
 
-      <div className="carDisplay" style={styles.carDisplay}>
+      <div className="carDisplay p-4" style={styles.carDisplay}>
         <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
           Featured Cars
         </header>
 
-        <ul
-          className="featuredCarList ml-24 mr-20"
-          style={styles.featuredCarList}
-        >
+        <ul className="featuredCarList grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {renderRandomVehicles()}
         </ul>
 

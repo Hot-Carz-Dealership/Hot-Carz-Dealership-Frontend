@@ -1,7 +1,6 @@
-/* Account.css */
 .homepage {
   text-align: center;
-  /* font-family: Arial, sans-serif; */
+  font-family: Arial, sans-serif;
 }
 
 .welcome {
@@ -65,7 +64,7 @@
 }
 
 .bookApptButton {
-  background: red;
+  background-color: red;
   color: white;
   padding: 5px 10px;
   margin-top: 10px;

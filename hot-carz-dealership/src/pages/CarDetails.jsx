@@ -14,103 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dateFormat from "dateformat";
 
-const styles = {
-  tablespacing: {
-    marginTop: "20px",
-  },
-  modal: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  },
-  table: {
-    borderCollapse: "collapse",
-    width: "100%",
-    border: "2px solid black",
-  },
-  th: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
-  td: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
-  creationButton: {
-    display: "inline-block",
-    padding: "10px 20px",
-    backgroundColor: "red",
-    color: "white",
-    borderRadius: "20px",
-    border: "none",
-    textDecoration: "none",
-    cursor: "pointer",
-    margin: "10px 0",
-  },
-  selected: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-  },
-  edit: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  delete: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  editIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  deleteIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  tableWrapper: {
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-    marginBottom: "20px",
-    padding: "10px",
-    backgroundColor: "rgba(128, 128, 128, 0.1)",
-  },
-  welcomeScreen: {
-    textAlign: "center",
-    marginTop: "100px", // Adjust as needed
-    padding: "50px",
-    backgroundColor: "#f0f0f0",
-    borderRadius: "10px",
-  },
-  welcomeScreenHeading: {
-    fontSize: "2.5em",
-    marginBottom: "20px",
-  },
-  welcomeScreenText: {
-    fontSize: "1.2em",
-    marginBottom: "30px",
-  },
-  welcomeScreenButton: {
-    fontSize: "1.2em",
-  },
-  largeTextStyle: {
-    fontSize: "2em",
-  },
-  paper: {},
-};
+import styles from "../css/cars.css";
 
 function VehicleInfo({ vehicleFeatures, vehicleImage }) {
   return (
@@ -161,7 +65,7 @@ function VehicleDetails({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
         setUser(user);
@@ -246,7 +150,7 @@ function VehicleDetails({
       body: JSON.stringify(data),
     };
     const response = await fetch(
-      "//localhost:5000/api/member/book-test-drive",
+      `${BASE_URL}/api/member/book-test-drive`,
       requestData
     );
     const responseData = await response.json();
@@ -293,7 +197,7 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
         setLoggedIn(true);

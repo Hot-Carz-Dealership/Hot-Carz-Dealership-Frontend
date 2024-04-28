@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utilities/constants";
+import { BASE_URL, FINANCE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
+import Button from "@mui/material/Button";
 
+import styles from "../css/employees.css";
 
 // to-do
 //delete_service_appointment
@@ -15,106 +17,14 @@ import VehicleImage from "../utilities/VehicleImage";
 //technician_view_service_appointments
 //technician edit
 
-
-
-const styles = {
-  tablespacing: {
-    marginTop: '20px',
-  },
-
-  table: {
-    borderCollapse: "collapse",
-    width: "100%",
-    border: "2px solid black",
-    height: "500px",
-  },
-  th: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
-  td: {
-    border: "2px solid black",
-    padding: "8px",
-    textAlign: "left",
-  },
-  creationButton: {
-    display: "inline-block",
-    padding: "10px 20px",
-    backgroundColor: "red",
-    color: "white",
-    borderRadius: "20px",
-    border: "none",
-    textDecoration: "none",
-    cursor: "pointer",
-    margin: "10px 0",
-  },
-  selected: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-  },
-  edit: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  delete: {
-    background: "none",
-    border: "none",
-    padding: 0,
-    marginRight: "5px",
-    cursor: "pointer",
-  },
-  editIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  deleteIcon: {
-    width: "20px",
-    height: "20px",
-  },
-  tableWrapper: {
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-    marginBottom: "20px",
-    padding: "10px",
-    backgroundColor: "rgba(128, 128, 128, 0.1)"
-  },
-  welcomeScreen: {
-    textAlign: "center",
-    marginTop: "100px", // Adjust as needed
-    padding: "50px",
-    backgroundColor: "#f0f0f0",
-    borderRadius: "10px",
-  },
-  welcomeScreenHeading: {
-    fontSize: "2.5em",
-    marginBottom: "20px",
-  },
-  welcomeScreenText: {
-    fontSize: "1.2em",
-    marginBottom: "30px",
-  },
-  welcomeScreenButton: {
-    fontSize: "1.2em",
-  },
-  tableHeight: {
-    height: "1000px",
-  },
-};
-
 const ManagerPage = () => {
-  const FINAN_URL = "http://localhost:5001";
+  const FINAN_URL = `${FINANCE_URL}`;
 
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
 
-
   //const [salesReport, setSalesReport] = useState([]);
-
 
   const [serviceAppointments, setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
@@ -130,11 +40,14 @@ const ManagerPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
         // Check if user role is either "Manager" or "superAdmin"
-        if (user.employeeType !== "Manager" && user.employeeType !== "superAdmin") {
+        if (
+          user.employeeType !== "Manager" &&
+          user.employeeType !== "superAdmin"
+        ) {
           throw new Error("Unauthorized access");
         }
 
@@ -151,13 +64,16 @@ const ManagerPage = () => {
     })();
   }, [navigate]);
 
-
   const handleGetStarted = () => {
     setShowTable(true);
   };
 
-
+  const logOutUser = async () => {
+    await httpClient.post(`${BASE_URL}/api/logout`);
+    window.location.href = "/";
+  };
   const fetchData = async () => {
+    /*
     try {
       // Fetch service appointments
       const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
@@ -281,33 +197,211 @@ const ManagerPage = () => {
     } catch (error) {
       console.error("Error fetching vehicle listings:", error);
     }
-
+ */
     // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
   };
 
+  const fetchDataSelection = async (selectedTab) => {
+    console.log("SELECTED TAB AAHHH SELECTED FUCKING TAB: " + selectedTab);
+    try {
+      switch (selectedTab) {
+        case 0:
+          /*
+          // Fetch service appointments
+          const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
+          if (!appointmentsResponse.ok) {
+            throw new Error('Failed to fetch service appointments');
+          }
+          const appointmentsData = await appointmentsResponse.json();
+          console.log("Service Appointments fetched successfully:", appointmentsData);
+          // Update state variable with fetched data
+          setServiceAppointments(appointmentsData);
+  
+          // Fetch members
+          const membersResponse = await fetch(`${BASE_URL}/api/members`);
+          if (!membersResponse.ok) {
+            throw new Error('Failed to fetch members');
+          }
+          const membersData = await membersResponse.json();
+          console.log("Members fetched successfully:", membersData);
+          // Update state variable with fetched data
+          setMembers(membersData);
+  
+          // Fetch Employees
+          const employeeResponse = await fetch(`${BASE_URL}/api/employees`);
+          if (!employeeResponse.ok) {
+            throw new Error('Failed to fetch employees');
+          }
+          const employeeData = await employeeResponse.json();
+          console.log("Employees fetched successfully", employeeData);
+          // Update state variable with fetched data
+          setEmployees(employeeData);
+  
+          // Fetch Technicians
+          const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
+          if (!technicianResponse.ok) {
+            throw new Error('Failed to fetch technicians');
+          }
+          const techniciansData = await technicianResponse.json();
+          console.log("Technicians fetched successfully:", techniciansData);
+          // Update state variable with fetched data
+          setTechnicians(techniciansData);
+  
+          // Fetch Bids
+          const bidsResponse = await fetch(`${FINAN_URL}/api/current-bids`);
+          if (!bidsResponse.ok) {
+            throw new Error('Failed to fetch bids');
+          }
+          const bidsData = await bidsResponse.json();
+          console.log("Bids fetched successfully:", bidsData);
+          // Update state variable with fetched data
+          setBids(bidsData);
+  
+          // Fetch Test Drives
+          const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
+          if (!testDrivesResponse.ok) {
+            throw new Error('Failed to fetch test drives');
+          }
+          const testDrivesData = await testDrivesResponse.json();
+          console.log("Test Drives fetched successfully:", testDrivesData);
+          // Update state variable with fetched data
+          setTestDrives(testDrivesData);
+  
+          // Fetch Vehicle Listings
+          const vehicleListingsResponse = await fetch(`${BASE_URL}/api/vehicles/search`);
+          if (!vehicleListingsResponse.ok) {
+            throw new Error('Failed to fetch vehicle listings');
+          }
+          const vehicleListingsData = await vehicleListingsResponse.json();
+          console.log("Vehicle Listings fetched successfully:", vehicleListingsData);
+          // Update state variable with fetched data
+          setVehicleListings(vehicleListingsData);
+          */
+
+          // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
+          break;
+        case 1:
+          // Fetch service appointments
+          const appointmentsResponse1 = await fetch(
+            `${BASE_URL}/api/service-appointments`
+          );
+          if (!appointmentsResponse1.ok) {
+            throw new Error("Failed to fetch service appointments");
+          }
+          const appointmentsData1 = await appointmentsResponse1.json();
+          console.log(
+            "Service Appointments fetched successfully:",
+            appointmentsData1
+          );
+          // Update state variable with fetched data
+          setServiceAppointments(appointmentsData1);
+          break;
+        case 2:
+          // Fetch Bids
+          const bidsResponse2 = await fetch(`${FINAN_URL}/api/current-bids`);
+          if (!bidsResponse2.ok) {
+            throw new Error("Failed to fetch bids");
+          }
+          const bidsData2 = await bidsResponse2.json();
+          console.log("Bids fetched successfully:", bidsData2);
+          // Update state variable with fetched data
+          setBids(bidsData2);
+          break;
+        case 3:
+          // Fetch Test Drives
+          const testDrivesResponse3 = await fetch(`${BASE_URL}/api/testdrives`);
+          if (!testDrivesResponse3.ok) {
+            throw new Error("Failed to fetch test drives");
+          }
+          const testDrivesData3 = await testDrivesResponse3.json();
+          console.log("Test Drives fetched successfully:", testDrivesData3);
+          // Update state variable with fetched data
+          setTestDrives(testDrivesData3);
+          break;
+        case 4:
+          // Fetch members
+          const membersResponse4 = await fetch(`${BASE_URL}/api/members`);
+          if (!membersResponse4.ok) {
+            throw new Error("Failed to fetch members");
+          }
+          const membersData4 = await membersResponse4.json();
+          console.log("Members fetched successfully:", membersData4);
+          // Update state variable with fetched data
+          setMembers(membersData4);
+          break;
+        case 5:
+          // Fetch Vehicle Listings
+          const vehicleListingsResponse5 = await fetch(
+            `${BASE_URL}/api/vehicles/search`
+          );
+          if (!vehicleListingsResponse5.ok) {
+            throw new Error("Failed to fetch vehicle listings");
+          }
+          const vehicleListingsData5 = await vehicleListingsResponse5.json();
+          console.log(
+            "Vehicle Listings fetched successfully:",
+            vehicleListingsData5
+          );
+          // Update state variable with fetched data
+          setVehicleListings(vehicleListingsData5);
+          break;
+        case 6:
+          return Promise.resolve();
+
+          // Fetch Sales Report
+          // Add your sales report fetching logic here
+          break;
+        case 7:
+          // Fetch Technicians
+          const technicianResponse7 = await fetch(
+            `${BASE_URL}/api/employees/technicians`
+          );
+          if (!technicianResponse7.ok) {
+            throw new Error("Failed to fetch technicians");
+          }
+          const techniciansData7 = await technicianResponse7.json();
+          console.log("Technicians fetched successfully:", techniciansData7);
+          // Update state variable with fetched data
+          setTechnicians(techniciansData7);
+          break;
+        case 8:
+          // Fetch Purchases
+          const purchasesResponse8 = await fetch(`${FINAN_URL}/api/purchases`);
+          if (!purchasesResponse8.ok) {
+            throw new Error("Failed to fetch purchases");
+          }
+          const purchasesData8 = await purchasesResponse8.json();
+          setPurchases(purchasesData8.purchases); // Update purchases state here
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   // Function to get member details by memberID
   const getMemberDetails = (memberID) => {
     const member = members.find((member) => member.memberID === memberID);
     return member
       ? {
-        memberID: member.memberID,
-        first_name: member.first_name,
-        last_name: member.last_name,
-        email: member.email,
-        phone: member.phone,
-        address: member.address,
-        state: member.state,
-        zipcode: member.zipcode,
-        join_date: member.join_date,
-      }
+          memberID: member.memberID,
+          first_name: member.first_name,
+          last_name: member.last_name,
+          email: member.email,
+          phone: member.phone,
+          address: member.address,
+          state: member.state,
+          zipcode: member.zipcode,
+          join_date: member.join_date,
+        }
       : null;
   };
 
-
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const renderTable = () => {
+  const RenderTable = () => {
     switch (selectedTab) {
       case 0: // If "ALL" is selected, render all tables with borders
         return (
@@ -391,12 +485,10 @@ const ManagerPage = () => {
     }
   };
 
-
   const ServiceCenter = () => {
-
     const [services, setServices] = useState([]);
-    const [newServiceName, setNewServiceName] = useState('');
-    const [newServicePrice, setNewServicePrice] = useState('');
+    const [newServiceName, setNewServiceName] = useState("");
+    const [newServicePrice, setNewServicePrice] = useState("");
 
     const handleSelectionChange = (appointmentId) => async (event) => {
       console.log("APP: " + appointmentId);
@@ -408,11 +500,11 @@ const ManagerPage = () => {
       try {
         await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
         // Update the appointment object with the newly selected technician ID
-        const updatedAppointments = serviceAppointments.map(appointment => {
+        const updatedAppointments = serviceAppointments.map((appointment) => {
           if (appointment.appointment_id === appointmentId) {
             return {
               ...appointment,
-              employeeID: selectedTechnicianId
+              employeeID: selectedTechnicianId,
             };
           }
           return appointment;
@@ -420,10 +512,9 @@ const ManagerPage = () => {
         // Update the state with the updated appointments
         setServiceAppointments(updatedAppointments);
       } catch (error) {
-        console.error('Error assigning technician:', error.message);
+        console.error("Error assigning technician:", error.message);
       }
     };
-
 
     // Function to assign a technician to an appointment
     const assignTechnician = (appointmentId, technicianId, sessionId) => {
@@ -434,92 +525,103 @@ const ManagerPage = () => {
       };
 
       fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        credentials: 'include', // Include cookies in the request
-        body: JSON.stringify(data)
+        credentials: "include", // Include cookies in the request
+        body: JSON.stringify(data),
       })
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
-            throw new Error('Failed to assign technician to appointment');
+            throw new Error("Failed to assign technician to appointment");
           }
           // Handle success response here if needed
-          console.log('Technician assigned successfully');
+          console.log("Technician assigned successfully");
         })
-        .catch(error => {
+        .catch((error) => {
           // Handle error here
-          console.error('Error assigning technician:', error.message);
+          console.error("Error assigning technician:", error.message);
         });
-
     };
 
     useEffect(() => {
       // Fetch services from the backend when the component mounts
-      fetchServices();
     }, []);
 
     const fetchServices = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/service-menu`);
         if (!response.ok) {
-          throw new Error('Failed to fetch services');
+          throw new Error("Failed to fetch services");
         }
         const data = await response.json();
         setServices(data);
       } catch (error) {
-        console.error('Error fetching services:', error.message);
+        console.error("Error fetching services:", error.message);
       }
     };
 
     const handleAddService = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include', // Include cookies in the request
-          body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // Include cookies in the request
+            body: JSON.stringify({
+              edit_or_add: 1,
+              service_name: newServiceName,
+              price: newServicePrice,
+            }),
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to add service');
+          throw new Error("Failed to add service");
         }
         // Refetch services after adding a new service
         await fetchServices();
         // Clear input fields after adding a new service
-        setNewServiceName('');
-        setNewServicePrice('');
+        setNewServiceName("");
+        setNewServicePrice("");
       } catch (error) {
-        console.error('Error adding service:', error.message);
+        console.error("Error adding service:", error.message);
       }
     };
 
     const handleDeleteService = async (serviceID) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include', // Include cookies in the request
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // Include cookies in the request
 
-          body: JSON.stringify({ service_id: serviceID })
-        });
+            body: JSON.stringify({ service_id: serviceID }),
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to delete service');
+          throw new Error("Failed to delete service");
         }
         // Refetch services after deleting a service
         await fetchServices();
       } catch (error) {
-        console.error('Error deleting service:', error.message);
+        console.error("Error deleting service:", error.message);
       }
     };
     const handleEditService = (service) => {
       // Prompt window to edit service name and price
-      const editedName = prompt('Enter new service name:', service.service_name);
-      const editedPrice = prompt('Enter new service price:', service.price);
+      const editedName = prompt(
+        "Enter new service name:",
+        service.service_name
+      );
+      const editedPrice = prompt("Enter new service price:", service.price);
 
       // If user clicks cancel, editedName and editedPrice will be null
       if (editedName !== null && editedPrice !== null) {
@@ -534,34 +636,39 @@ const ManagerPage = () => {
 
     const updateService = async (service) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            edit_or_add: 2,  // Indicate editing mode
-            serviceID: service.serviceID,
-            service_name: service.service_name,
-            price: service.price
-          })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              edit_or_add: 2, // Indicate editing mode
+              serviceID: service.serviceID,
+              service_name: service.service_name,
+              price: service.price,
+            }),
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to update service');
+          throw new Error("Failed to update service");
         }
         // Refetch services after updating
         await fetchServices();
       } catch (error) {
-        console.error('Error updating service:', error.message);
+        console.error("Error updating service:", error.message);
       }
     };
-
 
     return (
       <div className="table-responsive" style={styles.tableHeight}>
         <h2>Service Appointments</h2>
-        <table className="table table-bordered table-striped" style={styles.tableHeight}>
+        <table
+          className="table table-bordered table-striped"
+          style={styles.tableHeight}
+        >
           <thead className="thead-dark">
             <tr>
               <th>First Name</th>
@@ -575,27 +682,40 @@ const ManagerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {serviceAppointments && serviceAppointments.map(appointment => (
-              <tr key={appointment.appointment_id}>
-                <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
-                <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
-                <td>{getMemberDetails(appointment.memberID)?.email}</td>
-                <td>{getMemberDetails(appointment.memberID)?.phone}</td>
-                <td>{appointment.appointment_date}</td>
-                <td>{appointment.service_name}</td> {/* Display service name */}
-                <td>
-                  <select value={appointment.employeeID} onChange={handleSelectionChange(appointment.appointment_id)}>
-                    <option value="-" key="default">-</option>
-                    {technicians.map(technician => (
-                      <option key={technician.employeeID} value={technician.employeeID}>
-                        {technician.first_name} {technician.last_name}
+            {serviceAppointments &&
+              serviceAppointments.map((appointment) => (
+                <tr key={appointment.appointment_id}>
+                  <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
+                  <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
+                  <td>{getMemberDetails(appointment.memberID)?.email}</td>
+                  <td>{getMemberDetails(appointment.memberID)?.phone}</td>
+                  <td>{appointment.appointment_date}</td>
+                  <td>{appointment.service_name}</td>{" "}
+                  {/* Display service name */}
+                  <td>
+                    <select
+                      value={appointment.employeeID}
+                      onChange={handleSelectionChange(
+                        appointment.appointment_id
+                      )}
+                    >
+                      <option value="-" key="default">
+                        -
                       </option>
-                    ))}
-                  </select>
-                </td>
-                <td>{appointment.comments}</td> {/* Display technician comment */}
-              </tr>
-            ))}
+                      {technicians.map((technician) => (
+                        <option
+                          key={technician.employeeID}
+                          value={technician.employeeID}
+                        >
+                          {technician.first_name} {technician.last_name}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>{appointment.comments}</td>{" "}
+                  {/* Display technician comment */}
+                </tr>
+              ))}
             {!serviceAppointments && (
               <tr>
                 <td colSpan="8">No service appointments available</td>
@@ -623,7 +743,10 @@ const ManagerPage = () => {
           <button onClick={handleAddService}>Add Service</button>
         </div>
         <br />
-        <table className="table table-bordered table-striped" style={styles.tableHeight}>
+        <table
+          className="table table-bordered table-striped"
+          style={styles.tableHeight}
+        >
           <thead className="thead-dark">
             <tr>
               <th>Service Name</th>
@@ -632,32 +755,37 @@ const ManagerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {services.map(service => (
+            {services.map((service) => (
               <tr key={service.serviceID}>
                 <td>{service.service_name}</td>
                 <td>{service.price}</td>
                 <td>
-                  <button onClick={() => handleEditService(service)}>Edit</button> {/* Call handleEditService function */}
-                  <button onClick={() => handleDeleteService(service.serviceID)}>Delete</button>
+                  <button onClick={() => handleEditService(service)}>
+                    Edit
+                  </button>{" "}
+                  {/* Call handleEditService function */}
+                  <button
+                    onClick={() => handleDeleteService(service.serviceID)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
       </div>
     );
   };
 
   const TechnicianTable = () => {
-
-
     return (
-
       <div className="table-responsive" style={styles.tableHeight}>
-
         <h2>Technicians Management</h2>
-        <table className="table table-bordered table-striped" style={styles.tableHeight}>
+        <table
+          className="table table-bordered table-striped"
+          style={styles.tableHeight}
+        >
           <thead className="thead-dark">
             <tr>
               <th>First Name</th>
@@ -668,15 +796,16 @@ const ManagerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {technicians && technicians.map(technician => (
-              <tr key={technician.employeeID}>
-                <td>{technician.first_name}</td>
-                <td>{technician.last_name}</td>
-                <td>{technician.email}</td>
-                <td>{technician.employeeID}</td>
-                <td>{technician.phone}</td>
-              </tr>
-            ))}
+            {technicians &&
+              technicians.map((technician) => (
+                <tr key={technician.employeeID}>
+                  <td>{technician.first_name}</td>
+                  <td>{technician.last_name}</td>
+                  <td>{technician.email}</td>
+                  <td>{technician.employeeID}</td>
+                  <td>{technician.phone}</td>
+                </tr>
+              ))}
             {!technicians && (
               <tr>
                 <td colSpan="5">No technicians available</td>
@@ -688,24 +817,19 @@ const ManagerPage = () => {
     );
   };
 
-
   const BidsTable = () => {
-    const [bids, setBids] = useState([]);
-
-    useEffect(() => {
-      fetchCurrentBids();
-    }, []);
+    useEffect(() => {}, []);
 
     const fetchCurrentBids = async () => {
       try {
         const response = await fetch(`${FINAN_URL}/api/current-bids`);
         if (!response.ok) {
-          throw new Error('Failed to fetch current bids');
+          throw new Error("Failed to fetch current bids");
         }
         const bidData = await response.json();
         setBids(bidData);
       } catch (error) {
-        console.error('Error fetching current bids:', error.message);
+        console.error("Error fetching current bids:", error.message);
       }
     };
 
@@ -713,21 +837,23 @@ const ManagerPage = () => {
       console.log(bidId);
       try {
         const response = await fetch(`${FINAN_URL}/api/current-bids`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ bidID: bidId, confirmationStatus: confirmationStatus })
+          body: JSON.stringify({
+            bidID: bidId,
+            confirmationStatus: confirmationStatus,
+          }),
         });
         if (!response.ok) {
-          throw new Error('Failed to update bid status');
+          throw new Error("Failed to update bid status");
         }
         await fetchCurrentBids();
       } catch (error) {
-        console.error('Error updating bid status:', error.message);
+        console.error("Error updating bid status:", error.message);
       }
     };
-
 
     return (
       <div className="table-responsive" style={styles.tableHeight}>
@@ -746,25 +872,38 @@ const ManagerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {bids && bids.map((bid, index) => (
-              <tr key={index}>
-                <td>{bid.make}</td>
-                <td>{bid.model}</td>
-                <td>{bid.VIN}</td>
-                <td>{bid.MSRP}</td>
+            {bids &&
+              bids.map((bid, index) => (
+                <tr key={index}>
+                  <td>{bid.make}</td>
+                  <td>{bid.model}</td>
+                  <td>{bid.VIN}</td>
+                  <td>{bid.MSRP}</td>
 
-                <td>{bid.bidValue}</td>
-                <td>{bid.bidStatus}</td>
-                <td>
-                  {bid.bidStatus === 'Processing' && (
-                    <>
-                      <button onClick={() => handleBidConfirmation(bid.bidID, 'Confirmed')}>Accept</button>
-                      <button onClick={() => handleBidConfirmation(bid.bidID, 'Denied')}>Decline</button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                  <td>{bid.bidValue}</td>
+                  <td>{bid.bidStatus}</td>
+                  <td>
+                    {bid.bidStatus === "Processing" && (
+                      <>
+                        <button
+                          onClick={() =>
+                            handleBidConfirmation(bid.bidID, "Confirmed")
+                          }
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleBidConfirmation(bid.bidID, "Denied")
+                          }
+                        >
+                          Decline
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
             {!bids && (
               <tr>
                 <td colSpan="7">No bids available</td>
@@ -777,21 +916,21 @@ const ManagerPage = () => {
   };
 
   const PurchaseTable = () => (
-
-      <div className="table-responsive" style={styles.tableHeight}>
-        <h2>Purchases</h2>
-        <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>Purchase ID</th>
-              <th>Bid ID</th>
-              <th>VIN</th>
-              <th>Member ID</th>
-              <th>Confirmation Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchases && purchases.map((purchase, index) => (
+    <div className="table-responsive" style={styles.tableHeight}>
+      <h2>Purchases</h2>
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>Purchase ID</th>
+            <th>Bid ID</th>
+            <th>VIN</th>
+            <th>Member ID</th>
+            <th>Confirmation Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          {purchases &&
+            purchases.map((purchase, index) => (
               <tr key={index}>
                 <td>{purchase.purchaseID}</td>
                 <td>{purchase.bidID}</td>
@@ -800,18 +939,15 @@ const ManagerPage = () => {
                 <td>{purchase.confirmationNumber}</td>
               </tr>
             ))}
-            {!purchases && (
-              <tr>
-                <td colSpan="5">No purchases available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-
-
-          );
+          {!purchases && (
+            <tr>
+              <td colSpan="5">No purchases available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
 
   const TestDrivesTable = () => (
     <div className="table-responsive" style={styles.tableHeight}>
@@ -826,14 +962,15 @@ const ManagerPage = () => {
           </tr>
         </thead>
         <tbody>
-          {testDrives && testDrives.map((testDrive, index) => (
-            <tr key={index}>
-              <td>{testDrive.phone}</td>
-              <td>{testDrive.fullname}</td>
-              <td>{testDrive.car_make_model}</td>
-              <td>{testDrive.appointment_date}</td>
-            </tr>
-          ))}
+          {testDrives &&
+            testDrives.map((testDrive, index) => (
+              <tr key={index}>
+                <td>{testDrive.phone}</td>
+                <td>{testDrive.fullname}</td>
+                <td>{testDrive.car_make_model}</td>
+                <td>{testDrive.appointment_date}</td>
+              </tr>
+            ))}
           {!testDrives && (
             <tr>
               <td colSpan="4">No test drives available</td>
@@ -842,11 +979,9 @@ const ManagerPage = () => {
         </tbody>
       </table>
     </div>
-
   );
 
   // Similarly, update the other table components in the same way
-
 
   const CustomersTable = () => (
     <div className="table-responsive" style={styles.tableHeight}>
@@ -863,16 +998,17 @@ const ManagerPage = () => {
           </tr>
         </thead>
         <tbody>
-          {members && members.map((member, index) => (
-            <tr key={index}>
-              <td>{member.first_name}</td>
-              <td>{member.last_name}</td>
-              <td>{member.phone}</td>
-              <td>{member.email}</td>
-              <td>{member.join_date}</td>
-              <td>{member.memberID}</td>
-            </tr>
-          ))}
+          {members &&
+            members.map((member, index) => (
+              <tr key={index}>
+                <td>{member.first_name}</td>
+                <td>{member.last_name}</td>
+                <td>{member.phone}</td>
+                <td>{member.email}</td>
+                <td>{member.join_date}</td>
+                <td>{member.memberID}</td>
+              </tr>
+            ))}
           {!members && (
             <tr>
               <td colSpan="6">No customers available</td>
@@ -881,67 +1017,66 @@ const ManagerPage = () => {
         </tbody>
       </table>
     </div>
-
   );
 
-  const VehicleListingsTable = () =>
-  (<div className="table-responsive" style={styles.tableHeight}>
-    <h2>Vehicle Listings</h2>
-    <table className="table table-bordered table-striped">
-      <thead className="thead-dark">
-        <tr>
-          <th>Make</th>
-          <th>Model</th>
-          <th>Year</th>
-          <th>VIN</th>
-          <th>Page Views</th>
-          <th>Price</th>
-          <th>Status</th>
-          <th>Image</th>
-        </tr>
-      </thead>
-      <tbody>
-        {vehicleListings && vehicleListings.map((vehicle, index) => (
-          <tr key={index}>
-            <td>{vehicle.make}</td>
-            <td>{vehicle.model}</td>
-            <td>{vehicle.year}</td>
-            <td>{vehicle.VIN_carID}</td>
-            <td>{vehicle.viewsOnPage}</td>
-            <td>{vehicle.price}</td>
-            <td>
-              {/* Render status here */}
-            </td>
-            <td>
-              <VehicleImage
-                className="w-[150px] "
-                vin={vehicle.VIN_carID}
-                bodyType={vehicle.body}
-              />
-            </td>
-          </tr>
-        ))}
-        {!vehicleListings && (
+  const VehicleListingsTable = () => (
+    <div className="table-responsive" style={styles.tableHeight}>
+      <h2>Vehicle Listings</h2>
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
           <tr>
-            <td colSpan="8">No vehicle listings available</td>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>VIN</th>
+            <th>Page Views</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Image</th>
           </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-
+        </thead>
+        <tbody>
+          {vehicleListings &&
+            vehicleListings.map((vehicle, index) => (
+              <tr key={index}>
+                <td>{vehicle.make}</td>
+                <td>{vehicle.model}</td>
+                <td>{vehicle.year}</td>
+                <td>{vehicle.VIN_carID}</td>
+                <td>{vehicle.viewsOnPage}</td>
+                <td>{vehicle.price}</td>
+                <td>{/* Render status here */}</td>
+                <td>
+                  <VehicleImage
+                    className="w-[150px] "
+                    vin={vehicle.VIN_carID}
+                    bodyType={vehicle.body}
+                  />
+                </td>
+              </tr>
+            ))}
+          {!vehicleListings && (
+            <tr>
+              <td colSpan="8">No vehicle listings available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
   const SalesReportTable = () => {
     const [salesReport, setSalesReport] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState('');
-    const [selectedYear, setSelectedYear] = useState('');
-    const [totalSales, setTotalSales] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState("");
+    const [selectedYear, setSelectedYear] = useState("");
+    const [totalSales, setTotalSales] = useState("");
 
     useEffect(() => {
+      /*
       const response = fetch(`${FINAN_URL}/`);
       console.log(response);
       const response1 = fetch(`${BASE_URL}/`);
       console.log(response1);
+      */
       /// fetchSalesReport();
     }, []);
 
@@ -960,15 +1095,17 @@ const ManagerPage = () => {
 
       // Check if both month and year are selected
       if (!selectedMonth || !selectedYear) {
-        alert('Please select both month and year.');
+        alert("Please select both month and year.");
         return;
       }
 
       try {
         // Send a GET request to your backend API with selected month and year
-        const response = await fetch(`${FINAN_URL}/api/manager/monthly-sales-report?month=${selectedMonth}&year=${selectedYear}`);
+        const response = await fetch(
+          `${FINAN_URL}/api/manager/monthly-sales-report?month=${selectedMonth}&year=${selectedYear}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch sales report');
+          throw new Error("Failed to fetch sales report");
         }
 
         const data = await response.json();
@@ -976,12 +1113,9 @@ const ManagerPage = () => {
         // Set total sales in the state
         setTotalSales(data.total_sales);
       } catch (error) {
-        console.error('Error fetching sales report:', error.message);
+        console.error("Error fetching sales report:", error.message);
       }
     };
-
-
-
 
     return (
       <div className="table-responsive" style={styles.tableHeight}>
@@ -989,7 +1123,11 @@ const ManagerPage = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="month">Month:</label>
-            <select id="month" value={selectedMonth} onChange={handleMonthChange}>
+            <select
+              id="month"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+            >
               <option value="">Select Month</option>
               <option value="1">January</option>
               <option value="2">February</option>
@@ -1049,53 +1187,155 @@ const ManagerPage = () => {
           <p>No sales report available</p>
         )}
       </div>
-
-
     );
   };
 
-
-
-
   return (
     <div style={{ display: "flex" }}>
-      <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto", position: "fixed", left: 0 }}>
+      <div
+        className="bg-dark text-white p-3"
+        style={{
+          height: "100vh",
+          overflowY: "auto",
+          position: "fixed",
+          left: 0,
+        }}
+      >
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); }}>ALL</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 0 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(0);
+              fetchDataSelection(0);
+            }}
+          >
+            ALL
+          </button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { setSelectedTab(1); }}>Service Center</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 1 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(1);
+              fetchDataSelection(1);
+            }}
+          >
+            Service Center
+          </button>
         </div>
 
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); }}>Technicians</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 2 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(2);
+              fetchDataSelection(2);
+            }}
+          >
+            Bids
+          </button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8); }}>Purchases</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 3 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(3);
+              fetchDataSelection(3);
+            }}
+          >
+            Test Drives
+          </button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 4 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(4);
+              fetchDataSelection(4);
+            }}
+          >
+            Customers
+          </button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 5 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(5);
+              fetchDataSelection(5);
+            }}
+          >
+            Vehicle Listings
+          </button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 6 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(6);
+              fetchDataSelection(6);
+            }}
+          >
+            Sales Report
+          </button>
         </div>
 
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { setSelectedTab(2); }}>Bids</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 7 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(7);
+              fetchDataSelection(7);
+            }}
+          >
+            Technicians
+          </button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { setSelectedTab(3); }}>Test Drives</button>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 8 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(8);
+              fetchDataSelection(8);
+            }}
+          >
+            Purchases
+          </button>
         </div>
+
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { setSelectedTab(4); }}>Customers</button>
+          {user && user.employeeType === "superAdmin" && (
+            <Link
+              to="/create-employee-account"
+              className="btn btn-block btn-danger"
+            >
+              Create Employee Acct.
+            </Link>
+          )}{" "}
         </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { setSelectedTab(5); }}>Vehicle Listings</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); }}>Sales Report</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          {user && (user.employeeType === "superAdmin") && (
-            <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
-          )}        </div>
         <div>
-          <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
+          <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
+            Add new Vehicle
+          </Link>
         </div>
+
+        <Button
+          className="btn btn-block btn-danger "
+          style={styles.bookApptButton}
+          onClick={logOutUser}
+          variant="contained"
+        >
+          Log Out
+        </Button>
       </div>
 
       <div style={{ marginLeft: "200px", width: "calc(100% - 200px)" }}>
@@ -1103,14 +1343,29 @@ const ManagerPage = () => {
           <div className="row justify-content-center">
             <div className="col-lg-10 col-md-12">
               {showTable ? (
-                renderTable()
+                RenderTable()
               ) : (
                 <div style={styles.welcomeScreen}>
-                  <h1 style={styles.welcomeScreenHeading}>Hi {user && user.first_name}.</h1>
-                  <img src="logo512.png" alt="Logo" style={{ width: "200px", margin: "0 auto" }} />
+                  <h1 style={styles.welcomeScreenHeading}>
+                    Hi {user && user.first_name}.
+                  </h1>
+                  <img
+                    src="logo512.png"
+                    alt="Logo"
+                    style={{ width: "200px", margin: "0 auto" }}
+                  />
                   <br />
-                  <p style={styles.welcomeScreenText}>Click the button below to get started as {user && user.employeeType}.</p>
-                  <button onClick={handleGetStarted} style={styles.welcomeScreenButton} className="btn btn-primary">Get Started</button>
+                  <p style={styles.welcomeScreenText}>
+                    Click the button below to get started as{" "}
+                    {user && user.employeeType}.
+                  </p>
+                  <button
+                    onClick={handleGetStarted}
+                    style={styles.welcomeScreenButton}
+                    className="btn btn-primary"
+                  >
+                    Get Started
+                  </button>
                 </div>
               )}
             </div>
@@ -1119,11 +1374,6 @@ const ManagerPage = () => {
       </div>
     </div>
   );
-
-
-
-
-
 };
 
 export default ManagerPage;

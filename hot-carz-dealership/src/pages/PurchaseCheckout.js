@@ -2,6 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
+
+const getcart = () => {
+  //this gets the items from the cart
+  fetch(`${BASE_URL}/member/cart`,{
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('There was a problem with the fetch operation:', error);
+  });
+}
+
 function Payment() {
     return (
       <section className="flex justify-center items-center" style={{ flex: '1', marginRight: '10%', marginLeft: '10%' }}>
@@ -66,24 +91,32 @@ function Payment() {
   
   
   function PurchaseCheckout() {
+    const [cartItems, setCartItems] = useState([]);
+    const [subtotal, setSubtotal] = useState(0);
+    const [taxes, setTaxes] = useState(0);
+    const [total, setTotal] = useState(0);
 
-    //MOCK DATA
-    const services = [
-      { title: "Service 1", subtitle: "Service 1 description", price: 50, quantity: 1 },
-      { title: "Service 2", subtitle: "Service 2 description", price: 75, quantity: 2 },
-      { title: "Service 3", subtitle: "Service 3 description", price: 100, quantity: 1 }
-    ];
-  
-    const subtotal = services.reduce((acc, service) => acc + (service.price * service.quantity), 0);
-    const taxes = subtotal * 0.1;
-    const total = subtotal + taxes;
-  
+    useEffect(() => {
+      getcart();
+    }, []);
+
+    useEffect(() => {
+      // Calculate subtotal, taxes, and total
+      const sub = cartItems.reduce((acc, item) => acc + (item.item_price * item.quantity), 0);
+      const tax = sub * 0.1;
+      const tot = sub + tax;
+
+      setSubtotal(sub);
+      setTaxes(tax);
+      setTotal(tot);
+    }, [cartItems]);
+
     return (
       <div>
         <h1>Payment Checkout</h1>
         <div style={{ display: 'flex' }}>
           <Payment />
-          <Cart services={services} subtotal={subtotal} taxes={taxes} total={total} />
+          <Cart services={cartItems} subtotal={subtotal} taxes={taxes} total={total} />
         </div>
       </div>
     );

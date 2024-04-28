@@ -116,7 +116,6 @@ export default function ApplyFinancing() {
         );
         setFinancingModalOpen(false);
         navigate(`/addons`);
-      } else {
         // Handle error response
         const errorData = await response.json();
         console.error(

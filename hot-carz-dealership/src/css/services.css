@@ -1,7 +1,6 @@
-/* Account.css */
 .homepage {
   text-align: center;
-  /* font-family: Arial, sans-serif; */
+  font-family: Arial, sans-serif;
 }
 
 .welcome {
@@ -37,6 +36,7 @@
   background-color: red;
   color: white;
   padding: 5px 10px;
+  margin-bottom: 1rem;
 }
 
 .servicesItem {
@@ -57,7 +57,7 @@
 .servicesDisplayTitle {
   color: red;
   text-align: center;
-  font-size: 3em;
+  font-size: 1.5em;
 }
 
 .price {
@@ -65,14 +65,9 @@
 }
 
 .bookApptButton {
-  background: red;
+  background-color: red;
   color: white;
   padding: 5px 10px;
+  margin-bottom: 20px;
   margin-top: 10px;
-  margin-left: 10px;
-  justify-content: center;
-}
-
-.listAlign {
-  justify-content: left;
 }
