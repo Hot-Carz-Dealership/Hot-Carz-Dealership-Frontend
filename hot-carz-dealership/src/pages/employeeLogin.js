@@ -2,6 +2,9 @@ import React from "react";
 import httpClient from "../httpClient";
 import { useState } from "react";
 
+import styles from "../css/loginhome.css";
+
+
 const EmployeeLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

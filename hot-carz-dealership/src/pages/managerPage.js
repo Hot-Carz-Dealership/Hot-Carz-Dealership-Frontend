@@ -7,6 +7,9 @@ import VehicleImage from "../utilities/VehicleImage";
 import Button from "@mui/material/Button";
 
 
+import styles from "../css/employees.css";
+
+
 // to-do
 //delete_service_appointment
 //edit_service_menu()
@@ -74,6 +77,7 @@ const ManagerPage = () => {
     window.location.href = "/";
   };
   const fetchData = async () => {
+    /*
     try {
       // Fetch service appointments
       const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
@@ -197,10 +201,179 @@ const ManagerPage = () => {
     } catch (error) {
       console.error("Error fetching vehicle listings:", error);
     }
-
+ */
+  
     // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
-  };
+  }; 
 
+  const fetchDataSelection = async (selectedTab) => {
+    console.log("SELECTED TAB AAHHH SELECTED FUCKING TAB: " + selectedTab);
+    try {
+      switch (selectedTab) {
+        case 0:
+          /*
+          // Fetch service appointments
+          const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
+          if (!appointmentsResponse.ok) {
+            throw new Error('Failed to fetch service appointments');
+          }
+          const appointmentsData = await appointmentsResponse.json();
+          console.log("Service Appointments fetched successfully:", appointmentsData);
+          // Update state variable with fetched data
+          setServiceAppointments(appointmentsData);
+  
+          // Fetch members
+          const membersResponse = await fetch(`${BASE_URL}/api/members`);
+          if (!membersResponse.ok) {
+            throw new Error('Failed to fetch members');
+          }
+          const membersData = await membersResponse.json();
+          console.log("Members fetched successfully:", membersData);
+          // Update state variable with fetched data
+          setMembers(membersData);
+  
+          // Fetch Employees
+          const employeeResponse = await fetch(`${BASE_URL}/api/employees`);
+          if (!employeeResponse.ok) {
+            throw new Error('Failed to fetch employees');
+          }
+          const employeeData = await employeeResponse.json();
+          console.log("Employees fetched successfully", employeeData);
+          // Update state variable with fetched data
+          setEmployees(employeeData);
+  
+          // Fetch Technicians
+          const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
+          if (!technicianResponse.ok) {
+            throw new Error('Failed to fetch technicians');
+          }
+          const techniciansData = await technicianResponse.json();
+          console.log("Technicians fetched successfully:", techniciansData);
+          // Update state variable with fetched data
+          setTechnicians(techniciansData);
+  
+          // Fetch Bids
+          const bidsResponse = await fetch(`${FINAN_URL}/api/current-bids`);
+          if (!bidsResponse.ok) {
+            throw new Error('Failed to fetch bids');
+          }
+          const bidsData = await bidsResponse.json();
+          console.log("Bids fetched successfully:", bidsData);
+          // Update state variable with fetched data
+          setBids(bidsData);
+  
+          // Fetch Test Drives
+          const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
+          if (!testDrivesResponse.ok) {
+            throw new Error('Failed to fetch test drives');
+          }
+          const testDrivesData = await testDrivesResponse.json();
+          console.log("Test Drives fetched successfully:", testDrivesData);
+          // Update state variable with fetched data
+          setTestDrives(testDrivesData);
+  
+          // Fetch Vehicle Listings
+          const vehicleListingsResponse = await fetch(`${BASE_URL}/api/vehicles/search`);
+          if (!vehicleListingsResponse.ok) {
+            throw new Error('Failed to fetch vehicle listings');
+          }
+          const vehicleListingsData = await vehicleListingsResponse.json();
+          console.log("Vehicle Listings fetched successfully:", vehicleListingsData);
+          // Update state variable with fetched data
+          setVehicleListings(vehicleListingsData);
+          */
+  
+          // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
+          break;
+        case 1:
+          // Fetch service appointments
+          const appointmentsResponse1 = await fetch(`${BASE_URL}/api/service-appointments`);
+          if (!appointmentsResponse1.ok) {
+            throw new Error('Failed to fetch service appointments');
+          }
+          const appointmentsData1 = await appointmentsResponse1.json();
+          console.log("Service Appointments fetched successfully:", appointmentsData1);
+          // Update state variable with fetched data
+          setServiceAppointments(appointmentsData1);
+          break;
+        case 2:
+          // Fetch Bids
+          const bidsResponse2 = await fetch(`${FINAN_URL}/api/current-bids`);
+          if (!bidsResponse2.ok) {
+            throw new Error('Failed to fetch bids');
+          }
+          const bidsData2 = await bidsResponse2.json();
+          console.log("Bids fetched successfully:", bidsData2);
+          // Update state variable with fetched data
+          setBids(bidsData2);
+          break;
+        case 3:
+          // Fetch Test Drives
+          const testDrivesResponse3 = await fetch(`${BASE_URL}/api/testdrives`);
+          if (!testDrivesResponse3.ok) {
+            throw new Error('Failed to fetch test drives');
+          }
+          const testDrivesData3 = await testDrivesResponse3.json();
+          console.log("Test Drives fetched successfully:", testDrivesData3);
+          // Update state variable with fetched data
+          setTestDrives(testDrivesData3);
+          break;
+        case 4:
+          // Fetch members
+          const membersResponse4 = await fetch(`${BASE_URL}/api/members`);
+          if (!membersResponse4.ok) {
+            throw new Error('Failed to fetch members');
+          }
+          const membersData4 = await membersResponse4.json();
+          console.log("Members fetched successfully:", membersData4);
+          // Update state variable with fetched data
+          setMembers(membersData4);
+          break;
+        case 5:
+          // Fetch Vehicle Listings
+          const vehicleListingsResponse5 = await fetch(`${BASE_URL}/api/vehicles/search`);
+          if (!vehicleListingsResponse5.ok) {
+            throw new Error('Failed to fetch vehicle listings');
+          }
+          const vehicleListingsData5 = await vehicleListingsResponse5.json();
+          console.log("Vehicle Listings fetched successfully:", vehicleListingsData5);
+          // Update state variable with fetched data
+          setVehicleListings(vehicleListingsData5);
+          break;
+        case 6:
+          return Promise.resolve();
+
+          // Fetch Sales Report
+          // Add your sales report fetching logic here
+          break;
+        case 7:
+          // Fetch Technicians
+          const technicianResponse7 = await fetch(`${BASE_URL}/api/employees/technicians`);
+          if (!technicianResponse7.ok) {
+            throw new Error('Failed to fetch technicians');
+          }
+          const techniciansData7 = await technicianResponse7.json();
+          console.log("Technicians fetched successfully:", techniciansData7);
+          // Update state variable with fetched data
+          setTechnicians(techniciansData7);
+          break;
+        case 8:
+          // Fetch Purchases
+          const purchasesResponse8 = await fetch(`${FINAN_URL}/api/purchases`);
+          if (!purchasesResponse8.ok) {
+            throw new Error('Failed to fetch purchases');
+          }
+          const purchasesData8 = await purchasesResponse8.json();
+          setPurchases(purchasesData8.purchases); // Update purchases state here
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
 
   // Function to get member details by memberID
   const getMemberDetails = (memberID) => {
@@ -223,7 +396,9 @@ const ManagerPage = () => {
 
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const renderTable = () => {
+  const RenderTable = () => {
+
+
     switch (selectedTab) {
       case 0: // If "ALL" is selected, render all tables with borders
         return (
@@ -373,7 +548,6 @@ const ManagerPage = () => {
 
     useEffect(() => {
       // Fetch services from the backend when the component mounts
-      fetchServices();
     }, []);
 
     const fetchServices = async () => {
@@ -606,11 +780,11 @@ const ManagerPage = () => {
 
 
   const BidsTable = () => {
-    const [bids, setBids] = useState([]);
 
     useEffect(() => {
-      fetchCurrentBids();
     }, []);
+
+    
 
     const fetchCurrentBids = async () => {
       try {
@@ -625,6 +799,8 @@ const ManagerPage = () => {
       }
     };
 
+    
+   
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       console.log(bidId);
       try {
@@ -724,9 +900,6 @@ const ManagerPage = () => {
           </tbody>
         </table>
       </div>
-
-
-
           );
 
   const TestDrivesTable = () => (
@@ -854,10 +1027,12 @@ const ManagerPage = () => {
     const [totalSales, setTotalSales] = useState('');
 
     useEffect(() => {
+      /*
       const response = fetch(`${FINAN_URL}/`);
       console.log(response);
       const response1 = fetch(`${BASE_URL}/`);
       console.log(response1);
+      */
       /// fetchSalesReport();
     }, []);
 
@@ -977,34 +1152,35 @@ const ManagerPage = () => {
     <div style={{ display: "flex" }}>
       <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto", position: "fixed", left: 0 }}>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); }}>ALL</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); fetchDataSelection(0); }}>ALL</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { setSelectedTab(1); }}>Service Center</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { setSelectedTab(1); fetchDataSelection(1); }}>Service Center</button>
         </div>
 
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); }}>Technicians</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { setSelectedTab(2); fetchDataSelection(2); }}>Bids</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8); }}>Purchases</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { setSelectedTab(3); fetchDataSelection(3); }}>Test Drives</button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { setSelectedTab(4); fetchDataSelection(4); }}>Customers</button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { setSelectedTab(5); fetchDataSelection(5); }}>Vehicle Listings</button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); fetchDataSelection(6); }}>Sales Report</button>
+        </div>
+        
+        <div style={{ marginBottom: "10px" }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); fetchDataSelection(7); }}>Technicians</button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8);  fetchDataSelection(8);}}>Purchases</button>
         </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 2 ? styles.selected : {}} onClick={() => { setSelectedTab(2); }}>Bids</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 3 ? styles.selected : {}} onClick={() => { setSelectedTab(3); }}>Test Drives</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 4 ? styles.selected : {}} onClick={() => { setSelectedTab(4); }}>Customers</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 5 ? styles.selected : {}} onClick={() => { setSelectedTab(5); }}>Vehicle Listings</button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); }}>Sales Report</button>
-        </div>
         <div style={{ marginBottom: "10px" }}>
           {user && (user.employeeType === "superAdmin") && (
             <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
@@ -1030,7 +1206,7 @@ const ManagerPage = () => {
           <div className="row justify-content-center">
             <div className="col-lg-10 col-md-12">
               {showTable ? (
-                renderTable()
+                RenderTable()
               ) : (
                 <div style={styles.welcomeScreen}>
                   <h1 style={styles.welcomeScreenHeading}>Hi {user && user.first_name}.</h1>

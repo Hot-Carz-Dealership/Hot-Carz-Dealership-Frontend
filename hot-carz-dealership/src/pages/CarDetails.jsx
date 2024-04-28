@@ -14,6 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dateFormat from "dateformat";
 
+import styles from "../css/cars.css";
 
 
 function VehicleInfo({ vehicleFeatures, vehicleImage }) {

@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 import httpClient from "../httpClient";
 import VehicleImage from "../utilities/VehicleImage";
 
+import styles from "../css/loginhome.css";
+
+
 const HomePage = () => {
   const [randomVehicles, setRandomVehicles] = useState([]);
 

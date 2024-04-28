@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import "../Account.css"; // Import the CSS file for styling
 
+import styles from "../css/employees.css";
+
+
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

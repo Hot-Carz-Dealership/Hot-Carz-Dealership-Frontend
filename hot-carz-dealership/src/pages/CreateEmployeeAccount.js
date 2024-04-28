@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../css/creation.css";
 
 
 const CreateEmployeeAccount = () => {

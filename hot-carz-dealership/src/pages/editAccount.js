@@ -5,6 +5,9 @@ import httpClient from "../httpClient";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL, FINANCE_URL } from "../utilities/constants";
 
+import styles from "../css/editaccount.css";
+
+
 const EditAccount = () => {
   
   
