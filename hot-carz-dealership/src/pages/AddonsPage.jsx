@@ -6,15 +6,39 @@ import Typography from "@mui/material/Typography";
 import { BASE_URL } from "../utilities/constants";
 
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
+const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
 
 function ItemCard({ item }) {
   const { itemID, itemName, totalCost } = item;
   const [addedToCart, setAddedToCart] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleAddToCart = () => {
-    // Implement your add to cart functionality here
-    console.log(`Item ${itemID} ${itemName} added to cart ${totalCost}`);
-    setAddedToCart(true);
+    fetch(addToCartUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        item_name: itemName,
+        item_price: totalCost,
+        addon_ID: itemID,
+        // You may need to add other data like member ID if available
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add item to cart");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAddedToCart(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
 
   return (
@@ -44,6 +68,7 @@ function ItemCard({ item }) {
         >
           {addedToCart ? "Added" : "Add to Cart"}
         </Button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </CardContent>
     </Card>
   );
