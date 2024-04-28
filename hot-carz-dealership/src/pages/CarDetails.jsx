@@ -313,7 +313,7 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
       }
 
       // Item added to cart successfully, navigate to addons page
-      navigate("/PurchaseCheckout");
+      navigate("/addons");
     } catch (error) {
       console.error("Error adding item to cart:", error.message);
       // Handle error here, show error message to the user, etc.
