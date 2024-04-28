@@ -3,23 +3,18 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip"; // Import Tooltip component
 import { BASE_URL } from "../utilities/constants";
 
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 
 function ItemCard({ item }) {
-  const { itemName, totalCost } = item;
-  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const { itemID, itemName, totalCost } = item;
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const handleAddToCart = () => {
     // Implement your add to cart functionality here
-    console.log(`Item ${itemName} added to cart`);
-    setTooltipOpen(true); // Show tooltip when item is added to cart
-    // Hide tooltip after 2 seconds
-    setTimeout(() => {
-      setTooltipOpen(false);
-    }, 2000);
+    console.log(`Item ${itemID} ${itemName} added to cart ${totalCost}`);
+    setAddedToCart(true);
   };
 
   return (
@@ -41,12 +36,14 @@ function ItemCard({ item }) {
             Total Cost: ${totalCost}
           </Typography>
         </div>
-        {/* Add Tooltip to the Add to Cart Button */}
-        <Tooltip open={tooltipOpen} title="Added to Cart">
-          <Button onClick={handleAddToCart} variant="contained" color="error">
-            Add to Cart
-          </Button>
-        </Tooltip>
+        <Button
+          onClick={handleAddToCart}
+          variant="contained"
+          color="error"
+          disabled={addedToCart}
+        >
+          {addedToCart ? "Added" : "Add to Cart"}
+        </Button>
       </CardContent>
     </Card>
   );
