@@ -10,12 +10,6 @@
   font-weight: bold;
 }
 
-.carDisplay {
-  /* background-color: #f5f5f5; */
-  padding: 20px;
-  border-radius: 5px;
-}
-
 .carDisplayTitle {
   font-size: 1.5em;
   color: red;
