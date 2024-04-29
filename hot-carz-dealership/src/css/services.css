@@ -1,80 +1,73 @@
 .homepage {
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .welcome {
-    font-size: 2em;
-    color: black;
-    font-weight: bold;
-  }
-  
-  .carDisplay {
-    margin-top: 20px;
-    padding: 20px;
-    border-radius: 5px;
-  }
-  
-  .carDisplayTitle {
-    font-size: 1.5em;
-    color: red;
-  }
-  
-  .featuredCarList {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .featuredCarItem {
-    text-align: center;
-    flex: 1;
-  }
-  
-  .featuredCarImage {
-    height: 300px;
-    width: 300px;
-    margin: 0 auto;
-  }
-  
-  .searchButton {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    margin-bottom: 1rem;
-  }
-  
-  .servicesItem {
-    margin-left: 2%;
-    margin-right: 2%;
-    width: 30%;
-    text-align: center;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-  
-  .serviceImage {
-    height: 200px;
-    width: 300px;
-    margin: 0 auto;
-  }
-  
-  .servicesDisplayTitle {
-    color: red;
-    text-align: center;
-    font-size: 1.5em;
-  }
-  
-  .price {
-    color: red;
-  }
-  
-  .bookApptButton {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-  }
-  
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.welcome {
+  font-size: 2em;
+  color: black;
+  font-weight: bold;
+}
+
+.carDisplayTitle {
+  font-size: 1.5em;
+  color: red;
+}
+
+.featuredCarList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.featuredCarItem {
+  text-align: center;
+  flex: 1;
+}
+
+.featuredCarImage {
+  height: 300px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.searchButton {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 1rem;
+}
+
+.servicesItem {
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 30%;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.serviceImage {
+  height: 200px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.servicesDisplayTitle {
+  color: red;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.price {
+  color: red;
+}
+
+.bookApptButton {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}

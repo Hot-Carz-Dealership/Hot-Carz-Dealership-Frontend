@@ -1,16 +1,16 @@
 import React from "react";
 import httpClient from "../httpClient";
 import { useState } from "react";
+import { BASE_URL } from "../utilities/constants";
 
 import styles from "../css/loginhome.css";
-
 
 const EmployeeLogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const logInEmployee = async () => {
-    const resp = await httpClient.post("//localhost:5000/api/employees/login", {
+    const resp = await httpClient.post(`${BASE_URL}/api/employees/login`, {
       email: email,
       password: password,
     });

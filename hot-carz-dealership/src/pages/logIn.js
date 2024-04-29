@@ -15,7 +15,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import httpClient from "../httpClient";
 import { BASE_URL } from "../utilities/constants";
 
-
 function Copyright(props) {
   return (
     <Typography
