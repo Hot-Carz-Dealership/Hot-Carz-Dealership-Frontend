@@ -16,12 +16,16 @@ const Account = () => {
   const [selectedTab, setSelectedTab] = useState(1);
   const [vehicleListings, setVehicleListings] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
+  const [invoices, setInvoices] = useState([]);
+  const [bids, setBids] = useState([]);
+  const [testDrives, setTestDrives] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         setUser(resp.data);
+
         setLoading(false);
         
         const requestData = {
@@ -41,6 +45,18 @@ const Account = () => {
         const serviceResponse = await fetch(`${BASE_URL}/api/members/service-appointments`, requestData);
         const serviceData = await serviceResponse.json();
         setServiceAppointments(serviceData);
+
+        const invoiceResponse = await fetch(`${BASE_URL}/api/member/payment-purchases-finance-bid-data`, requestData)
+        const invoiceData = await invoiceResponse.json();
+        setInvoices(invoiceData);
+
+        const bidResponse = await fetch(`${BASE_URL}/api/member/current-bids`, requestData)
+        const bidData = await bidResponse.json();
+        setBids(bidData);
+
+        const driveResponse = await fetch(`${BASE_URL}/api/member/test_drive_data`, requestData)
+        const driveData = await driveResponse.json();
+        setTestDrives(driveData);
 
       } catch (error) {
         console.log("Not Authenticated");
@@ -130,6 +146,8 @@ const Account = () => {
         return <VehicleListingsTable />;
       case 6:
         return <SalesReportTable />;
+      case 7:
+        return <ActiveBidsTable />;
       default:
         return <AccountInfo />;
     }
@@ -190,15 +208,54 @@ const Account = () => {
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>Make</th>
-            <th>Model</th>
+            <th>Bid ID</th>
             <th>VIN</th>
-            <th>MSRP</th>
-            <th>Bid Amount</th>
+            <th>Bid Value</th>
+            <th>Status</th>
+            <th>Bid Date</th>
+          </tr>
+        </thead>
+        <tbody> 
+        {bids.map(bid => ( bid.bidStatus === "Confirmed" &&
+                <tr key={bid.bidID}>
+                  <td>{bid.bidID}</td>
+                  <td>{bid.VIN_carID}</td>
+                  <td>{bid.bidValue}</td>
+                  <td>{bid.bidStatus}</td>
+                  <td>{bid.bidTimestamp}</td>
+                </tr>
+              ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const ActiveBidsTable = () => (
+    <div className="table-responsive">
+      <h2>Active Bids</h2>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Bid ID</th>
+            <th>VIN</th>
+            <th>Bid Value</th>
+            <th>Status</th>
+            <th>Bid Date</th>
             <th>Action</th>
           </tr>
         </thead>
-        <tbody> TODO: idk replace this later</tbody>
+        <tbody> 
+        {bids.map(bid => ( bid.bidStatus === "Processing" &&
+                <tr key={bid.bidID}>
+                  <td>{bid.bidID}</td>
+                  <td>{bid.VIN_carID}</td>
+                  <td>{bid.bidValue}</td>
+                  <td>{bid.bidStatus}</td>
+                  <td>{bid.bidTimestamp}</td>
+                  <td><button>Counter Offer</button><button>Decline</button></td>
+                </tr>
+              ))}
+        </tbody>
       </table>
     </div>
   );
@@ -209,13 +266,28 @@ const Account = () => {
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>Customer Phone</th>
-            <th>Full Name</th>
-            <th>Vehicle</th>
-            <th>Datetime</th>
+            <th>Test Drive ID</th>
+            <th>Car VIN</th>
+            <th>Date</th>
+            <th>Confirmed?</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
           </tr>
         </thead>
-        <tbody>TODO: idk replace this later</tbody>
+        <tbody>
+        {testDrives.map(drive => (
+                <tr key={drive.testdrive_id}>
+                  <td>{drive.testdrive_id}</td>
+                  <td>{drive.VIN_carID}</td>
+                  <td>{drive.appointment_date}</td>
+                  <td>{drive.confirmation}</td>
+                  <td>{drive.make}</td>
+                  <td>{drive.model}</td>
+                  <td>{drive.year}</td>
+                </tr>
+              ))}
+        </tbody>
       </table>
     </div>
   );
@@ -282,122 +354,34 @@ const Account = () => {
     </div>
   );
   const SalesReportTable = () => {
-    const [salesReport, setSalesReport] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState("");
-    const [selectedYear, setSelectedYear] = useState("");
-    const [totalSales, setTotalSales] = useState("");
 
-    useEffect(() => {
-      const response = fetch(`${FINANCE_URL}/`);
-      console.log(response);
-      const response1 = fetch(`${BASE_URL}/`);
-      console.log(response1);
-      /// fetchSalesReport();
-    }, []);
-
-    // Function to handle changes in the month dropdown
-    const handleMonthChange = (event) => {
-      setSelectedMonth(event.target.value);
-    };
-
-    // Function to handle changes in the year dropdown
-    const handleYearChange = (event) => {
-      setSelectedYear(event.target.value);
-    };
-
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-
-      // Check if both month and year are selected
-      if (!selectedMonth || !selectedYear) {
-        alert("Please select both month and year.");
-        return;
-      }
-
-      try {
-        // Send a GET request to your backend API with selected month and year
-        const response = await fetch(
-          `${FINANCE_URL}/api/manager/monthly-sales-report?month=${selectedMonth}&year=${selectedYear}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch sales report");
-        }
-
-        const data = await response.json();
-        setSalesReport(data.sales_report);
-        // Set total sales in the state
-        setTotalSales(data.total_sales);
-      } catch (error) {
-        console.error("Error fetching sales report:", error.message);
-      }
-    };
 
     return (
       <div className="table-responsive">
-        <h2>Sales Report</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="month">Month:</label>
-            <select
-              id="month"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-            >
-              <option value="">Select Month</option>
-              <option value="">Select Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-            <label htmlFor="year">Year:</label>
-            <select id="year" value={selectedYear} onChange={handleYearChange}>
-              <option value="">Select Year</option>
-              <option value="">Select Year</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-              <option value="2020">2020</option>
-              <option value="2019">2019</option>
-            </select>
-            <button type="submit">Generate Report</button>
-          </div>
-        </form>
+        <h2>Past Invoices</h2>
         <table className="table table-bordered">
           <thead>
             <tr>
               <th>Purchase ID</th>
-              <th>Member ID</th>
+              <th>Bid ID (For Vehicle Purchases)</th>
+              <th>Car VIN</th>
               <th>Confirmation Number</th>
-              <th>Vehicle ID</th>
-              <th>Bid Value</th>
+              <th>Purchse Type</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            {salesReport.map((sale, index) => (
+            {invoices.purchase_history.map((purch, index) => (
               <tr key={index}>
-                <td>{sale.purchase_id}</td>
-                <td>{sale.member_id}</td>
-                <td>{sale.confirmation_number}</td>
-                <td>{sale.vehicle_id}</td>
-                <td>{sale.bid_value}</td>
+                <td>{purch.purchaseID}</td>
+                <td>{purch.bidID}</td>
+                <td>{purch.VIN_carID}</td>
+                <td>{purch.confirmationNumber}</td>
+                <td>{purch.purchaseType}</td>
+                <td>{purch.purchaseDate}</td>
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan="4">Total Sales:</td>
-              <td>{totalSales}</td>
-            </tr>
-          </tfoot>
         </table>
       </div>
     );
@@ -436,6 +420,17 @@ const Account = () => {
           }}
         >
           Bids
+        </button>
+        <button
+          className="btn btn-block btn-dark mb-3"
+          style={selectedTab === 7 ? styles.selected : {}}
+          onClick={() => {
+            // fetchDataSelection("");
+            setSelectedTab(7);
+            renderSection();
+          }}
+        >
+          Active Bids
         </button>
         <button
           className="btn btn-block btn-dark mb-3"
