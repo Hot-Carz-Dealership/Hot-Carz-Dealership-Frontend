@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
-import VehicleImage from "../utilities/VehicleImage";
+//import VehicleImage from "../utilities/VehicleImage";
 
 const getcart = () => {
   //this gets the items from the cart
@@ -91,7 +91,7 @@ function Payment() {
   
   
   function PurchaseCheckout() {
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, /*setCartItems*/] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
     const [taxes, setTaxes] = useState(0);
     const [total, setTotal] = useState(0);
@@ -122,12 +122,13 @@ function Payment() {
     );
   }
   
-
+/*
 function Footer() {
   return (
     <footer className="self-stretch mt-32 w-full bg-black min-h-[287px] max-md:mt-10 max-md:max-w-full" />
   );
 }
+*/
 
 
 export default PurchaseCheckout;

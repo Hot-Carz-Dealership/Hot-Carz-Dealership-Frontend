@@ -10,8 +10,8 @@ import styles from "../css/creation.css";
 
 const AddMemberVehicle = () => {
 
-  const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
+  const [/*user,*/ setUser] = useState(null);
+  const [/*sessionId,*/ setSessionId] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [formData, setFormData] = useState({
@@ -42,7 +42,7 @@ useEffect(() => {
           navigate("/login");
       }
   })();
-}, [navigate]);
+},);
 
   const carData = {
     "Acura": {
@@ -403,6 +403,7 @@ useEffect(() => {
     };
 
   // Function to dynamically populate the year dropdown based on the selected model
+  /*
   const handleModelChange = (e) => {
     const selectedModel = e.target.value;
     setFormData({
@@ -411,6 +412,7 @@ useEffect(() => {
       year: "", // Reset year when model changes
     });
   };
+  */
 
 
   return (

@@ -13,12 +13,12 @@ import styles from "../css/employees.css";
     const navigate = useNavigate();
   
     const [user, setUser] = useState(null);
-    const [sessionId, setSessionId] = useState(null);
-    const [serviceAppointments, setServiceAppointments] = useState([]);
-    const [members, setMembers] = useState([]);
-    const [employees, setEmployees] = useState([]);
-    const [technicians, setTechnicians] = useState([]);
-    const [selectedTab, setSelectedTab] = useState(0);
+    const [/*sessionId,*/ setSessionId] = useState(null);
+    const [/*serviceAppointments,*/ setServiceAppointments] = useState([]);
+    const [/*members,*/ setMembers] = useState([]);
+    const [/*employees,*/ setEmployees] = useState([]);
+    const [/*technicians,*/ setTechnicians] = useState([]);
+   // const [selectedTab, setSelectedTab] = useState(0);
     const [showTable, setShowTable] = useState(false);
     const [assignedAppointments, setAssignedAppointments] = useState([]);
     const currentDate = new Date().toLocaleDateString(); 
@@ -60,7 +60,7 @@ import styles from "../css/employees.css";
       };
   
       fetchData();
-    }, [navigate]);
+    }, );
   
 
     
@@ -69,6 +69,7 @@ import styles from "../css/employees.css";
     window.location.href = "/";
   };
 
+  /*
     const handleSelectionChange = (appointmentId) => async (event) => {
       const selectedTechnicianId = event.target.value;
   
@@ -95,6 +96,8 @@ import styles from "../css/employees.css";
         }
         : null;
     };
+
+    */
   
     const handleGetStarted = () => {
       setShowTable(true);
@@ -152,7 +155,7 @@ import styles from "../css/employees.css";
     const [apptStatus, setApptStatus] = React.useState(null);
     const [apptComment, setApptComment] = React.useState(null);
 
-    const [newStatus, setNewStatus] = React.useState(null);
+    //const [newStatus, setNewStatus] = React.useState(null);
 
 
     const [open, setOpen] = React.useState(false);
@@ -171,7 +174,7 @@ import styles from "../css/employees.css";
 
     const ValueModal = ({ open, aptID, aptVIN, aptDate, aptName, aptStatus, aptComment, onClose }) => {
     
-      const [value, setValue] = useState('');
+      const [value/*, setValue*/] = useState('');
 
       return (
         <Modal
@@ -196,7 +199,7 @@ import styles from "../css/employees.css";
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Appointment Status: {aptStatus}
           </Typography>
-          {aptStatus != "Done" ? (
+          {aptStatus !== "Done" ? (
             <div>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Update Appointment:
@@ -235,10 +238,11 @@ import styles from "../css/employees.css";
         </Modal>
       );
     };
+    /*
     const handleStatusChange = (e) =>{
       setNewStatus(e.target.value)
     }
-
+*/
     const handleUpdateSubmit = async () =>{
       var x = document.getElementById("newStatus");
       var stat = x.value;
@@ -264,42 +268,11 @@ import styles from "../css/employees.css";
         body: JSON.stringify(data)
       }
       const response = await fetch(`${BASE_URL}/api/technician-view-service-appointments/technician-edit`, requestData);
-      const responseData = await response.json();
+    const responseData = await response.json();
+    console.log(responseData);
     }
 
 
-
-
-
-
-
-
-
-    const assignTechnician = (appointmentId, technicianId, sessionId) => {
-      const data = {
-        appointment_id: appointmentId,
-        employee_id: technicianId,
-      };
-  
-      fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to assign technician to appointment');
-        }
-        console.log('Technician assigned successfully');
-      })
-      .catch(error => {
-        console.error('Error assigning technician:', error.message);
-      });
-    };
-  
     const renderTable = () => {
       return (
         <div style={styles.tableWrapper}>

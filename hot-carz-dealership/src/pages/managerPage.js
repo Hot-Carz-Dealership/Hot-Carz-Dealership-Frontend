@@ -24,7 +24,7 @@ import styles from "../css/employees.css";
 const ManagerPage = () => {
   const FINAN_URL = "http://localhost:5001";
 
-  const [bids, setBids] = useState([]);
+  const [setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
 
@@ -34,9 +34,7 @@ const ManagerPage = () => {
 
   const [serviceAppointments, setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
-  const [employees, setEmployees] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [services, setServices] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
@@ -77,173 +75,15 @@ const ManagerPage = () => {
     window.location.href = "/";
   };
   const fetchData = async () => {
-    /*
-    try {
-      // Fetch service appointments
-      const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
-      if (!appointmentsResponse.ok) {
-        throw new Error('Failed to fetch service appointments');
-      }
-      const appointmentsData = await appointmentsResponse.json();
-      console.log("Service Appointments fetched successfully:", appointmentsData);
-      // Update state variable with fetched data
-      setServiceAppointments(appointmentsData);
-    } catch (error) {
-      console.error("Error fetching service appointments:", error);
-    }
-
-    try {
-      // Fetch members
-      const servicesResponse = await fetch(`${BASE_URL}/api/service-menu`);
-      if (!servicesResponse.ok) {
-        throw new Error('Failed to fetch services');
-      }
-      const serviceData = await servicesResponse.json();
-      console.log("Services fetched successfully:", serviceData);
-      // Update state variable with fetched data
-      setServices(serviceData);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-    }
-
-    try {
-      // Fetch members
-      const membersResponse = await fetch(`${BASE_URL}/api/members`);
-      if (!membersResponse.ok) {
-        throw new Error('Failed to fetch members');
-      }
-      const membersData = await membersResponse.json();
-      console.log("Members fetched successfully:", membersData);
-      // Update state variable with fetched data
-      setMembers(membersData);
-    } catch (error) {
-      console.error("Error fetching members:", error);
-    }
-
-    try {
-      // Fetch Employees
-      const employeeResponse = await fetch(`${BASE_URL}/api/employees`);
-      if (!employeeResponse.ok) {
-        throw new Error('Failed to fetch employees');
-      }
-      const employeeData = await employeeResponse.json();
-      console.log("Employees fetched successfully", employeeData);
-      // Update state variable with fetched data
-      setEmployees(employeeData);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
-
-    try {
-      // Fetch Technicians
-      const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
-      if (!technicianResponse.ok) {
-        throw new Error('Failed to fetch technicians');
-      }
-      const techniciansData = await technicianResponse.json();
-      console.log("Technicians fetched successfully:", techniciansData);
-      // Update state variable with fetched data
-      setTechnicians(techniciansData);
-    } catch (error) {
-      console.error("Error fetching technicians:", error);
-    }
-
-    try {
-      // Fetch Bids
-      const bidsResponse = await fetch(`${FINAN_URL}/api/current-bids`);
-      if (!bidsResponse.ok) {
-        throw new Error('Failed to fetch bids');
-      }
-      const bidsData = await bidsResponse.json();
-      console.log("Bids fetched successfully:", bidsData);
-      // Update state variable with fetched data
-      setBids(bidsData);
-    } catch (error) {
-      console.error("Error fetching bids:", error);
-    }
-
-    try {
-      const purchasesResponse = await fetch(`${FINAN_URL}/api/purchases`);
-      if (!purchasesResponse.ok) {
-        throw new Error('Failed to fetch purchases');
-      }
-      const purchasesData = await purchasesResponse.json();
-      setPurchases(purchasesData.purchases); // Update purchases state here
-    } catch (error) {
-      console.error('Error fetching purchases:', error.message);
-    }
-    
-
-    try {
-      // Fetch Test Drives
-      const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
-      if (!testDrivesResponse.ok) {
-        throw new Error('Failed to fetch test drives');
-      }
-      const testDrivesData = await testDrivesResponse.json();
-      console.log("Test Drives fetched successfully:", testDrivesData);
-      // Update state variable with fetched data
-      setTestDrives(testDrivesData);
-    } catch (error) {
-      console.error("Error fetching test drives:", error);
-    }
-
-    try {
-      // Fetch Vehicle Listings
-      const vehicleListingsResponse = await fetch(`${BASE_URL}/api/vehicles/search`);
-      if (!vehicleListingsResponse.ok) {
-        throw new Error('Failed to fetch vehicle listings');
-      }
-      const vehicleListingsData = await vehicleListingsResponse.json();
-      console.log("Vehicle Listings fetched successfully:", vehicleListingsData);
-      // Update state variable with fetched data
-      setVehicleListings(vehicleListingsData);
-    } catch (error) {
-      console.error("Error fetching vehicle listings:", error);
-    }
- */
-  
-    // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
-  }; 
+  };
 
   const fetchDataSelection = async (selectedTab) => {
     console.log("SELECTED TAB AAHHH SELECTED FUCKING TAB: " + selectedTab);
     try {
       switch (selectedTab) {
         case 0:
-          /*
-          // Fetch service appointments
-          const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
-          if (!appointmentsResponse.ok) {
-            throw new Error('Failed to fetch service appointments');
-          }
-          const appointmentsData = await appointmentsResponse.json();
-          console.log("Service Appointments fetched successfully:", appointmentsData);
-          // Update state variable with fetched data
-          setServiceAppointments(appointmentsData);
-  
-          // Fetch members
-          const membersResponse = await fetch(`${BASE_URL}/api/members`);
-          if (!membersResponse.ok) {
-            throw new Error('Failed to fetch members');
-          }
-          const membersData = await membersResponse.json();
-          console.log("Members fetched successfully:", membersData);
-          // Update state variable with fetched data
-          setMembers(membersData);
-  
-          // Fetch Employees
-          const employeeResponse = await fetch(`${BASE_URL}/api/employees`);
-          if (!employeeResponse.ok) {
-            throw new Error('Failed to fetch employees');
-          }
-          const employeeData = await employeeResponse.json();
-          console.log("Employees fetched successfully", employeeData);
-          // Update state variable with fetched data
-          setEmployees(employeeData);
-  
           // Fetch Technicians
-          const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
+          const technicianResponse= await fetch(`${BASE_URL}/api/employees/technicians`);
           if (!technicianResponse.ok) {
             throw new Error('Failed to fetch technicians');
           }
@@ -251,18 +91,7 @@ const ManagerPage = () => {
           console.log("Technicians fetched successfully:", techniciansData);
           // Update state variable with fetched data
           setTechnicians(techniciansData);
-  
-          // Fetch Bids
-          const bidsResponse = await fetch(`${FINAN_URL}/api/current-bids`);
-          if (!bidsResponse.ok) {
-            throw new Error('Failed to fetch bids');
-          }
-          const bidsData = await bidsResponse.json();
-          console.log("Bids fetched successfully:", bidsData);
-          // Update state variable with fetched data
-          setBids(bidsData);
-  
-          // Fetch Test Drives
+
           const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
           if (!testDrivesResponse.ok) {
             throw new Error('Failed to fetch test drives');
@@ -271,19 +100,34 @@ const ManagerPage = () => {
           console.log("Test Drives fetched successfully:", testDrivesData);
           // Update state variable with fetched data
           setTestDrives(testDrivesData);
-  
-          // Fetch Vehicle Listings
-          const vehicleListingsResponse = await fetch(`${BASE_URL}/api/vehicles/search`);
-          if (!vehicleListingsResponse.ok) {
-            throw new Error('Failed to fetch vehicle listings');
+
+
+          const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
+          if (!appointmentsResponse.ok) {
+            throw new Error('Failed to fetch service appointments');
           }
-          const vehicleListingsData = await vehicleListingsResponse.json();
-          console.log("Vehicle Listings fetched successfully:", vehicleListingsData);
+          const appointmentsData = await appointmentsResponse.json();
+          console.log("Service Appointments fetched successfully:", appointmentsData);
           // Update state variable with fetched data
-          setVehicleListings(vehicleListingsData);
-          */
-  
-          // If there are any other operations or data sets to fetch, add similar try-catch blocks here.
+          setServiceAppointments(appointmentsData);
+
+
+          const bidsResponse = await fetch(`${FINAN_URL}/api/manager/current-bids`);
+          if (!bidsResponse.ok) {
+            throw new Error('Failed to fetch bids');
+          }
+          const bidsData = await bidsResponse.json();
+          console.log("Bids fetched successfully:", bidsData);
+          // Update state variable with fetched data
+          setBids(bidsData);
+
+
+          //Appointments that need to be assigned
+          //Contract that need to be signed by manager
+          //Bids that need to be accepted/ denied/ counter-bid
+          //TEST DAMN DRIVES
+
+
           break;
         case 1:
           // Fetch service appointments
@@ -298,7 +142,7 @@ const ManagerPage = () => {
           break;
         case 2:
           // Fetch Bids
-          const bidsResponse2 = await fetch(`${FINAN_URL}/api/current-bids`);
+          const bidsResponse2 = await fetch(`${FINAN_URL}/api/manager/current-bids`);
           if (!bidsResponse2.ok) {
             throw new Error('Failed to fetch bids');
           }
@@ -345,7 +189,6 @@ const ManagerPage = () => {
 
           // Fetch Sales Report
           // Add your sales report fetching logic here
-          break;
         case 7:
           // Fetch Technicians
           const technicianResponse7 = await fetch(`${BASE_URL}/api/employees/technicians`);
@@ -373,7 +216,7 @@ const ManagerPage = () => {
       console.error("Error fetching data:", error);
     }
   };
-  
+
 
   // Function to get member details by memberID
   const getMemberDetails = (memberID) => {
@@ -393,6 +236,61 @@ const ManagerPage = () => {
       : null;
   };
 
+  const handleSelectionChange = (appointmentId) => async (event) => {
+    console.log("APP: " + appointmentId);
+    console.log("EMPL: " + event.target.value);
+    // Get the selected technician ID from the dropdown
+    const selectedTechnicianId = event.target.value;
+
+    // Call the assignTechnician function with appointment ID, selected technician ID, and session ID
+    try {
+      await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
+      // Update the appointment object with the newly selected technician ID
+      const updatedAppointments = serviceAppointments.map(appointment => {
+        if (appointment.appointment_id === appointmentId) {
+          return {
+            ...appointment,
+            employeeID: selectedTechnicianId
+          };
+        }
+        return appointment;
+      });
+      // Update the state with the updated appointments
+      setServiceAppointments(updatedAppointments);
+    } catch (error) {
+      console.error('Error assigning technician:', error.message);
+    }
+  };
+
+  const assignTechnician = (appointmentId, technicianId, sessionId) => {
+    // Create a JSON object with appointment_id, employee_id, and session_id
+    const data = {
+      appointment_id: appointmentId,
+      employee_id: technicianId,
+    };
+
+    fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Include cookies in the request
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to assign technician to appointment');
+        }
+        // Handle success response here if needed
+        console.log('Technician assigned successfully');
+      })
+      .catch(error => {
+        // Handle error here
+        console.error('Error assigning technician:', error.message);
+      });
+
+  };
+
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -402,32 +300,9 @@ const ManagerPage = () => {
     switch (selectedTab) {
       case 0: // If "ALL" is selected, render all tables with borders
         return (
-          <>
-            <div style={styles.tableWrapper}>
-              <ServiceCenter />
-            </div>
-            <div style={styles.tableWrapper}>
-              <TechnicianTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <BidsTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <PurchaseTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <TestDrivesTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <CustomersTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <VehicleListingsTable />
-            </div>
-            <div style={styles.tableWrapper}>
-              <SalesReportTable />
-            </div>
-          </>
+          <div style={styles.tableWrapper}>
+            <TODO />
+          </div>
         );
       case 1: // Render selected table with border
         return (
@@ -482,74 +357,147 @@ const ManagerPage = () => {
     }
   };
 
+  const TODO = () => {
+    // Get today's date
+    const [selectedTab, setSelectedTab] = useState('serviceCenter');
+  
+    const renderSelectedTable = () => {
+      switch (selectedTab) {
+        case 'serviceCenter':
+          return <ServiceCenter applyFilter={true} />;
+        case 'testDrives':
+          return <TestDrivesTable applyFilter={true} />;
+        case 'bids':
+          return <BidsTable applyFilter={true} />;
+        case 'awaitingSignature':
+          return <AwaitingSignature />;
+        default:
+          return null;
+      }
+    };
+  
+    return (
+      <div>
+        <div>
+          <button className={selectedTab === 'serviceCenter' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('serviceCenter')}>Service Appointments</button>
+          <button className={selectedTab === 'testDrives' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('testDrives')}>Test Drives</button>
+          <button className={selectedTab === 'bids' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('bids')}>Bids</button>
+          <button className={selectedTab === 'awaitingSignature' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('awaitingSignature')}>Awaiting Signature</button>
+        </div>
+        {renderSelectedTable()}
+      </div>
+    );
+  };
+  const AwaitingSignature = () => {
+    const [contracts, setContracts] = useState([]);
+    const [managerSignature, setManagerSignature] = useState('');
 
-  const ServiceCenter = () => {
+    useEffect(() => {
+        fetchContracts();
+    }, []);
 
+    const fetchContracts = async () => {
+        try {
+            const response = await fetch('/api/manager/signature-waiting');
+            if (!response.ok) {
+                throw new Error('Failed to fetch contracts awaiting signature');
+            }
+            const data = await response.json();
+            setContracts(data.purchases_waiting_signature);
+        } catch (error) {
+            console.error('Error fetching contracts:', error.message);
+        }
+    };
+
+    const handleSignatureChange = (event) => {
+        setManagerSignature(event.target.value);
+    };
+
+    const handleSubmit = async (purchaseID) => {
+        try {
+            const response = await fetch('/api/manager/signature', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ purchaseID, signature: managerSignature })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update signature');
+            }
+            const data = await response.json();
+            console.log(data.message); // Log success message
+            // Refetch awaiting signature contracts after successful update
+            fetchContracts();
+        } catch (error) {
+            console.error('Error updating signature:', error.message);
+        }
+    };
+
+    return (
+        <div>
+            <h2>Contracts Awaiting Manager Signature</h2>
+            <table className="table table-bordered table-striped">
+                <thead className="thead-dark">
+                    <tr>
+                        <th>Purchase ID</th>
+                        <th>Bid ID</th>
+                        <th>Member ID</th>
+                        <th>VIN Car ID</th>
+                        <th>Addon ID</th>
+                        <th>Service ID</th>
+                        <th>Confirmation Number</th>
+                        <th>Purchase Type</th>
+                        <th>Purchase Date</th>
+                        <th>Manager's Signature</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {contracts.map(contract => (
+                        <tr key={contract.purchaseID}>
+                            <td>{contract.purchaseID}</td>
+                            <td>{contract.bidID}</td>
+                            <td>{contract.memberID}</td>
+                            <td>{contract.VIN_carID}</td>
+                            <td>{contract.addon_ID}</td>
+                            <td>{contract.serviceID}</td>
+                            <td>{contract.confirmationNumber}</td>
+                            <td>{contract.purchaseType}</td>
+                            <td>{contract.purchaseDate}</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="Enter Manager's Signature"
+                                    value={managerSignature}
+                                    onChange={handleSignatureChange}
+                                />
+                            </td>
+                            <td>
+                                <button onClick={() => handleSubmit(contract.purchaseID)}>Submit Signature</button>
+                            </td>
+                        </tr>
+                    ))}
+                    {contracts.length === 0 && (
+                        <tr>
+                            <td colSpan="11">No contracts awaiting manager signature</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+  const ServiceCenter = ({ applyFilter }) => {
     const [services, setServices] = useState([]);
     const [newServiceName, setNewServiceName] = useState('');
     const [newServicePrice, setNewServicePrice] = useState('');
-
-    const handleSelectionChange = (appointmentId) => async (event) => {
-      console.log("APP: " + appointmentId);
-      console.log("EMPL: " + event.target.value);
-      // Get the selected technician ID from the dropdown
-      const selectedTechnicianId = event.target.value;
-
-      // Call the assignTechnician function with appointment ID, selected technician ID, and session ID
-      try {
-        await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
-        // Update the appointment object with the newly selected technician ID
-        const updatedAppointments = serviceAppointments.map(appointment => {
-          if (appointment.appointment_id === appointmentId) {
-            return {
-              ...appointment,
-              employeeID: selectedTechnicianId
-            };
-          }
-          return appointment;
-        });
-        // Update the state with the updated appointments
-        setServiceAppointments(updatedAppointments);
-      } catch (error) {
-        console.error('Error assigning technician:', error.message);
-      }
-    };
-
-
-    // Function to assign a technician to an appointment
-    const assignTechnician = (appointmentId, technicianId, sessionId) => {
-      // Create a JSON object with appointment_id, employee_id, and session_id
-      const data = {
-        appointment_id: appointmentId,
-        employee_id: technicianId,
-      };
-
-      fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include', // Include cookies in the request
-        body: JSON.stringify(data)
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to assign technician to appointment');
-          }
-          // Handle success response here if needed
-          console.log('Technician assigned successfully');
-        })
-        .catch(error => {
-          // Handle error here
-          console.error('Error assigning technician:', error.message);
-        });
-
-    };
-
+  
     useEffect(() => {
-      // Fetch services from the backend when the component mounts
+      fetchServices();
     }, []);
-
+  
     const fetchServices = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/service-menu`);
@@ -562,7 +510,7 @@ const ManagerPage = () => {
         console.error('Error fetching services:', error.message);
       }
     };
-
+  
     const handleAddService = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
@@ -570,22 +518,20 @@ const ManagerPage = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include', // Include cookies in the request
+          credentials: 'include',
           body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
         });
         if (!response.ok) {
           throw new Error('Failed to add service');
         }
-        // Refetch services after adding a new service
         await fetchServices();
-        // Clear input fields after adding a new service
         setNewServiceName('');
         setNewServicePrice('');
       } catch (error) {
         console.error('Error adding service:', error.message);
       }
     };
-
+  
     const handleDeleteService = async (serviceID) => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
@@ -593,35 +539,28 @@ const ManagerPage = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include', // Include cookies in the request
-
+          credentials: 'include',
           body: JSON.stringify({ service_id: serviceID })
         });
         if (!response.ok) {
           throw new Error('Failed to delete service');
         }
-        // Refetch services after deleting a service
         await fetchServices();
       } catch (error) {
         console.error('Error deleting service:', error.message);
       }
     };
+  
     const handleEditService = (service) => {
-      // Prompt window to edit service name and price
       const editedName = prompt('Enter new service name:', service.service_name);
       const editedPrice = prompt('Enter new service price:', service.price);
-
-      // If user clicks cancel, editedName and editedPrice will be null
       if (editedName !== null && editedPrice !== null) {
-        // Update service name and price locally
         service.service_name = editedName;
         service.price = editedPrice;
-
-        // Send updated service data to the backend
         updateService(service);
       }
     };
-
+  
     const updateService = async (service) => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
@@ -631,7 +570,7 @@ const ManagerPage = () => {
           },
           credentials: 'include',
           body: JSON.stringify({
-            edit_or_add: 2,  // Indicate editing mode
+            edit_or_add: 2,
             serviceID: service.serviceID,
             service_name: service.service_name,
             price: service.price
@@ -640,62 +579,71 @@ const ManagerPage = () => {
         if (!response.ok) {
           throw new Error('Failed to update service');
         }
-        // Refetch services after updating
         await fetchServices();
       } catch (error) {
         console.error('Error updating service:', error.message);
       }
     };
+    
+     // Get today's date
+  const today = new Date();
 
-
+  // Filter service appointments for today or future dates that don't have a technician assigned yet
+  const scheduledServiceAppointments = applyFilter ? serviceAppointments.filter(appointment => {
+    const appointmentDate = new Date(appointment.appointment_date);
+    return appointmentDate >= today && appointment.status === 'Scheduled' && !appointment.employeeID;
+  }) : serviceAppointments;
+  
     return (
-      <div className="table-responsive" style={styles.tableHeight}>
-        <h2>Service Appointments</h2>
-        <table className="table table-bordered table-striped" style={styles.tableHeight}>
-          <thead className="thead-dark">
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Appointment Date</th>
-              <th>Service Type</th>
-              <th>Technician Assigned</th>
-              <th>Technician Comment</th>
+      <div>
+        {/* Service Appointments */}
+        <div className="table-responsive" style={styles.tableHeight}>
+      <h2>Scheduled Service Appointments</h2>
+      <table className="table table-bordered table-striped" style={styles.tableHeight}>
+        <thead className="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Appointment Date</th>
+            <th>Service Type</th>
+            <th>Technician Assigned</th>
+            <th>Technician Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {scheduledServiceAppointments.map(appointment => (
+            <tr key={appointment.appointment_id}>
+              <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
+              <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
+              <td>{getMemberDetails(appointment.memberID)?.email}</td>
+              <td>{getMemberDetails(appointment.memberID)?.phone}</td>
+              <td>{appointment.appointment_date}</td>
+              <td>{appointment.service_name}</td>
+              <td>
+                <select value={appointment.employeeID} onChange={handleSelectionChange(appointment.appointment_id)}>
+                  <option value="-" key="default">-</option>
+                  {technicians.map(technician => (
+                    <option key={technician.employeeID} value={technician.employeeID}>
+                      {technician.first_name} {technician.last_name}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>{appointment.comments}</td>
             </tr>
-          </thead>
-          <tbody>
-            {serviceAppointments && serviceAppointments.map(appointment => (
-              <tr key={appointment.appointment_id}>
-                <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
-                <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
-                <td>{getMemberDetails(appointment.memberID)?.email}</td>
-                <td>{getMemberDetails(appointment.memberID)?.phone}</td>
-                <td>{appointment.appointment_date}</td>
-                <td>{appointment.service_name}</td> {/* Display service name */}
-                <td>
-                  <select value={appointment.employeeID} onChange={handleSelectionChange(appointment.appointment_id)}>
-                    <option value="-" key="default">-</option>
-                    {technicians.map(technician => (
-                      <option key={technician.employeeID} value={technician.employeeID}>
-                        {technician.first_name} {technician.last_name}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td>{appointment.comments}</td> {/* Display technician comment */}
-              </tr>
-            ))}
-            {!serviceAppointments && (
-              <tr>
-                <td colSpan="8">No service appointments available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
+          ))}
+          {scheduledServiceAppointments.length === 0 && (
+            <tr>
+              <td colSpan="8">No scheduled service appointments available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  
         <h2>Current Available Services</h2>
-
         {/* Add Service Input Fields */}
         <div>
           <input
@@ -727,17 +675,17 @@ const ManagerPage = () => {
                 <td>{service.service_name}</td>
                 <td>{service.price}</td>
                 <td>
-                  <button onClick={() => handleEditService(service)}>Edit</button> {/* Call handleEditService function */}
+                  <button onClick={() => handleEditService(service)}>Edit</button>
                   <button onClick={() => handleDeleteService(service.serviceID)}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
       </div>
     );
   };
+  
 
   const TechnicianTable = () => {
 
@@ -777,18 +725,16 @@ const ManagerPage = () => {
       </div>
     );
   };
-
-
-  const BidsTable = () => {
-
+  const BidsTable = ({ applyFilter }) => {
+    const [bids, setBids] = useState([]);
+  
     useEffect(() => {
+      fetchCurrentBids();
     }, []);
-
-    
-
+  
     const fetchCurrentBids = async () => {
       try {
-        const response = await fetch(`${FINAN_URL}/api/current-bids`);
+        const response = await fetch(`${FINAN_URL}/api/manager/current-bids`);
         if (!response.ok) {
           throw new Error('Failed to fetch current bids');
         }
@@ -798,13 +744,10 @@ const ManagerPage = () => {
         console.error('Error fetching current bids:', error.message);
       }
     };
-
-    
-   
+  
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
-      console.log(bidId);
       try {
-        const response = await fetch(`${FINAN_URL}/api/current-bids`, {
+        const response = await fetch(`${FINAN_URL}/api/manager/current-bids`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -819,8 +762,18 @@ const ManagerPage = () => {
         console.error('Error updating bid status:', error.message);
       }
     };
-
-
+  
+    const getBidColor = (bid) => {
+      const percentage = (bid.bidValue / bid.MSRP) * 100;
+      if (percentage < 10) {
+        return 'green';
+      } else if (percentage >= 10 && percentage <= 20) {
+        return 'orange';
+      } else {
+        return 'red';
+      }
+    };
+  
     return (
       <div className="table-responsive" style={styles.tableHeight}>
         <h2>Bids</h2>
@@ -830,7 +783,6 @@ const ManagerPage = () => {
               <th>Make</th>
               <th>Model</th>
               <th>VIN</th>
-
               <th>MSRP</th>
               <th>Bid Amount</th>
               <th>Status</th>
@@ -838,25 +790,26 @@ const ManagerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {bids && bids.map((bid, index) => (
-              <tr key={index}>
-                <td>{bid.make}</td>
-                <td>{bid.model}</td>
-                <td>{bid.VIN}</td>
-                <td>{bid.MSRP}</td>
-
-                <td>{bid.bidValue}</td>
-                <td>{bid.bidStatus}</td>
-                <td>
-                  {bid.bidStatus === 'Processing' && (
-                    <>
-                      <button onClick={() => handleBidConfirmation(bid.bidID, 'Confirmed')}>Accept</button>
-                      <button onClick={() => handleBidConfirmation(bid.bidID, 'Denied')}>Decline</button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {bids && bids
+              .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
+              .map((bid, index) => (
+                <tr key={index}>
+                  <td>{bid.make}</td>
+                  <td>{bid.model}</td>
+                  <td>{bid.VIN}</td>
+                  <td>{bid.MSRP}</td>
+                  <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
+                  <td>{bid.bidStatus}</td>
+                  <td>
+                    {bid.bidStatus === 'Processing' && (
+                      <>
+                        <button onClick={() => handleBidConfirmation(bid.bidID, 'Confirmed')}>Accept</button>
+                        <button onClick={() => handleBidConfirmation(bid.bidID, 'Denied')}>Decline</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
             {!bids && (
               <tr>
                 <td colSpan="7">No bids available</td>
@@ -867,72 +820,129 @@ const ManagerPage = () => {
       </div>
     );
   };
-
+  
+  
   const PurchaseTable = () => (
 
-      <div className="table-responsive" style={styles.tableHeight}>
-        <h2>Purchases</h2>
-        <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>Purchase ID</th>
-              <th>Bid ID</th>
-              <th>VIN</th>
-              <th>Member ID</th>
-              <th>Confirmation Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchases && purchases.map((purchase, index) => (
-              <tr key={index}>
-                <td>{purchase.purchaseID}</td>
-                <td>{purchase.bidID}</td>
-                <td>{purchase.VIN_carID}</td>
-                <td>{purchase.memberID}</td>
-                <td>{purchase.confirmationNumber}</td>
-              </tr>
-            ))}
-            {!purchases && (
-              <tr>
-                <td colSpan="5">No purchases available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-          );
-
-  const TestDrivesTable = () => (
     <div className="table-responsive" style={styles.tableHeight}>
-      <h2>Test Drives</h2>
+      <h2>Purchases</h2>
       <table className="table table-bordered table-striped">
         <thead className="thead-dark">
           <tr>
-            <th>Customer Phone</th>
-            <th>Full Name</th>
-            <th>Vehicle</th>
-            <th>Datetime</th>
+            <th>Purchase ID</th>
+            <th>Bid ID</th>
+            <th>VIN</th>
+            <th>Member ID</th>
+            <th>Confirmation Number</th>
           </tr>
         </thead>
         <tbody>
-          {testDrives && testDrives.map((testDrive, index) => (
+          {purchases && purchases.map((purchase, index) => (
             <tr key={index}>
-              <td>{testDrive.phone}</td>
-              <td>{testDrive.fullname}</td>
-              <td>{testDrive.car_make_model}</td>
-              <td>{testDrive.appointment_date}</td>
+              <td>{purchase.purchaseID}</td>
+              <td>{purchase.bidID}</td>
+              <td>{purchase.VIN_carID}</td>
+              <td>{purchase.memberID}</td>
+              <td>{purchase.confirmationNumber}</td>
             </tr>
           ))}
-          {!testDrives && (
+          {!purchases && (
             <tr>
-              <td colSpan="4">No test drives available</td>
+              <td colSpan="5">No purchases available</td>
             </tr>
           )}
         </tbody>
       </table>
     </div>
-
   );
+
+  const TestDrivesTable = ({ applyFilter }) => {
+    // Get today's date
+    const today = new Date();
+  
+    // Filter test drives for today or future dates and 'Awaiting Confirmation' status
+    const pendingTestDrives = testDrives.filter(testDrive => {
+      const testDriveDate = new Date(testDrive.appointment_date); // Convert to JavaScript Date object
+      // Check if the test drive date is today or in the future and confirmation status is 'Awaiting Confirmation'
+      return testDriveDate >= today && testDrive.confirmation === 'Awaiting Confirmation';
+    });
+      
+    // Function to handle confirmation update
+    const handleConfirmationUpdate = async (testDriveId, confirmationValue) => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/testdrives/update_confirmation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ testdrive_id: testDriveId, confirmation: confirmationValue })
+  
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update confirmation');
+        }
+        // Refresh data after successful update
+        fetchDataSelection(3);
+        // Implement a function to fetch data again from the server and update state
+      } catch (error) {
+        console.error('Error updating confirmation:', error.message);
+        // Handle error
+      }
+    };
+  
+    return (
+      <div className="table-responsive" style={styles.tableHeight}>
+        <h2>Test Drives</h2>
+        <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
+            <tr>
+              <th>Customer Phone</th>
+              <th>Full Name</th>
+              <th>Vehicle</th>
+              <th>Datetime</th>
+              <th>Action</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {applyFilter && pendingTestDrives.map((testDrive, index) => (
+              <tr key={index}>
+                <td>{testDrive.phone}</td>
+                <td>{testDrive.fullname}</td>
+                <td>{testDrive.car_make_model}</td>
+                <td>{testDrive.appointment_date}</td>
+                <td>
+                  {/* Buttons for approval and cancellation */}
+                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 1)} className="btn btn-success">Approve</button>
+                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 3)} className="btn btn-danger">Cancel</button>
+                </td>
+  
+              </tr>
+            ))}
+            {!applyFilter && testDrives.map((testDrive, index) => (
+              <tr key={index}>
+                <td>{testDrive.phone}</td>
+                <td>{testDrive.fullname}</td>
+                <td>{testDrive.car_make_model}</td>
+                <td>{testDrive.appointment_date}</td>
+                <td>
+                  {/* Buttons for approval and cancellation */}
+                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 1)} className="btn btn-success">Approve</button>
+                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 3)} className="btn btn-danger">Cancel</button>
+                </td>
+              </tr>
+            ))}
+            {testDrives.length === 0 && (
+              <tr>
+                <td colSpan="4">No test drives available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+  
 
   // Similarly, update the other table components in the same way
 
@@ -1027,13 +1037,6 @@ const ManagerPage = () => {
     const [totalSales, setTotalSales] = useState('');
 
     useEffect(() => {
-      /*
-      const response = fetch(`${FINAN_URL}/`);
-      console.log(response);
-      const response1 = fetch(`${BASE_URL}/`);
-      console.log(response1);
-      */
-      /// fetchSalesReport();
     }, []);
 
     // Function to handle changes in the month dropdown
@@ -1152,7 +1155,7 @@ const ManagerPage = () => {
     <div style={{ display: "flex" }}>
       <div className="bg-dark text-white p-3" style={{ height: "100vh", overflowY: "auto", position: "fixed", left: 0 }}>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); fetchDataSelection(0); }}>ALL</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); fetchDataSelection(0); }}>To-Do's</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 1 ? styles.selected : {}} onClick={() => { setSelectedTab(1); fetchDataSelection(1); }}>Service Center</button>
@@ -1173,32 +1176,32 @@ const ManagerPage = () => {
         <div style={{ marginBottom: "10px" }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); fetchDataSelection(6); }}>Sales Report</button>
         </div>
-        
+
         <div style={{ marginBottom: "10px" }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); fetchDataSelection(7); }}>Technicians</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8);  fetchDataSelection(8);}}>Purchases</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8); fetchDataSelection(8); }}>Purchases</button>
         </div>
 
         <div style={{ marginBottom: "10px" }}>
           {user && (user.employeeType === "superAdmin") && (
             <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
-          )}        </div>
+          )}</div>
         <div>
           <Link to="/add-new-vehicle" className="btn btn-block btn-danger">Add new Vehicle</Link>
 
         </div>
 
         <Button
-            className="btn btn-block btn-danger "
-            style={styles.bookApptButton}
-            onClick={logOutUser}
-            variant="contained"
-          >
-            Log Out
-          </Button>
-          
+          className="btn btn-block btn-danger "
+          style={styles.bookApptButton}
+          onClick={logOutUser}
+          variant="contained"
+        >
+          Log Out
+        </Button>
+
       </div>
 
       <div style={{ marginLeft: "200px", width: "calc(100% - 200px)" }}>

@@ -9,8 +9,8 @@ import styles from "../css/creation.css";
 
 const CreateEmployeeAccount = () => {
     
-    const [user, setUser] = useState(null);
-    const [sessionId, setSessionId] = useState(null);
+    const [/*user,*/ setUser] = useState(null);
+    const [/*sessionId,*/ setSessionId] = useState(null);
     const navigate = useNavigate(); // Initialize useNavigate
 
 
@@ -51,7 +51,7 @@ useEffect(() => {
             navigate("/login");
         }
     })();
-}, [navigate]);
+}, );
 
 
     const handleChange = (e) => {
