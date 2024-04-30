@@ -23,6 +23,7 @@ import PurchaseConfirmation from "./pages/PurchaseConfirmation";
 import AddMemberVehicle from "./pages/addMemberVehicle";
 import ApplyFinancing from "./pages/ApplyFinancing";
 import AddonsPage from "./pages/AddonsPage";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
         <Route path="/bookAppt" element={<BookAppointment />} />
         <Route path="/apply-financing" element={<ApplyFinancing />} />
         <Route path="/addons" element={<AddonsPage />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </>
   );
