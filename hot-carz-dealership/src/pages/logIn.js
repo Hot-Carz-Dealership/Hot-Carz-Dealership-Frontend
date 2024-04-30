@@ -61,9 +61,14 @@ export default function LogIn() {
         window.location.href = "/account";
       } else {
         // Handle non-200 responses, such as displaying an error message
+
         console.error("Login failed:", resp.data);
+        
       }
     } catch (error) {
+      setUsername("");
+      setPassword("");
+      window.alert("User account does not exist. Please sign up.");
       console.error("Error occurred while logging in:", error);
     }
   };
