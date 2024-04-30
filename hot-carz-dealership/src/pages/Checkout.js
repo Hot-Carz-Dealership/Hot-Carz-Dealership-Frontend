@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,82 +10,25 @@ import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
-import AddressForm from "../components/features/checkout/AddressForm";
-import getCheckoutTheme from "../components/features/checkout/getCheckoutTheme";
 import Info from "../components/features/checkout/Info";
 import InfoMobile from "../components/features/checkout/InfoMobile";
 import PaymentForm from "../components/features/checkout/PaymentForm";
 import Review from "../components/features/checkout/Review";
 
-function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100dvw",
-        position: "fixed",
-        bottom: 24,
-      }}
-    >
-      <ToggleButtonGroup
-        color="primary"
-        exclusive
-        value={showCustomTheme}
-        onChange={toggleCustomTheme}
-        aria-label="Platform"
-        sx={{
-          backgroundColor: "background.default",
-          "& .Mui-selected": {
-            pointerEvents: "none",
-          },
-        }}
-      >
-        <ToggleButton value>
-          <AutoAwesomeRoundedIcon sx={{ fontSize: "20px", mr: 1 }} />
-          Custom theme
-        </ToggleButton>
-        <ToggleButton value={false}>Material Design 2</ToggleButton>
-      </ToggleButtonGroup>
-    </Box>
-  );
-}
-
-ToggleCustomTheme.propTypes = {
-  showCustomTheme: PropTypes.shape({
-    valueOf: PropTypes.func.isRequired,
-  }).isRequired,
-  toggleCustomTheme: PropTypes.func.isRequired,
-};
-
-const steps = ["Shipping address", "Payment details", "Review your order"];
-
-const logoStyle = {
-  width: "140px",
-  height: "56px",
-  marginLeft: "-4px",
-  marginRight: "-8px",
-};
+const steps = ["Payment details", "Review your order"];
 
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm />;
-    case 1:
       return <PaymentForm />;
-    case 2:
+    case 1:
       return <Review />;
     default:
       throw new Error("Unknown step");
@@ -94,15 +36,9 @@ function getStepContent(step) {
 }
 
 export default function Checkout() {
-  const [mode, setMode] = React.useState("light");
-  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const checkoutTheme = createTheme(getCheckoutTheme(mode));
+  const mode = "light";
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-
-  const toggleCustomTheme = () => {
-    setShowCustomTheme((prev) => !prev);
-  };
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -113,7 +49,7 @@ export default function Checkout() {
   };
 
   return (
-    <ThemeProvider theme={showCustomTheme ? checkoutTheme : defaultTheme}>
+    <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
         <Grid
@@ -139,23 +75,7 @@ export default function Checkout() {
               alignItems: "end",
               height: 150,
             }}
-          >
-            <Button
-              startIcon={<ArrowBackRoundedIcon />}
-              component="a"
-              href="/material-ui/getting-started/templates/landing-page/"
-              sx={{ ml: "-8px" }}
-            >
-              Back to
-              <img
-                src={
-                  "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-                }
-                style={logoStyle}
-                alt="Sitemark's logo"
-              />
-            </Button>
-          </Box>
+          ></Box>
           <Box
             sx={{
               display: "flex",
@@ -201,23 +121,7 @@ export default function Checkout() {
                 width: "100%",
                 justifyContent: "space-between",
               }}
-            >
-              <Button
-                startIcon={<ArrowBackRoundedIcon />}
-                component="a"
-                href="/material-ui/getting-started/templates/landing-page/"
-                sx={{ alignSelf: "start" }}
-              >
-                Back to
-                <img
-                  src={
-                    "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-                  }
-                  style={logoStyle}
-                  alt="Sitemark's logo"
-                />
-              </Button>
-            </Box>
+            ></Box>
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -393,10 +297,6 @@ export default function Checkout() {
           </Box>
         </Grid>
       </Grid>
-      <ToggleCustomTheme
-        toggleCustomTheme={toggleCustomTheme}
-        showCustomTheme={showCustomTheme}
-      />
     </ThemeProvider>
   );
 }
