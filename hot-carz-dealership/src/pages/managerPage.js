@@ -683,8 +683,18 @@ const ManagerPage = () => {
                 <td>{service.service_name}</td>
                 <td>{service.price}</td>
                 <td>
-                  <button onClick={() => handleEditService(service)}>Edit</button>
-                  <button onClick={() => handleDeleteService(service.serviceID)}>Delete</button>
+                <button 
+          className="btn btn-primary mr-2" 
+          onClick={() => handleEditService(service)}
+        >
+          Edit
+        </button>
+        <button 
+          className="btn btn-danger" 
+          onClick={() => handleDeleteService(service.serviceID)}
+        >
+          Delete
+        </button>
                 </td>
               </tr>
             ))}
