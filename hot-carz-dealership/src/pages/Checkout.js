@@ -28,7 +28,6 @@ import Info from "../components/features/checkout/Info";
 import InfoMobile from "../components/features/checkout/InfoMobile";
 import PaymentForm from "../components/features/checkout/PaymentForm";
 import Review from "../components/features/checkout/Review";
-import ToggleColorMode from "../components/features/checkout/ToggleColorMode";
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -100,10 +99,6 @@ export default function Checkout() {
   const checkoutTheme = createTheme(getCheckoutTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
 
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
@@ -222,7 +217,6 @@ export default function Checkout() {
                   alt="Sitemark's logo"
                 />
               </Button>
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
             <Box
               sx={{
@@ -234,7 +228,6 @@ export default function Checkout() {
                 height: 150,
               }}
             >
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
               <Stepper
                 id="desktop-stepper"
                 activeStep={activeStep}
