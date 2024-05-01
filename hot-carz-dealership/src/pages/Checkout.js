@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import Check from "@mui/icons-material/Check";
-
+import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -69,6 +69,8 @@ const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
   },
 }));
 
+
+
 function QontoStepIcon(props) {
   const { active, completed, className } = props;
 
@@ -101,7 +103,7 @@ export default function Checkout() {
   const mode = "light";
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-
+  const location = useLocation();
   const [cartData, setCartData] = useState(null);
   const [routingNumber, setRoutingNumber] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -184,6 +186,32 @@ export default function Checkout() {
       // Update the confirmation number state
       setConfirmationNumber(confirmation_number);
 
+      //Book service appointment if
+
+      const queryParams = new URLSearchParams(location.search);
+      if(queryParams.get("appointment_date") != null){
+        
+        const apptData = {
+          VIN_carID: queryParams.get("VIN_carID"),
+          appointment_date: queryParams.get("appointment_date"),
+          serviceID: queryParams.get("servID")
+        }
+        const apptResponse = await fetch(
+          `${BASE_URL}/api/member/book-service-appointment`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(apptData),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+      }
       // Move to the next step
       setActiveStep(activeStep + 1);
       // Delete the entire cart
