@@ -393,6 +393,7 @@ const ManagerPage = () => {
       </div>
     );
   };
+  
   const AwaitingSignature = () => {
     const [contracts, setContracts] = useState([]);
     const [managerSignature, setManagerSignature] = useState('');
@@ -403,7 +404,7 @@ const ManagerPage = () => {
 
     const fetchContracts = async () => {
         try {
-            const response = await fetch('/api/manager/signature-waiting');
+            const response = await fetch(`${BASE_URL}/api/manager/signature-waiting`);
             if (!response.ok) {
                 throw new Error('Failed to fetch contracts awaiting signature');
             }
@@ -420,7 +421,7 @@ const ManagerPage = () => {
 
     const handleSubmit = async (purchaseID) => {
         try {
-            const response = await fetch('/api/manager/signature', {
+            const response = await fetch(`${BASE_URL}/api/manager/signature`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -494,48 +495,66 @@ const ManagerPage = () => {
     );
 };
 
-  const ServiceCenter = ({ applyFilter }) => {
-    const [services, setServices] = useState([]);
-    const [newServiceName, setNewServiceName] = useState('');
-    const [newServicePrice, setNewServicePrice] = useState('');
-  
-    useEffect(() => {
-      fetchServices();
-    }, []);
-  
-    const fetchServices = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/service-menu`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch services");
-        }
-        const data = await response.json();
-        setServices(data);
-      } catch (error) {
-        console.error("Error fetching services:", error.message);
+const ServiceCenter = ({ applyFilter }) => {
+  const [services, setServices] = useState([]);
+  const [newServiceName, setNewServiceName] = useState('');
+  const [newServicePrice, setNewServicePrice] = useState('');
+  const [scheduledServiceAppointments, setScheduledServiceAppointments] = useState([]);
+
+  useEffect(() => {
+    fetchServices();
+    if (applyFilter) {
+      fetchScheduledServiceAppointments();
+    }
+  }, [applyFilter]);
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/service-menu`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch services");
       }
-    };
-  
-    const handleAddService = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
-        });
-        if (!response.ok) {
-          throw new Error("Failed to add service");
-        }
-        await fetchServices();
-        setNewServiceName('');
-        setNewServicePrice('');
-      } catch (error) {
-        console.error("Error adding service:", error.message);
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error("Error fetching services:", error.message);
+    }
+  };
+
+  const fetchScheduledServiceAppointments = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/pending-service-appointments`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch pending service appointments");
       }
-    };
+      const data = await response.json();
+      setScheduledServiceAppointments(data);
+    } catch (error) {
+      console.error("Error fetching pending service appointments:", error.message);
+    }
+  };
+
+  const handleAddService = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add service");
+      }
+      await fetchServices();
+      setNewServiceName('');
+      setNewServicePrice('');
+    } catch (error) {
+      console.error("Error adding service:", error.message);
+    }
+  };
+
   
     const handleDeleteService = async (serviceID) => {
       try {
@@ -589,15 +608,8 @@ const ManagerPage = () => {
         console.error("Error updating service:", error.message);
       }
     };
-    
-     // Get today's date
-  const today = new Date();
 
-  // Filter service appointments for today or future dates that don't have a technician assigned yet
-  const scheduledServiceAppointments = applyFilter ? serviceAppointments.filter(appointment => {
-    const appointmentDate = new Date(appointment.appointment_date);
-    return appointmentDate >= today && appointment.status === 'Scheduled' && !appointment.employeeID;
-  }) : serviceAppointments;
+  
   
     return (
       <div>
@@ -648,58 +660,54 @@ const ManagerPage = () => {
       </table>
     </div>
   
-        <h2>Current Available Services</h2>
-        {/* Add Service Input Fields */}
-        <div>
-          <input
-            type="text"
-            placeholder="Enter service name"
-            value={newServiceName}
-            onChange={(e) => setNewServiceName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Enter service price"
-            value={newServicePrice}
-            onChange={(e) => setNewServicePrice(e.target.value)}
-          />
-          <button onClick={handleAddService}>Add Service</button>
-        </div>
-        <br />
-        <table
-          className="table table-bordered table-striped"
-          style={styles.tableHeight}
-        >
-          <thead className="thead-dark">
-            <tr>
-              <th>Service Name</th>
-              <th>Service Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.map((service) => (
-              <tr key={service.serviceID}>
-                <td>{service.service_name}</td>
-                <td>{service.price}</td>
-                <td>
-                <button 
-          className="btn btn-primary mr-2" 
-          onClick={() => handleEditService(service)}
-        >
-          Edit
-        </button>
-        <button 
-          className="btn btn-danger" 
-          onClick={() => handleDeleteService(service.serviceID)}
-        >
-          Delete
-        </button>
-                </td>
+      {/* Render the "Current Available Services" table when applyFilter is false */}
+      {!applyFilter && (
+        <>
+          <h2>Current Available Services</h2>
+          {/* Add Service Input Fields */}
+          {/* Render input fields for adding new service */}
+          <div>
+            <input
+              type="text"
+              placeholder="Enter service name"
+              value={newServiceName}
+              onChange={(e) => setNewServiceName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Enter service price"
+              value={newServicePrice}
+              onChange={(e) => setNewServicePrice(e.target.value)}
+            />
+            <button onClick={handleAddService}>Add Service</button>
+          </div>
+          <br />
+          {/* Render table for current available services */}
+          <table className="table table-bordered table-striped" style={styles.tableHeight}>
+            {/* Table headers */}
+            <thead className="thead-dark">
+              <tr>
+                <th>Service Name</th>
+                <th>Service Price</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {services.map((service) => (
+                <tr key={service.serviceID}>
+                  <td>{service.service_name}</td>
+                  <td>{service.price}</td>
+                  <td>
+                    {/* Buttons for editing and deleting services */}
+                    <button className="btn btn-primary mr-2" onClick={() => handleEditService(service)}>Edit</button>
+                    <button className="btn btn-danger" onClick={() => handleDeleteService(service.serviceID)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
       </div>
     );
   };
@@ -745,7 +753,8 @@ const ManagerPage = () => {
   };
   const BidsTable = ({ applyFilter }) => {
     const [bids, setBids] = useState([]);
-  
+    const [selectedBid, setSelectedBid] = useState(null);
+
     useEffect(() => {
       fetchCurrentBids();
     }, []);
@@ -794,52 +803,95 @@ const ManagerPage = () => {
         return 'red';
       }
     };
+
+    const handleViewBid = (bid) => {
+      setSelectedBid(bid);
+    };
   
+    const closeModal = () => {
+      setSelectedBid(null);
+    };
+  
+  
+ 
     return (
-      <div className="table-responsive" style={styles.tableHeight}>
-        <h2>Bids</h2>
-        <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>Make</th>
-              <th>Model</th>
-              <th>VIN</th>
-              <th>MSRP</th>
-              <th>Bid Amount</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bids && bids
-              .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
-              .map((bid, index) => (
-                <tr key={index}>
-                  <td>{bid.make}</td>
-                  <td>{bid.model}</td>
-                  <td>{bid.VIN}</td>
-                  <td>{bid.MSRP}</td>
-                  <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
-                  <td>{bid.bidStatus}</td>
-                  <td>
-                    {bid.bidStatus === 'Processing' && (
-                      <>
-                        <button onClick={() => handleBidConfirmation(bid.bidID, 'Confirmed')}>Accept</button>
-                        <button onClick={() => handleBidConfirmation(bid.bidID, 'Denied')}>Decline</button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            {!bids && (
+      <div>
+        <div className="table-responsive" style={styles.tableHeight}>
+          <h2>Bids</h2>
+          <table className="table table-bordered table-striped">
+            <thead className="thead-dark">
               <tr>
-                <td colSpan="7">No bids available</td>
+                <th>Make</th>
+                <th>Model</th>
+                <th>VIN</th>
+                <th>MSRP</th>
+                <th>Bid Amount</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {bids && bids
+                .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
+                .map((bid, index) => (
+                  <tr key={index}>
+                    <td>{bid.make}</td>
+                    <td>{bid.model}</td>
+                    <td>{bid.VIN}</td>
+                    <td>{bid.MSRP}</td>
+                    <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
+                    <td>{bid.bidStatus}</td>
+                    <td>
+                      {bid.bidStatus === 'Processing' && (
+                        <button onClick={() => handleViewBid(bid)}>View</button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              {!bids && (
+                <tr>
+                  <td colSpan="7">No bids available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+     {/* Modal for viewing bid details */}
+     {selectedBid && (
+        <div className="modal-container">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Bid Details</h5>
+                <button type="button" className="close" onClick={closeModal}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                {/* Display bid details here */}
+                <p>Make: {selectedBid.make}</p>
+                <p>Model: {selectedBid.model}</p>
+                <p>VIN: {selectedBid.VIN}</p>
+                <p>MSRP: {selectedBid.MSRP}</p>
+                <p>Bid Amount: {selectedBid.bidValue}</p>
+                <p>Status: {selectedBid.bidStatus}</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Confirmed')}>Accept Bid</button>
+                <button type="button" className="btn btn-danger" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Denied')}>Deny Bid</button>
+                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       </div>
+
+
+
     );
+    
   };
   
   
@@ -880,13 +932,32 @@ const ManagerPage = () => {
     // Get today's date
     const today = new Date();
   
-    // Filter test drives for today or future dates and 'Awaiting Confirmation' status
-    const pendingTestDrives = testDrives.filter(testDrive => {
-      const testDriveDate = new Date(testDrive.appointment_date); // Convert to JavaScript Date object
-      // Check if the test drive date is today or in the future and confirmation status is 'Awaiting Confirmation'
-      return testDriveDate >= today && testDrive.confirmation === 'Awaiting Confirmation';
-    });
-      
+    // Function to fetch pending test drives
+    const fetchPendingTestDrives = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/pending_testdrives`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch pending test drives');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching pending test drives:', error.message);
+        // Handle error
+      }
+    };
+  
+    // State to store test drives data
+    const [testDrives, setTestDrives] = useState([]);
+  
+    // Fetch test drives data when component mounts
+    useEffect(() => {
+      const fetchData = async () => {
+        const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
+        setTestDrives(data);
+      };
+      fetchData();
+    }, [applyFilter]);
+  
     // Function to handle confirmation update
     const handleConfirmationUpdate = async (testDriveId, confirmationValue) => {
       try {
@@ -896,7 +967,6 @@ const ManagerPage = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ testdrive_id: testDriveId, confirmation: confirmationValue })
-  
         });
         if (!response.ok) {
           throw new Error('Failed to update confirmation');
@@ -921,25 +991,10 @@ const ManagerPage = () => {
               <th>Vehicle</th>
               <th>Datetime</th>
               <th>Action</th>
-
             </tr>
           </thead>
           <tbody>
-            {applyFilter && pendingTestDrives.map((testDrive, index) => (
-              <tr key={index}>
-                <td>{testDrive.phone}</td>
-                <td>{testDrive.fullname}</td>
-                <td>{testDrive.car_make_model}</td>
-                <td>{testDrive.appointment_date}</td>
-                <td>
-                  {/* Buttons for approval and cancellation */}
-                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 1)} className="btn btn-success">Approve</button>
-                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 3)} className="btn btn-danger">Cancel</button>
-                </td>
-  
-              </tr>
-            ))}
-            {!applyFilter && testDrives.map((testDrive, index) => (
+            {testDrives.map((testDrive, index) => (
               <tr key={index}>
                 <td>{testDrive.phone}</td>
                 <td>{testDrive.fullname}</td>
@@ -1167,17 +1222,9 @@ const ManagerPage = () => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div
-        className="bg-dark text-white p-3"
-        style={{
-          height: "100vh",
-          overflowY: "auto",
-          position: "fixed",
-          left: 0,
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
+    <div style={{ }}>
+      <div className="sidebar">
+        <div style={{ marginBottom: '10px' }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); fetchDataSelection(0); }}>To-Do's</button>
         </div>
         <div style={{ marginBottom: "10px" }}>
@@ -1272,7 +1319,7 @@ const ManagerPage = () => {
         </Button>
       </div>
 
-      <div style={{ marginLeft: "200px", width: "calc(100% - 200px)" }}>
+      <div className="main-content">
         <div className="container-fluid">
           <div className="row justify-content-center">
             <div className="col-lg-10 col-md-12">
