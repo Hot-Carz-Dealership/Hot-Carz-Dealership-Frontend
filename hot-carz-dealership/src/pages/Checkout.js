@@ -146,8 +146,63 @@ export default function Checkout() {
     setActiveStep(activeStep + 1);
   };
 
+  const [confirmationNumber, setConfirmationNumber] = React.useState("");
+  const handlePlaceOrder = async () => {
+    try {
+      // Prepare the data to send in the request body
+      const requestData = {
+        routingNumber: routingNumber,
+        bankAcctNumber: accountNumber,
+        "Amount Due Now": cartData["Amount Due Now"],
+        "Financed Amount": cartData["Financed Amount"],
+      };
+
+      // Make the POST request to the backend endpoint
+      const response = await fetch(
+        `${BASE_URL}/api/vehicle-purchase/make-purchase`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      // Parse the response JSON
+      const responseData = await response.json();
+
+      // Extract the confirmation number from the response
+      const { confirmation_number } = responseData;
+
+      // Update the confirmation number state
+      setConfirmationNumber(confirmation_number);
+
+      // Move to the next step
+      setActiveStep(activeStep + 1);
+      // Delete the entire cart
+      await fetch(`${BASE_URL}/api/member/delete_cart`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  };
+
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const handleGoToMyOrders = () => {
+    // Implement redirection to /checkout
+    window.location.href = "/account";
   };
 
   return (
@@ -325,11 +380,11 @@ export default function Checkout() {
                 <Typography variant="h1">📦🏎️</Typography>
                 <Typography variant="h5">Thank you for your order!</Typography>
                 <Typography variant="body1" color="text.secondary">
-                  Your order number is
-                  <strong>&nbsp;#140396</strong>. We have emailed your order
-                  confirmation and will update you once its shipped.
+                  Your confirmation number is
+                  <strong>&nbsp;{confirmationNumber}</strong>.
                 </Typography>
                 <Button
+                  onClick={handleGoToMyOrders}
                   variant="contained"
                   sx={{
                     alignSelf: "start",
@@ -411,7 +466,7 @@ export default function Checkout() {
                     <Button
                       variant="contained"
                       endIcon={<ChevronRightRoundedIcon />}
-                      onClick={handleNext}
+                      onClick={handlePlaceOrder}
                       sx={{
                         width: {
                           xs: "100%",
