@@ -28,12 +28,12 @@ import { BASE_URL } from "../utilities/constants";
 
 const steps = ["Payment details", "Review your order"];
 
-function getStepContent(step) {
+function getStepContent(step, cartData) {
   switch (step) {
     case 0:
       return <PaymentForm />;
     case 1:
-      return <Review />;
+      return cartData ? <Review cartData={cartData} /> : null; // Render Review only when cartData is available
     default:
       throw new Error("Unknown step");
   }
@@ -319,7 +319,7 @@ export default function Checkout() {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                {getStepContent(activeStep, cartData)}
                 <Box
                   sx={{
                     display: "flex",
