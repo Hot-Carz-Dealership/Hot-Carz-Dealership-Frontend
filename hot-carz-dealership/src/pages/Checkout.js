@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import Check from "@mui/icons-material/Check";
@@ -24,6 +24,7 @@ import Info from "../components/features/checkout/Info";
 import InfoMobile from "../components/features/checkout/InfoMobile";
 import PaymentForm from "../components/features/checkout/PaymentForm";
 import Review from "../components/features/checkout/Review";
+import { BASE_URL } from "../utilities/constants";
 
 const steps = ["Payment details", "Review your order"];
 
@@ -91,6 +92,33 @@ export default function Checkout() {
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
 
+  const [cartData, setCartData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(`${BASE_URL}/api/member/cart`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setCartData(data);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    }
+
+    fetchData();
+
+    // Cleanup function (optional)
+    return () => {
+      // Perform any cleanup here if necessary
+    };
+  }, []); // Empty dependency array means this effect runs once after the initial render
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
@@ -136,7 +164,7 @@ export default function Checkout() {
               maxWidth: 500,
             }}
           >
-            <Info totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"} />
+            {cartData && <Info data={cartData} />}
           </Box>
         </Grid>
         <Grid
@@ -227,12 +255,10 @@ export default function Checkout() {
                   Selected products
                 </Typography>
                 <Typography variant="body1">
-                  {activeStep >= 2 ? "$144.97" : "$134.98"}
+                  {`$${cartData && cartData["Grand Total"]}`}
                 </Typography>
               </div>
-              <InfoMobile
-                totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"}
-              />
+              <InfoMobile data={cartData} />
             </CardContent>
           </Card>
           <Box
