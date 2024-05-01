@@ -2,7 +2,8 @@
 import React from "react";
 import "./index.css";
 import "./App.css";
-import { Link, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/common/Navbar";
 
 import Homepage from "./pages/homepage";
 import Services from "./pages/services";
@@ -28,26 +29,8 @@ import Checkout from "./pages/Checkout";
 function App() {
   return (
     <>
-      <header className="header">
-        <Link to="/" className="logo ">
-          Hot Carz
-        </Link>
-        <nav className="nav">
-          <Link to="/" className="button">
-            Home
-          </Link>
-          <Link to="/cars" className="button">
-            Cars
-          </Link>
-          <Link to="/services" className="button">
-            Services
-          </Link>
-          <Link to="/account" className="button">
-            Account
-          </Link>
-        </nav>
-      </header>
-
+      <Navbar />
+      
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/cars" element={<Cars />} />
@@ -61,14 +44,8 @@ function App() {
         <Route path="/editAccount" element={<EditAccount />} />
         <Route path="/TechnicianPage" element={<TechnicianPage />} />
         <Route path="/PurchaseCheckout" element={<PurchaseCheckout />} />
-        <Route
-          path="/PurchaseConfirmation"
-          element={<PurchaseConfirmation />}
-        />
-        <Route
-          path="/create-employee-account"
-          element={<CreateEmployeeAccount />}
-        />
+        <Route path="/PurchaseConfirmation" element={<PurchaseConfirmation />} />
+        <Route path="/create-employee-account" element={<CreateEmployeeAccount />} />
         <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
         <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
         <Route path="/bookAppt" element={<BookAppointment />} />
