@@ -273,7 +273,7 @@ export default function Checkout() {
             </Stepper>
             {activeStep === steps.length ? (
               <Stack spacing={2} useFlexGap>
-                <Typography variant="h1">📦</Typography>
+                <Typography variant="h1">📦🏎️</Typography>
                 <Typography variant="h5">Thank you for your order!</Typography>
                 <Typography variant="body1" color="text.secondary">
                   Your order number is
@@ -285,6 +285,7 @@ export default function Checkout() {
                   sx={{
                     alignSelf: "start",
                     width: { xs: "100%", sm: "auto" },
+                    background: "red",
                   }}
                 >
                   Go to my orders
@@ -313,7 +314,7 @@ export default function Checkout() {
                       onClick={handleBack}
                       variant="text"
                       sx={{
-                        display: { xs: "none", sm: "flex" },
+                        display: { xs: "none", sm: "flex", color: "red" },
                       }}
                     >
                       Previous
@@ -325,9 +326,10 @@ export default function Checkout() {
                       startIcon={<ChevronLeftRoundedIcon />}
                       onClick={handleBack}
                       variant="outlined"
+                      backgroundColor="red"
                       fullWidth
                       sx={{
-                        display: { xs: "flex", sm: "none" },
+                        display: { xs: "flex", sm: "none", color: "red" },
                       }}
                     >
                       Previous
@@ -339,7 +341,11 @@ export default function Checkout() {
                     endIcon={<ChevronRightRoundedIcon />}
                     onClick={handleNext}
                     sx={{
-                      width: { xs: "100%", sm: "fit-content" },
+                      width: {
+                        xs: "100%",
+                        sm: "fit-content",
+                        background: "red",
+                      },
                     }}
                   >
                     {activeStep === steps.length - 1 ? "Place order" : "Next"}
