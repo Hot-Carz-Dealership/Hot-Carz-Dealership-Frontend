@@ -74,7 +74,6 @@ const ManagerPage = () => {
   };
 
   const fetchDataSelection = async (selectedTab) => {
-    console.log("SELECTED TAB AAHHH SELECTED FUCKING TAB: " + selectedTab);
     try {
       switch (selectedTab) {
         case 0:
@@ -289,11 +288,16 @@ const ManagerPage = () => {
           throw new Error('Failed to assign technician to appointment');
         }
         // Handle success response here if needed
+        
         console.log('Technician assigned successfully');
+        return 'Technician assigned successfully';
+
       })
       .catch(error => {
         // Handle error here
         console.error('Error assigning technician:', error.message);
+        return 'Error assigning technician: ' + error.message;
+
       });
 
   };
@@ -396,7 +400,18 @@ const ManagerPage = () => {
   
   const AwaitingSignature = () => {
     const [contracts, setContracts] = useState([]);
+    const [selectedContract, setSelectedContract] = useState(null);
     const [managerSignature, setManagerSignature] = useState('');
+    const [showSignatureModal, setShowSignatureModal] = useState(false);
+    const [showReplacementModal, setShowReplacementModal] = useState(false);
+    const [isSignatureEntered, setIsSignatureEntered] = useState(false);
+    const [financeInfo, setFinanceInfo] = useState([]);
+    const [vehicleInfo, setVehicleInfo] = useState({});
+    const [memberInfo, setMemberInfo] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+
+
+
 
     useEffect(() => {
         fetchContracts();
@@ -413,26 +428,90 @@ const ManagerPage = () => {
         } catch (error) {
             console.error('Error fetching contracts:', error.message);
         }
+        setIsLoading(false);
+
     };
 
-    const handleSignatureChange = (event) => {
-        setManagerSignature(event.target.value);
-    };
+    const handleViewContract = async (contract) => {
+      setSelectedContract(contract);
+      setShowSignatureModal(true);
+      await fetchFinanceInfo(contract.memberID);
+      await fetchVehicleAndMemberInfo(contract);
+  };
 
-    const handleSubmit = async (purchaseID) => {
+  const handleSignatureChange = (event) => {
+    setManagerSignature(event.target.value);
+    setIsSignatureEntered(!!event.target.value);
+};
+
+const fetchFinanceInfo = async (memberId) => {
+  try {
+      const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              member_id: memberId
+          })
+      });
+      if (!response.ok) {
+          throw new Error('Failed to fetch finance information');
+      }
+
+      const financeData = await response.json();
+      setFinanceInfo(financeData);
+  } catch (error) {
+      console.error('Error fetching finance information:', error.message);
+  }
+};
+
+const fetchVehicleAndMemberInfo = async (appointment) => {
+  try {
+      const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      
+      if (!vehicleResponse.ok) {
+          throw new Error('Failed to fetch vehicle information');
+      }
+      const vehicleData = await vehicleResponse.json();
+      setVehicleInfo(vehicleData);
+
+      const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ memberID: appointment.memberID }),
+      });
+      if (!memberResponse.ok) {
+          throw new Error('Failed to fetch member information');
+      }
+      const memberData = await memberResponse.json();
+      setMemberInfo(memberData);
+  } catch (error) {
+      console.error('Error fetching vehicle and member information:', error.message);
+  }
+};
+
+    const handleSubmitSignature = async () => {
         try {
             const response = await fetch(`${BASE_URL}/api/manager/signature`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ purchaseID, signature: managerSignature })
+                body: JSON.stringify({ purchaseID: selectedContract.purchaseID, signature: 'Yes' })
             });
             if (!response.ok) {
                 throw new Error('Failed to update signature');
             }
-            const data = await response.json();
-            console.log(data.message); // Log success message
+            setShowSignatureModal(false);
+            setShowReplacementModal(true);
             // Refetch awaiting signature contracts after successful update
             fetchContracts();
         } catch (error) {
@@ -440,74 +519,208 @@ const ManagerPage = () => {
         }
     };
 
+    const closeModal = () => {
+      setShowSignatureModal(false);
+      setShowReplacementModal(false);
+setManagerSignature('');
+    };
+
+
     return (
-        <div>
-            <h2>Contracts Awaiting Manager Signature</h2>
-            <table className="table table-bordered table-striped">
-                <thead className="thead-dark">
-                    <tr>
-                        <th>Purchase ID</th>
-                        <th>Bid ID</th>
-                        <th>Member ID</th>
-                        <th>VIN Car ID</th>
-                        <th>Addon ID</th>
-                        <th>Service ID</th>
-                        <th>Confirmation Number</th>
-                        <th>Purchase Type</th>
-                        <th>Purchase Date</th>
-                        <th>Manager's Signature</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {contracts.map(contract => (
-                        <tr key={contract.purchaseID}>
-                            <td>{contract.purchaseID}</td>
-                            <td>{contract.bidID}</td>
-                            <td>{contract.memberID}</td>
-                            <td>{contract.VIN_carID}</td>
-                            <td>{contract.addon_ID}</td>
-                            <td>{contract.serviceID}</td>
-                            <td>{contract.confirmationNumber}</td>
-                            <td>{contract.purchaseType}</td>
-                            <td>{contract.purchaseDate}</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="Enter Manager's Signature"
-                                    value={managerSignature}
-                                    onChange={handleSignatureChange}
-                                />
-                            </td>
-                            <td>
-                                <button onClick={() => handleSubmit(contract.purchaseID)}>Submit Signature</button>
-                            </td>
-                        </tr>
-                    ))}
-                    {contracts.length === 0 && (
-                        <tr>
-                            <td colSpan="11">No contracts awaiting manager signature</td>
-                        </tr>
+      <div>
+      <h2>Contracts Awaiting Manager Signature</h2>
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>VIN Car ID</th>
+            <th>Purchase Type</th>
+            <th>Purchase Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {isLoading ? ( // Check if loading
+            <tr>
+              <td colSpan="4">Loading Contracts...</td>
+            </tr>
+          ) : (
+            <>
+              {contracts.map(contract => (
+                <tr key={contract.purchaseID}>
+                  <td>{contract.VIN_carID}</td>
+                  <td>{contract.purchaseType}</td>
+                  <td>{contract.purchaseDate}</td>
+                  <td>
+                    <button onClick={() => handleViewContract(contract)}>View</button>
+                  </td>
+                </tr>
+              ))}
+              {contracts.length === 0 && (
+                <tr>
+                  <td colSpan="4">No contracts awaiting manager signature</td>
+                </tr>
+              )}
+            </>
+          )}
+        </tbody>
+      </table>
+
+          {showSignatureModal && selectedContract && (
+    <div className="modal-container">
+        {/* Signature Modal */}
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">Contract Details</h5>
+                    <button type="button" className="close" onClick={closeModal}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div className="modal-body">
+                    {/* Display contract details */}
+                    <p>VIN Car ID: {selectedContract.VIN_carID}</p>
+                    <p>Purchase Type: {selectedContract.purchaseType}</p>
+                    <p>Purchase Date: {selectedContract.purchaseDate}</p>
+                    {/* Display finance information */}
+                    {financeInfo.length > 0 && (
+                        <div>
+                            <h5>Finance Information</h5>
+                            <p>Credit Score: {financeInfo[0].credit_score}</p>
+                            <p>Income: ${financeInfo[0].income}</p>
+                            <p>Down Payment: ${financeInfo[0].down_payment}</p>
+                            <p>Loan Total: ${financeInfo[0].loan_total}</p>
+                            <p>Monthly Payment Sum: ${financeInfo[0].monthly_payment_sum}</p>
+                            <p>Percentage: {financeInfo[0].percentage}%</p>
+                            <p>Remaining Months: {financeInfo[0].remaining_months}</p>
+                        </div>
                     )}
-                </tbody>
-            </table>
+                    {/* Display vehicle information */}
+                    {vehicleInfo && (
+                        <div>
+                            <h5>Vehicle Information</h5>
+                            <p>Vin: {vehicleInfo.VIN_carID}</p>
+
+                            <p>Make: {vehicleInfo.make}</p>
+                            <p>Model: {vehicleInfo.model}</p>
+                            <p>Body: {vehicleInfo.body}</p>
+                            <p>Color: {vehicleInfo.color}</p>
+                            <p>Price: ${vehicleInfo.price}</p>
+                            <p>Year: {vehicleInfo.year}</p>
+                            <p>Mileage: {vehicleInfo.mileage}</p>
+                        </div>
+                    )}
+                    {/* Display member information */}
+                    {memberInfo && (
+                        <div>
+                            <h5>Member Information</h5>
+                            <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
+                            <p>Email: {memberInfo.email}</p>
+                            <p>Address: {memberInfo.address}, {memberInfo.city}, {memberInfo.state}, {memberInfo.zipcode}</p>
+                            <p>Phone: {memberInfo.phone}</p>
+                        </div>
+                    )}
+                    {/* Signature input field */}
+                    <div className="form-group">
+                        <label htmlFor="signature">Manager's Signature:</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="signature"
+                            placeholder="Enter Signature"
+                            value={managerSignature}
+                            onChange={handleSignatureChange}
+                        />
+                        <small className="form-text text-muted">
+                            By signing this, you are accepting the contract.
+                        </small>
+                        {managerSignature && !isSignatureEntered && <p style={{ color: 'red' }}>Please enter your first and last name.</p>}
+                    </div>
+                </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                    <button type="button" className="btn btn-primary" onClick={handleSubmitSignature} disabled={!isSignatureEntered}>Confirm Signature</button>
+                </div>
+            </div>
         </div>
-    );
+    </div>
+)}
+
+
+          {showReplacementModal && (
+              <div className="modal-container">
+                  {/* Replacement Modal */}
+                  {/* Display confirmation message */}
+                  <div className="modal-dialog">
+                      <div className="modal-content">
+                          <div className="modal-header">
+                              <h5 className="modal-title">Signature Confirmed</h5>
+                              <button type="button" className="close" onClick={closeModal}>
+                                  <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div className="modal-body">
+                              <p>Your signature has been confirmed.</p>
+                          </div>
+                          <div className="modal-footer">
+                              <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          )}
+      </div>
+  );
 };
 
 const ServiceCenter = ({ applyFilter }) => {
   const [services, setServices] = useState([]);
   const [newServiceName, setNewServiceName] = useState('');
   const [newServicePrice, setNewServicePrice] = useState('');
+  const [assignmentMessage, setAssignmentMessage] = useState('');
+
   const [scheduledServiceAppointments, setScheduledServiceAppointments] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [vehicleInfo, setVehicleInfo] = useState(null);
+  const [memberInfo, setMemberInfo] = useState(null);
+  const [technicians, setTechnicians] = useState([]);
+const [selectedTechnician, setSelectedTechnician] = useState(null);
+const [showReplacementModal, setShowReplacementModal] = useState(false);
+const [showTechnicianWarning, setShowTechnicianWarning] = useState(false);
+const [isLoading, setIsLoading] = useState(true);
+
+
+
+  const openModal = (appointment) => {
+    setSelectedAppointment(appointment);
+  };
+
+
 
   useEffect(() => {
     fetchServices();
+    fetchTechnicians();
+
     if (applyFilter) {
       fetchScheduledServiceAppointments();
     }
   }, [applyFilter]);
 
+
+
+  const fetchTechnicians = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/employees/technicians`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch technicians");
+      }
+      const data = await response.json();
+      setTechnicians(data);
+    } catch (error) {
+      console.error("Error fetching technicians:", error.message);
+    } finally {
+    }
+  };
+  
   const fetchServices = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/service-menu`);
@@ -518,11 +731,13 @@ const ServiceCenter = ({ applyFilter }) => {
       setServices(data);
     } catch (error) {
       console.error("Error fetching services:", error.message);
+    } finally {
     }
   };
 
   const fetchScheduledServiceAppointments = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${BASE_URL}/api/pending-service-appointments`);
       if (!response.ok) {
         throw new Error("Failed to fetch pending service appointments");
@@ -531,9 +746,44 @@ const ServiceCenter = ({ applyFilter }) => {
       setScheduledServiceAppointments(data);
     } catch (error) {
       console.error("Error fetching pending service appointments:", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const fetchVehicleAndMemberInfo = async (appointment) => {
+    try {
+      const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!vehicleResponse.ok) {
+        throw new Error('Failed to fetch vehicle information');
+      }
+      const vehicleData = await vehicleResponse.json();
+      setVehicleInfo(vehicleData);
+
+      const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ memberID: appointment.memberID }),
+      });
+      if (!memberResponse.ok) {
+        throw new Error('Failed to fetch member information');
+      }
+      const memberData = await memberResponse.json();
+      setMemberInfo(memberData);
+    } catch (error) {
+      console.error('Error fetching vehicle and member information:', error.message);
+    } finally {
+    }
+  };
+  
+  
   const handleAddService = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
@@ -609,56 +859,163 @@ const ServiceCenter = ({ applyFilter }) => {
       }
     };
 
-  
-  
+    const handleTechnicianChange = (event) => {
+      setSelectedTechnician(event.target.value);
+    };
+    
+    const confirmTechnician = async () => {
+
+      if (selectedTechnician) {
+        try {
+          const message = await assignTechnician(selectedAppointment.appointment_id, selectedTechnician, sessionId);
+          setAssignmentMessage(message);
+          setShowReplacementModal(true);
+          await fetchScheduledServiceAppointments();
+        } catch (error) {
+          setAssignmentMessage('Error assigning technician: ' + error.message);
+          setShowReplacementModal(true); // Still show modal to display error message
+        }
+      } else {
+        setShowTechnicianWarning(true); // Show the warning text
+      }
+    };
+    
+    
+ 
+    const closeModal = () => {
+      setShowReplacementModal(false);
+      setSelectedAppointment(null);
+      setVehicleInfo(null);
+      setMemberInfo(null);
+      setSelectedTechnician(null);
+    };
+    
     return (
       <div>
-        {/* Service Appointments */}
-        <div className="table-responsive" style={styles.tableHeight}>
-      <h2>Scheduled Service Appointments</h2>
-      <table className="table table-bordered table-striped" style={styles.tableHeight}>
-        <thead className="thead-dark">
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Appointment Date</th>
-            <th>Service Type</th>
-            <th>Technician Assigned</th>
-            <th>Technician Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scheduledServiceAppointments.map(appointment => (
-            <tr key={appointment.appointment_id}>
-              <td>{getMemberDetails(appointment.memberID)?.first_name}</td>
-              <td>{getMemberDetails(appointment.memberID)?.last_name}</td>
-              <td>{getMemberDetails(appointment.memberID)?.email}</td>
-              <td>{getMemberDetails(appointment.memberID)?.phone}</td>
-              <td>{appointment.appointment_date}</td>
-              <td>{appointment.service_name}</td>
-              <td>
-                <select value={appointment.employeeID} onChange={handleSelectionChange(appointment.appointment_id)}>
-                  <option value="-" key="default">-</option>
-                  {technicians.map(technician => (
-                    <option key={technician.employeeID} value={technician.employeeID}>
-                      {technician.first_name} {technician.last_name}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>{appointment.comments}</td>
-            </tr>
-          ))}
-          {scheduledServiceAppointments.length === 0 && (
+      {/* Service Appointments */}
+      <div className="table-responsive" style={styles.tableHeight}>
+        <h2>Scheduled Service Appointments</h2>
+        <table className="table table-bordered table-striped" style={styles.tableHeight}>
+          <thead className="thead-dark">
             <tr>
-              <td colSpan="8">No scheduled service appointments available</td>
+              <th>Appointment Date</th>
+              <th>Service Type</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan="4">Loading service appointments...</td>
+              </tr>
+            ) : (
+              <>
+                {scheduledServiceAppointments.map(appointment => (
+                  <tr key={appointment.appointment_id}>
+                    <td>{appointment.appointment_date}</td>
+                    <td>{appointment.service_name}</td>
+                    <td>{appointment.status}</td>
+                    <td>
+                      <button onClick={() => { openModal(appointment); fetchVehicleAndMemberInfo(appointment); } } className="btn btn-primary">View</button>
+                    </td>
+                  </tr>
+                ))}
+                {scheduledServiceAppointments.length === 0 && (
+                  <tr>
+                    <td colSpan="4">No scheduled service appointments available</td>
+                  </tr>
+                )}
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+{/* Modal for viewing appointment details */}
+{selectedAppointment && (
+  <div className="modal-container">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Appointment Details</h5>
+          <button type="button" className="close" onClick={closeModal}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <p>Appointment Date: {selectedAppointment.appointment_date}</p>
+          <p>Service Type: {selectedAppointment.service_name}</p>
+          <p>Status: {selectedAppointment.status}</p>
+          {vehicleInfo && (
+            <div>
+              <h5>Vehicle Information</h5>
+              <p>VIN: {vehicleInfo.VIN_carID}</p>
+              <p>Make: {vehicleInfo.make}</p>
+              <p>Model: {vehicleInfo.model}</p>
+              <p>Year: {vehicleInfo.year}</p>
+              <p>Color: {vehicleInfo.color}</p>
+              {/* Add more vehicle info fields as needed */}
+            </div>
           )}
-        </tbody>
-      </table>
+          {memberInfo && (
+            <div>
+              <h5>Member Information</h5>
+              <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
+              <p>Email: {memberInfo.email}</p>
+              <p>Phone: {memberInfo.phone}</p>
+              <p>Address: {memberInfo.address}</p>
+
+              {/* Add more member info fields as needed */}
+            </div>
+          )}
+        </div>
+        <div className="modal-footer">
+      <label htmlFor="technician">Select Technician:</label>
+      <select id="technician" value={selectedAppointment.employeeID} onChange={handleTechnicianChange}>
+        <option value="-">-</option>
+        {technicians.map(technician => (
+          <option key={technician.employeeID} value={technician.employeeID}>
+            {technician.first_name} {technician.last_name}
+          </option>
+        ))}
+      </select>
+      {showTechnicianWarning && <span style={{ color: 'red' }}>Please select a technician</span>}
+
+      <button type="button" className="btn btn-primary" onClick={confirmTechnician}>Confirm</button>
+      <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
     </div>
+
+      </div>
+    </div>
+  </div>
+)}
+
+{showReplacementModal && (
+  <div className="modal-container">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Service Status</h5>
+          <button type="button" className="close" onClick={closeModal}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <p>Service Type: {selectedAppointment.service_name}</p>
+          {assignmentMessage !== null && <p>{assignmentMessage}</p>}
+          
+          {/* Add more summary information here */}
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
   
       {/* Render the "Current Available Services" table when applyFilter is false */}
       {!applyFilter && (
@@ -754,6 +1111,15 @@ const ServiceCenter = ({ applyFilter }) => {
   const BidsTable = ({ applyFilter }) => {
     const [bids, setBids] = useState([]);
     const [selectedBid, setSelectedBid] = useState(null);
+    const [financeInfo, setFinanceInfo] = useState([]); 
+    const [confirmationStatus, setConfirmationStatus] = useState(null);
+    const [showReplacementModal, setShowReplacementModal] = useState(false);
+    const [signature, setSignature] = useState('');
+    const [isSignatureEntered, setIsSignatureEntered] = useState(false);
+
+    const [counterOfferAmount, setCounterOfferAmount] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
 
     useEffect(() => {
       fetchCurrentBids();
@@ -770,8 +1136,35 @@ const ServiceCenter = ({ applyFilter }) => {
       } catch (error) {
         console.error("Error fetching current bids:", error.message);
       }
+      setIsLoading(false);
+
     };
-  
+
+    const fetchFinanceInfo = async (memberId) => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            member_id: memberId
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch finance information');
+        }
+
+        const financeData = await response.json();
+        console.log(financeData);
+
+        setFinanceInfo(financeData);
+      } catch (error) {
+        console.error('Error fetching finance information:', error.message);
+      }
+    };
+    
+
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
         const response = await fetch(`${FINAN_URL}/api/manager/current-bids`, {
@@ -788,9 +1181,12 @@ const ServiceCenter = ({ applyFilter }) => {
           throw new Error("Failed to update bid status");
         }
         await fetchCurrentBids();
+        setConfirmationStatus(confirmationStatus);
+        setShowReplacementModal(true);
       } catch (error) {
         console.error("Error updating bid status:", error.message);
       }
+      console.log('Updated Status of Bid. ' + confirmationStatus);
     };
   
     const getBidColor = (bid) => {
@@ -804,58 +1200,99 @@ const ServiceCenter = ({ applyFilter }) => {
       }
     };
 
-    const handleViewBid = (bid) => {
+    const handleViewBid = async (bid) => {
       setSelectedBid(bid);
+      await fetchFinanceInfo(bid.memberID); 
     };
   
     const closeModal = () => {
       setSelectedBid(null);
+      setFinanceInfo([]); 
+      setShowReplacementModal(false);
+      setConfirmationStatus(null);
+      setCounterOfferAmount('');
     };
   
+    
+    const handleSignatureChange = (e) => {
+      const signatureValue = e.target.value;
+      setSignature(signatureValue);
+      setIsSignatureEntered(!!signatureValue && signatureValue.trim().split(' ').length >= 2); // Check if first and last name are provided
+    };
+
+    const handleCounterBidOffer = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/manager/counter_bid_offer`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            bidID: selectedBid.bidID,
+            newOfferPrice: counterOfferAmount,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to update bid offer price");
+        }
+        await fetchCurrentBids();
+        setShowReplacementModal(true);
+      } catch (error) {
+        console.error("Error updating bid offer price:", error.message);
+      }
+    };
   
  
     return (
       <div>
-        <div className="table-responsive" style={styles.tableHeight}>
-          <h2>Bids</h2>
-          <table className="table table-bordered table-striped">
-            <thead className="thead-dark">
+<div className="table-responsive" style={styles.tableHeight}>
+        <h2>Bids</h2>
+        <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
+            <tr>
+              <th>Make</th>
+              <th>Model</th>
+              <th>VIN</th>
+              <th>MSRP</th>
+              <th>Bid Amount</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading ? ( // Check if loading
               <tr>
-                <th>Make</th>
-                <th>Model</th>
-                <th>VIN</th>
-                <th>MSRP</th>
-                <th>Bid Amount</th>
-                <th>Status</th>
-                <th>Action</th>
+                <td colSpan="7">Loading Bids...</td>
               </tr>
-            </thead>
-            <tbody>
-              {bids && bids
-                .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
-                .map((bid, index) => (
-                  <tr key={index}>
-                    <td>{bid.make}</td>
-                    <td>{bid.model}</td>
-                    <td>{bid.VIN}</td>
-                    <td>{bid.MSRP}</td>
-                    <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
-                    <td>{bid.bidStatus}</td>
-                    <td>
-                      {bid.bidStatus === 'Processing' && (
-                        <button onClick={() => handleViewBid(bid)}>View</button>
-                      )}
-                    </td>
+            ) : (
+              <>
+                {bids && bids
+                  .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
+                  .map((bid, index) => (
+                    <tr key={index}>
+                      <td>{bid.make}</td>
+                      <td>{bid.model}</td>
+                      <td>{bid.VIN}</td>
+                      <td>{bid.MSRP}</td>
+                      <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
+                      <td>{bid.bidStatus}</td>
+                      <td>
+                        {bid.bidStatus === 'Processing' && (
+                          <button onClick={() => handleViewBid(bid) } className="btn btn-primary">View</button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                {!bids && (
+                  <tr>
+                    <td colSpan="7">No bids available</td>
                   </tr>
-                ))}
-              {!bids && (
-                <tr>
-                  <td colSpan="7">No bids available</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
      {/* Modal for viewing bid details */}
      {selectedBid && (
         <div className="modal-container">
@@ -873,12 +1310,105 @@ const ServiceCenter = ({ applyFilter }) => {
                 <p>Model: {selectedBid.model}</p>
                 <p>VIN: {selectedBid.VIN}</p>
                 <p>MSRP: {selectedBid.MSRP}</p>
-                <p>Bid Amount: {selectedBid.bidValue}</p>
+                <p style={{ color: getBidColor(selectedBid.bidValue) }}> Bid Amount:  {selectedBid.bidValue} {((selectedBid.bidValue - selectedBid.MSRP) / selectedBid.MSRP * 100).toFixed(2)}%</p>
                 <p>Status: {selectedBid.bidStatus}</p>
+                {/* Display finance information */}
+                {financeInfo.length > 0  && (
+                  <div>
+                    <h5>Finance Information</h5>
+                    <p>Offer from: {financeInfo[0].first_name} {financeInfo[0].last_name}, {financeInfo[0].phone} </p>
+
+                    <p>Income: {financeInfo[0].income}</p>
+                    <p>Credit Score: {financeInfo[0].credit_score}</p>
+                    <p>Loan Total: {financeInfo[0].loan_total}</p>
+                    <p>Down Payment: {financeInfo[0].down_payment}</p>
+                    <p>Percentage: {financeInfo[0].percentage}</p>
+                    <p>Monthly Payment Sum: {financeInfo[0].monthly_payment_sum}</p>
+                    <p>Remaining Months: {financeInfo[0].remaining_months}</p>
+                  </div>
+                )}
+                <div className="form-group">
+                  <input
+                    type="text"
+                    placeholder="Offer Amount"
+                    value={counterOfferAmount}
+                    onChange={(e) => setCounterOfferAmount(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleCounterBidOffer}
+                    disabled={!counterOfferAmount.trim()}
+                  >
+                    Send Counter Offer
+                  </button>
+                </div>
+
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Confirmed')}>Accept Bid</button>
-                <button type="button" className="btn btn-danger" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Denied')}>Deny Bid</button>
+
+              <div className="form-group">
+        <label htmlFor="signature">Signature:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="signature"
+          placeholder="Enter Signature"
+          value={signature}
+          onChange={handleSignatureChange}
+        />
+        <small className="form-text text-muted">
+          By signing this, you are accepting the proposed bid and are entering into a contract with this entity.
+        </small>
+        {signature && !isSignatureEntered && <p style={{ color: 'red' }}>Please enter your first and last name.</p>}
+      </div>
+
+
+      <button
+  type="button"
+  className="btn btn-primary"
+  onClick={() => handleBidConfirmation(selectedBid.bidID, 'Confirmed')}
+  disabled={!isSignatureEntered} // Disable button if signature is not provided
+>
+  Accept Bid
+</button>
+                          <button type="button" className="btn btn-danger" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Denied')}>Deny Bid</button>
+                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+{showReplacementModal && (
+        <div className="modal-container">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Bid Status</h5>
+                <button type="button" className="close" onClick={closeModal}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+
+              {counterOfferAmount && (
+            <div>
+              <p>Action: Counter Bid</p>
+              <p>Counter Offer Amount: {counterOfferAmount}</p>
+            </div>
+          )}
+                {/* Display bid status information here */}
+                <p>Bid Status: {confirmationStatus || selectedBid.bidStatus}</p>
+                {selectedBid && (
+                  <div>
+                    <p>Make: {selectedBid.make}</p>
+                    <p>Model: {selectedBid.model}</p>
+                    {/* Add more bid details as needed */}
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
               </div>
             </div>
@@ -929,8 +1459,7 @@ const ServiceCenter = ({ applyFilter }) => {
   );
 
   const TestDrivesTable = ({ applyFilter }) => {
-    // Get today's date
-    const today = new Date();
+  
   
     // Function to fetch pending test drives
     const fetchPendingTestDrives = async () => {
@@ -948,12 +1477,25 @@ const ServiceCenter = ({ applyFilter }) => {
   
     // State to store test drives data
     const [testDrives, setTestDrives] = useState([]);
-  
+    const [selectedTestDrive, setSelectedTestDrive] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [confirmationValue, setConfirmationValue] = useState(null);  
+
+    const [isLoading, setIsLoading] = useState(true); // State for loading indicator
+
     // Fetch test drives data when component mounts
+
     useEffect(() => {
       const fetchData = async () => {
-        const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
-        setTestDrives(data);
+        try {
+          setIsLoading(true); // Set loading to true while fetching
+          const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
+          setTestDrives(data);
+        } catch (error) {
+          console.error('Error fetching test drives:', error.message);
+        } finally {
+          setIsLoading(false); // Set loading to false after fetching
+        }
       };
       fetchData();
     }, [applyFilter]);
@@ -979,6 +1521,34 @@ const ServiceCenter = ({ applyFilter }) => {
         // Handle error
       }
     };
+
+      // Function to handle modal open
+  const handleModalOpen = (testDrive) => {
+    setSelectedTestDrive(testDrive);
+    setShowModal(true);
+  };
+
+  // Function to handle modal close
+  const handleModalClose = () => {
+    setSelectedTestDrive(null);
+    setShowModal(false);
+  };
+
+  const handleConfirmation = async (confirmation) => {
+    try {
+      setConfirmationValue(confirmation);
+      await handleConfirmationUpdate(selectedTestDrive.id, confirmation);
+      setShowModal(false); // Close modal after confirmation
+      // Call the API again to fetch the latest test drive data
+      const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
+      setTestDrives(data);
+      // Show replacement modal describing the choice made
+      // Implement replacement modal logic here
+    } catch (error) {
+      console.error('Error handling confirmation:', error.message);
+      // Handle error
+    }
+  };
   
     return (
       <div className="table-responsive" style={styles.tableHeight}>
@@ -994,26 +1564,58 @@ const ServiceCenter = ({ applyFilter }) => {
             </tr>
           </thead>
           <tbody>
-            {testDrives.map((testDrive, index) => (
-              <tr key={index}>
-                <td>{testDrive.phone}</td>
-                <td>{testDrive.fullname}</td>
-                <td>{testDrive.car_make_model}</td>
-                <td>{testDrive.appointment_date}</td>
-                <td>
-                  {/* Buttons for approval and cancellation */}
-                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 1)} className="btn btn-success">Approve</button>
-                  <button onClick={() => handleConfirmationUpdate(testDrive.id, 3)} className="btn btn-danger">Cancel</button>
-                </td>
-              </tr>
-            ))}
-            {testDrives.length === 0 && (
-              <tr>
-                <td colSpan="4">No test drives available</td>
-              </tr>
-            )}
-          </tbody>
+        {testDrives.length === 0 && !isLoading && (
+          <tr>
+            <td colSpan="5">No test drives available</td>
+          </tr>
+        )}
+        {isLoading && (
+          <tr>
+            <td colSpan="5">Loading test drives...</td>
+          </tr>
+        )}
+        {!isLoading && testDrives.map((testDrive, index) => (
+          <tr key={index}>
+            <td>{testDrive.phone}</td>
+            <td>{testDrive.fullname}</td>
+            <td>{testDrive.car_make_model}</td>
+            <td>{testDrive.appointment_date}</td>
+            <td>
+              {/* Button to view details and confirm/cancel */}
+              <button onClick={() => handleModalOpen(testDrive)} className="btn btn-primary">View</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
         </table>
+
+              {/* Modal for displaying test drive details and confirmation */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Test Drive Details</h5>
+                <button type="button" className="close" onClick={handleModalClose}>
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Customer Phone: {selectedTestDrive.phone}</p>
+                <p>Full Name: {selectedTestDrive.fullname}</p>
+                <p>Vehicle: {selectedTestDrive.car_make_model}</p>
+                <p>Datetime: {selectedTestDrive.appointment_date}</p>
+                {/* Add more details as needed */}
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-success" onClick={() => handleConfirmation(1)}>Confirm</button>
+                <button className="btn btn-danger" onClick={() => handleConfirmation(3)}>Cancel Test Drive</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       </div>
     );
   };
@@ -1239,6 +1841,7 @@ const ServiceCenter = ({ applyFilter }) => {
             Service Center
           </button>
         </div>
+{/*
 
         <div style={{ marginBottom: "10px" }}>
           <button
@@ -1264,6 +1867,8 @@ const ServiceCenter = ({ applyFilter }) => {
             Test Drives
           </button>
         </div>
+          */}
+
         <div style={{ marginBottom: "10px" }}>
           <button
             className="btn btn-block btn-dark"
@@ -1295,9 +1900,13 @@ const ServiceCenter = ({ applyFilter }) => {
         <div style={{ marginBottom: "10px" }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); fetchDataSelection(7); }}>Technicians</button>
         </div>
+        
+        {/*
         <div style={{ marginBottom: "10px" }}>
           <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8); fetchDataSelection(8); }}>Purchases</button>
         </div>
+          */}
+        
 
         <div style={{ marginBottom: "10px" }}>
           {user && (user.employeeType === "superAdmin") && (
