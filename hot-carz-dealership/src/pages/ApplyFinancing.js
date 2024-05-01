@@ -104,7 +104,7 @@ export default function ApplyFinancing() {
       setFinancingModalOpen(false);
 
       try {
-        // Make a POST request to your Flask endpoint to insert financing information
+        // Make a POST request to insert financing information
         const response = await fetch(
           `${BASE_URL}/api/vehicle-purchase/insert-financing`,
           {
@@ -113,7 +113,6 @@ export default function ApplyFinancing() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-
             body: JSON.stringify({
               VIN_carID: queryParams.get("VIN_carID"),
               income: financingTerms.income,
@@ -134,6 +133,25 @@ export default function ApplyFinancing() {
             "Financing information inserted successfully:",
             responseData.message
           );
+
+          // Add item to cart
+          await fetch(`${BASE_URL}/api/member/add_to_cart`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              item_name: queryParams.get("vehicleName"),
+              item_price:
+                parseFloat(financingTerms.down_payment) +
+                parseFloat(financingTerms.loan_total),
+              VIN_carID: queryParams.get("VIN_carID"),
+              financed_amount: financingTerms.loan_total,
+            }),
+          });
+
+          // Redirect to addons page
           setFinancingModalOpen(false);
           navigate(`/addons`);
         } else {
