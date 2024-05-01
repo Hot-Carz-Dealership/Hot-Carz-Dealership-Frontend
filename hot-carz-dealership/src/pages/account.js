@@ -5,6 +5,14 @@ import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import "../Account.css"; // Import the CSS file for styling
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import dayjs from "dayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dateFormat from "dateformat";
 
 import styles from "../css/employees.css";
 
@@ -19,6 +27,10 @@ const Account = () => {
   const [invoices, setInvoices] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
+  const [testDrivesID, setTestDrivesID] = useState([]);
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+  const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
 
   useEffect(() => {
     (async () => {
@@ -46,8 +58,9 @@ const Account = () => {
         const serviceData = await serviceResponse.json();
         setServiceAppointments(serviceData);
 
-        const invoiceResponse = await fetch(`${BASE_URL}/api/member/payment-purchases-finance-bid-data`, requestData)
+        const invoiceResponse = await fetch(`${BASE_URL}/api/member/order_history`, requestData)
         const invoiceData = await invoiceResponse.json();
+        console.log(invoiceData)
         setInvoices(invoiceData);
 
         const bidResponse = await fetch(`${BASE_URL}/api/member/current-bids`, requestData)
@@ -70,6 +83,114 @@ const Account = () => {
   const logOutUser = async () => {
     await httpClient.post(`${BASE_URL}/api/logout`);
     window.location.href = "/";
+  };
+
+  const ValueModal = ({ open, onClose }) => {
+    const [value, setValue] = useState("");
+    const [newValue, setNewValue] = useState(null);
+
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Box sx={styles.modal}>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Select Date and Time for Test Drive:
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              name="date"
+              id="date"
+              onChange={(newValue) => setNewValue(newValue)}
+              defaultValue={tomorrow}
+              minDate={tomorrow}
+              views={["year", "month", "day", "hours", "minutes"]}
+            />
+          </LocalizationProvider>
+
+          <div>
+            <Button onClick={() => handleTestdriveSubmit(newValue)}>
+              Submit Test Drive
+            </Button>
+          </div>
+          <div>
+            <Button onClick={() => handleCancel(newValue)}>
+              Cancel Test Drive
+            </Button>
+          </div>
+
+          <Button onClick={onClose}>Close</Button>
+        </Box>
+      </Modal>
+    );
+  };
+
+  const handleOpen = (vehicleVIN, testdrive_id) => {
+    setOpen(true);
+    setTestDrivesID(testdrive_id)
+    console.log({ vehicleVIN });
+    if (user) {
+      console.log(user.memberID);
+    } else {
+      console.log("User not available");
+    }
+  };
+
+  const handleCancel = async (value) => {
+    var x = document.getElementById("date");
+    var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
+
+    console.log(tdDate);
+    console.log(testDrives.VIN_carID);
+
+    const data = {
+      testdrive_id: testDrivesID,
+      appointment_date: tdDate,
+    };
+    const requestData = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Include cookies in the request
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(
+      `${BASE_URL}/api/testdrives/edit`,
+      requestData
+    );
+    const responseData = await response.json();
+    window.location.href = "/account";
+  };
+
+  const handleTestdriveSubmit = async (value) => {
+    var x = document.getElementById("date");
+    var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
+
+    console.log(tdDate);
+    console.log(testDrives.VIN_carID);
+
+    const data = {
+      testdrive_id: testDrivesID,
+      appointment_date: tdDate,
+    };
+    const requestData = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Include cookies in the request
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(
+      `${BASE_URL}/api/testdrives/edit`,
+      requestData
+    );
+    const responseData = await response.json();
+    window.location.href = "/account";
   };
 
   if (loading) {
@@ -273,6 +394,7 @@ const Account = () => {
             <th>Make</th>
             <th>Model</th>
             <th>Year</th>
+            <th>Edit Test Drive</th>
           </tr>
         </thead>
         <tbody>
@@ -285,10 +407,12 @@ const Account = () => {
                   <td>{drive.make}</td>
                   <td>{drive.model}</td>
                   <td>{drive.year}</td>
+                  <td><button onClick={() => handleOpen(drive.VIN_carID, drive.testdrive_id)}>Edit Test Drive</button></td>
                 </tr>
               ))}
         </tbody>
       </table>
+      <ValueModal open={open} onClose={handleClose} />
     </div>
   );
 
@@ -357,32 +481,26 @@ const Account = () => {
 
 
     return (
-      <div className="table-responsive">
-        <h2>Past Invoices</h2>
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>Purchase ID</th>
-              <th>Bid ID (For Vehicle Purchases)</th>
-              <th>Car VIN</th>
-              <th>Confirmation Number</th>
-              <th>Purchse Type</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.purchase_history.map((purch, index) => (
-              <tr key={index}>
-                <td>{purch.purchaseID}</td>
-                <td>{purch.bidID}</td>
-                <td>{purch.VIN_carID}</td>
-                <td>{purch.confirmationNumber}</td>
-                <td>{purch.purchaseType}</td>
-                <td>{purch.purchaseDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        {invoices.map((sale, index) => (
+          <div key={index}>
+            <h2>Confirmation Number: {sale["Confirmation Number"]}</h2>
+            <p>Amount Paid: {sale["Amount Paid"]}</p>
+            <p>Subtotal: {sale["Subtotal"]}</p>
+            <p>Taxes: {sale["Taxes"]}</p>
+            <p>Total Financed: {sale["Total Financed"]}</p>
+            <h3>Items:</h3>
+            <ul>
+              {sale.items.map((item, idx) => (
+                <li key={idx}>
+                  <p>Item Name: {item["Item Name"]}</p>
+                  <p>Item Price: {item["Item Price"]}</p>
+                  <p>Financed Amount: {item["Financed Amount"]}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     );
   };
