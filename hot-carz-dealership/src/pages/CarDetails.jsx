@@ -5,8 +5,7 @@ import VehicleImage from "../utilities/VehicleImage";
 import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+
 import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -14,7 +13,20 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dateFormat from "dateformat";
 
-import styles from "../css/cars.css";
+// import styles from "../css/cars.css";
+
+const styles = {
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    // width: 400,
+
+    // boxShadow: 24,
+    // p: 4,
+  },
+};
 
 function VehicleInfo({ vehicleFeatures, vehicleImage }) {
   return (
@@ -54,13 +66,13 @@ function VehicleDetails({
 }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
+  // const [sessionId, setSessionId] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
 
-  const [date, setDate] = React.useState(null);
+  // const [date, setDate] = React.useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +81,7 @@ function VehicleDetails({
         const user = resp.data;
 
         setUser(user);
-        setSessionId(user.employeeID);
+        // setSessionId(user.employeeID);
         setLoggedIn(true);
       } catch (error) {
         console.log("Not Authenticated or Unauthorized");
@@ -94,8 +106,32 @@ function VehicleDetails({
   };
 
   const ValueModal = ({ open, onClose }) => {
-    const [value, setValue] = useState("");
+    // const [value, setValue] = useState("");
     const [newValue, setNewValue] = useState(null);
+
+    const handleTestdriveSubmit = async (value) => {
+      // var x = document.getElementById("date");
+      var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
+
+      console.log(tdDate);
+      console.log(vehicleVIN);
+
+      const data = {
+        VIN_carID: vehicleVIN,
+        appointment_date: tdDate,
+      };
+      const requestData = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies in the request
+        body: JSON.stringify(data),
+      };
+      await fetch(`${BASE_URL}/api/member/book-test-drive`, requestData);
+      // const responseData = await response.json();
+      window.location.href = "/account";
+    };
 
     return (
       <Modal
@@ -105,56 +141,39 @@ function VehicleDetails({
         aria-describedby="simple-modal-description"
       >
         <Box sx={styles.modal}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Select Date and Time for Test Drive:
-          </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              name="date"
-              id="date"
-              onChange={(newValue) => setNewValue(newValue)}
-              defaultValue={tomorrow}
-              minDate={tomorrow}
-              views={["year", "month", "day", "hours", "minutes"]}
-            />
-          </LocalizationProvider>
+          <div className="rounded-lg bg-white p-8 shadow-2xl">
+            <h2 className="text-lg font-bold">
+              Select Date and Time for Test Drive:
+            </h2>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                name="date"
+                id="date"
+                onChange={(newValue) => setNewValue(newValue)}
+                defaultValue={tomorrow}
+                minDate={tomorrow}
+                views={["year", "month", "day", "hours", "minutes"]}
+              />
+            </LocalizationProvider>
 
-          <div>
-            <Button onClick={() => handleTestdriveSubmit(newValue)}>
-              Submit Test Drive
-            </Button>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => handleTestdriveSubmit(newValue)}
+                className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
+              >
+                Submit Test Drive
+              </button>
+              <button
+                onClick={onClose}
+                className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+              >
+                Close
+              </button>
+            </div>
           </div>
-
-          <Button onClick={onClose}>Close</Button>
         </Box>
       </Modal>
     );
-  };
-  const handleTestdriveSubmit = async (value) => {
-    var x = document.getElementById("date");
-    var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
-
-    console.log(tdDate);
-    console.log(vehicleVIN);
-
-    const data = {
-      VIN_carID: vehicleVIN,
-      appointment_date: tdDate,
-    };
-    const requestData = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // Include cookies in the request
-      body: JSON.stringify(data),
-    };
-    const response = await fetch(
-      `${BASE_URL}/api/member/book-test-drive`,
-      requestData
-    );
-    const responseData = await response.json();
-    window.location.href = "/account";
   };
 
   return (
@@ -197,8 +216,8 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await httpClient.get(`${BASE_URL}/@me`);
-        const user = resp.data;
+        await httpClient.get(`${BASE_URL}/@me`);
+        // const user = resp.data;
 
         setLoggedIn(true);
       } catch (error) {
@@ -283,7 +302,6 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
     </section>
   );
 }
-
 const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
   const navigate = useNavigate();
 
@@ -323,6 +341,7 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
       // Handle error here, show error message to the user, etc.
     }
   };
+
   return (
     <Modal
       open={open}
@@ -331,12 +350,24 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
       aria-describedby="simple-modal-description"
     >
       <Box sx={styles.modal}>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Do you want to apply for financing?
-        </Typography>
-        <div>
-          <Button onClick={userWantsFinancing}>Yes</Button>
-          <Button onClick={userNoFinancing}>No</Button>
+        <div className="rounded-lg bg-white p-8 shadow-2xl">
+          <h2 className="text-lg font-bold">
+            Do you want to apply for financing?
+          </h2>
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={userWantsFinancing}
+              className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
+            >
+              Yes
+            </button>
+            <button
+              onClick={userNoFinancing}
+              className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+            >
+              No
+            </button>
+          </div>
         </div>
       </Box>
     </Modal>
