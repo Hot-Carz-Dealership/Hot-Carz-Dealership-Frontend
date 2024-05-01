@@ -253,7 +253,7 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
   };
 
   return (
-    <section className="flex gap-5 justify-between pr-12 mt-32 max-w-full w-[921px] max-md:flex-wrap max-md:pr-5 max-md:mt-10">
+    <section className="flex gap-5 justify-between pr-28 mt-32 max-w-full w-[921px] max-md:flex-wrap max-md:pr-5 max-md:mt-10">
       <div className="flex flex-col  uppercase">
         <h2 className="text-4xl font-bold leading-6 text-center text-black">
           Purchase At MSRP
@@ -266,31 +266,15 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
         </button>
       </div>
       <div className="flex flex-col">
-        <h2 className="self-center text-4xl font-bold  leading-6 text-center text-black uppercase">
-          Bid on Price
+        <h2 className="text-4xl font-bold leading-6 text-center text-black">
+          Enter A Bid{" "}
         </h2>
-        <form onSubmit={handleBidSubmit} className="flex gap-px mt-8">
-          <label
-            htmlFor="bidPrice"
-            className="pb-8 text-xs tracking-normal leading-3 rounded text-black text-opacity-60"
-          >
-            Enter Bid Price
-          </label>
-          <input
-            type="number"
-            id="bidPrice"
-            value={bidPrice}
-            onChange={handleBidPriceChange}
-            className="sr-only"
-            aria-label="Enter Bid Price"
-          />
-          <button
-            type="submit"
-            className="justify-center self-start px-6 py-2 text-base font-medium  leading-7 text-white uppercase whitespace-nowrap bg-red-700 rounded shadow-md max-md:px-5"
-          >
-            Bid
-          </button>
-        </form>
+        <button
+          onClick={handleOpenFinancingModal}
+          className="justify-center self-center px-6 py-2 mt-8 text-base font-medium leading-7 text-white bg-red-700 rounded shadow-md max-md:px-5"
+        >
+          BID
+        </button>
       </div>
       <FinancingModal
         open={financingModalOpen}
