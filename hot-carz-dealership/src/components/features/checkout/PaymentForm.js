@@ -1,14 +1,11 @@
 import * as React from "react";
 
 import Box from "@mui/material/Box";
-
 import FormLabel from "@mui/material/FormLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
 import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded";
-
 import { styled } from "@mui/system";
 
 const FormGrid = styled("div")(() => ({
@@ -16,15 +13,47 @@ const FormGrid = styled("div")(() => ({
   flexDirection: "column",
 }));
 
-export default function PaymentForm() {
+export default function PaymentForm({
+  onRoutingNumberChange,
+  onAccountNumberChange,
+}) {
   const paymentType = "bankTransfer";
-  const [cardNumber, setCardNumber] = React.useState("");
+  const [routingNumber, setRoutingNumber] = React.useState("");
+  const [accountNumber, setAccountNumber] = React.useState("");
+  const [routingValid, setRoutingValid] = React.useState(false);
+  const [accountValid, setAccountValid] = React.useState(false);
+  const [routingError, setRoutingError] = React.useState("");
+  const [accountError, setAccountError] = React.useState("");
 
-  const handleCardNumberChange = (event) => {
+  const handleRoutingNumberChange = (event) => {
     const value = event.target.value.replace(/\D/g, "");
-    const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
-    if (value.length <= 16) {
-      setCardNumber(formattedValue);
+
+    setRoutingNumber(value);
+
+    if (/^\d{9}$/.test(value)) {
+      onRoutingNumberChange(value); // Call callback function from props
+      setRoutingValid(true);
+      setRoutingError("");
+    } else {
+      setRoutingValid(false);
+      setRoutingError("Routing number must be 9 digits");
+      onRoutingNumberChange(null);
+    }
+  };
+
+  const handleAccountNumberChange = (event) => {
+    const value = event.target.value.replace(/\D/g, "");
+
+    setAccountNumber(value);
+
+    if (/^\d{8,12}$/.test(value)) {
+      onAccountNumberChange(value); // Call callback function from props
+      setAccountValid(true);
+      setAccountError("");
+    } else {
+      setAccountValid(false);
+      setAccountError("Account number must be between 8 and 12 digits");
+      onAccountNumberChange(null);
     }
   };
 
@@ -60,7 +89,6 @@ export default function PaymentForm() {
             <AccountBalanceRoundedIcon
               sx={{
                 fontSize: { xs: 48, sm: 56 },
-
                 color: "text.secondary",
               }}
             />
@@ -73,30 +101,46 @@ export default function PaymentForm() {
               }}
             >
               <FormGrid sx={{ flexGrow: 1 }}>
-                <FormLabel htmlFor="card-number" required>
+                <FormLabel htmlFor="routing-number" required>
                   Routing number
                 </FormLabel>
                 <OutlinedInput
-                  id="card-number"
-                  autoComplete="card-number"
+                  id="routing-number"
+                  autoComplete="routing-number"
                   placeholder="123456789"
+                  error={!routingValid}
                   required
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
+                  value={routingNumber}
+                  onChange={handleRoutingNumberChange}
+                  inputProps={{ maxLength: 9 }}
                 />
+                {routingError && (
+                  <Typography variant="body2" color="error">
+                    {routingError}
+                  </Typography>
+                )}
               </FormGrid>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
               <FormGrid sx={{ flexGrow: 1 }}>
-                <FormLabel htmlFor="card-name" required>
+                <FormLabel htmlFor="account-number" required>
                   Account number
                 </FormLabel>
                 <OutlinedInput
-                  id="card-name"
-                  autoComplete="card-name"
+                  id="account-number"
+                  autoComplete="account-number"
                   placeholder="0123456789"
+                  error={!accountValid}
                   required
+                  value={accountNumber}
+                  onChange={handleAccountNumberChange}
+                  inputProps={{ maxLength: 12 }}
                 />
+                {accountError && (
+                  <Typography variant="body2" color="error">
+                    {accountError}
+                  </Typography>
+                )}
               </FormGrid>
             </Box>
           </Box>

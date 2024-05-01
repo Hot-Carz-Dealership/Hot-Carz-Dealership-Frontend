@@ -35,8 +35,8 @@ function Info({ data }) {
   );
 }
 
-Info.propTypes = {
-  data: PropTypes.object.isRequired,
-};
+// Info.propTypes = {
+//   data: PropTypes.object.isRequired,
+// };
 
 export default Info;

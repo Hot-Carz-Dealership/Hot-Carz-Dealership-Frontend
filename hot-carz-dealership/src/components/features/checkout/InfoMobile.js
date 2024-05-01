@@ -48,8 +48,8 @@ function InfoMobile({ data }) {
   );
 }
 
-InfoMobile.propTypes = {
-  data: PropTypes.object.isRequired, // Change prop type from string to object
-};
+// InfoMobile.propTypes = {
+//   data: PropTypes.object.isRequired, // Change prop type from string to object
+// };
 
 export default InfoMobile;

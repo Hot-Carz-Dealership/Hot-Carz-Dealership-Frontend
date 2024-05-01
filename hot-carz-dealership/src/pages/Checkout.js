@@ -28,10 +28,20 @@ import { BASE_URL } from "../utilities/constants";
 
 const steps = ["Payment details", "Review your order"];
 
-function getStepContent(step, cartData) {
+function getStepContent(
+  step,
+  cartData,
+  handleRoutingNumberChange,
+  handleAccountNumberChange
+) {
   switch (step) {
     case 0:
-      return <PaymentForm />;
+      return (
+        <PaymentForm
+          onRoutingNumberChange={handleRoutingNumberChange}
+          onAccountNumberChange={handleAccountNumberChange}
+        />
+      );
     case 1:
       return cartData ? <Review cartData={cartData} /> : null; // Render Review only when cartData is available
     default:
@@ -93,6 +103,19 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const [cartData, setCartData] = useState(null);
+  const [routingNumber, setRoutingNumber] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+
+  // Callback functions to update routing and account numbers
+  const handleRoutingNumberChange = (value) => {
+    setRoutingNumber(value);
+    console.log(value);
+  };
+
+  const handleAccountNumberChange = (value) => {
+    setAccountNumber(value);
+    console.log(value);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -319,7 +342,12 @@ export default function Checkout() {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep, cartData)}
+                {getStepContent(
+                  activeStep,
+                  cartData,
+                  handleRoutingNumberChange,
+                  handleAccountNumberChange
+                )}
                 <Box
                   sx={{
                     display: "flex",
@@ -352,7 +380,7 @@ export default function Checkout() {
                       startIcon={<ChevronLeftRoundedIcon />}
                       onClick={handleBack}
                       variant="outlined"
-                      backgroundColor="red"
+                      backgroundcolor="red"
                       fullWidth
                       sx={{
                         display: { xs: "flex", sm: "none", color: "red" },
@@ -361,21 +389,40 @@ export default function Checkout() {
                       Previous
                     </Button>
                   )}
+                  {activeStep === 0 && (
+                    <Button
+                      variant="contained"
+                      endIcon={<ChevronRightRoundedIcon />}
+                      onClick={handleNext}
+                      disabled={!routingNumber || !accountNumber}
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "fit-content",
+                          background: "red",
+                        },
+                      }}
+                    >
+                      {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                    </Button>
+                  )}
 
-                  <Button
-                    variant="contained"
-                    endIcon={<ChevronRightRoundedIcon />}
-                    onClick={handleNext}
-                    sx={{
-                      width: {
-                        xs: "100%",
-                        sm: "fit-content",
-                        background: "red",
-                      },
-                    }}
-                  >
-                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                  </Button>
+                  {activeStep === steps.length - 1 && (
+                    <Button
+                      variant="contained"
+                      endIcon={<ChevronRightRoundedIcon />}
+                      onClick={handleNext}
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "fit-content",
+                          background: "red",
+                        },
+                      }}
+                    >
+                      {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                    </Button>
+                  )}
                 </Box>
               </React.Fragment>
             )}
