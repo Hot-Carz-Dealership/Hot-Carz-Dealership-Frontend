@@ -46,8 +46,9 @@ const Account = () => {
         const serviceData = await serviceResponse.json();
         setServiceAppointments(serviceData);
 
-        const invoiceResponse = await fetch(`${BASE_URL}/api/member/payment-purchases-finance-bid-data`, requestData)
+        const invoiceResponse = await fetch(`${BASE_URL}/api/member/order_history`, requestData)
         const invoiceData = await invoiceResponse.json();
+        console.log(invoiceData)
         setInvoices(invoiceData);
 
         const bidResponse = await fetch(`${BASE_URL}/api/member/current-bids`, requestData)
@@ -357,32 +358,26 @@ const Account = () => {
 
 
     return (
-      <div className="table-responsive">
-        <h2>Past Invoices</h2>
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>Purchase ID</th>
-              <th>Bid ID (For Vehicle Purchases)</th>
-              <th>Car VIN</th>
-              <th>Confirmation Number</th>
-              <th>Purchse Type</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.purchase_history.map((purch, index) => (
-              <tr key={index}>
-                <td>{purch.purchaseID}</td>
-                <td>{purch.bidID}</td>
-                <td>{purch.VIN_carID}</td>
-                <td>{purch.confirmationNumber}</td>
-                <td>{purch.purchaseType}</td>
-                <td>{purch.purchaseDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        {invoices.map((sale, index) => (
+          <div key={index}>
+            <h2>Confirmation Number: {sale["Confirmation Number"]}</h2>
+            <p>Amount Paid: {sale["Amount Paid"]}</p>
+            <p>Subtotal: {sale["Subtotal"]}</p>
+            <p>Taxes: {sale["Taxes"]}</p>
+            <p>Total Financed: {sale["Total Financed"]}</p>
+            <h3>Items:</h3>
+            <ul>
+              {sale.items.map((item, idx) => (
+                <li key={idx}>
+                  <p>Item Name: {item["Item Name"]}</p>
+                  <p>Item Price: {item["Item Price"]}</p>
+                  <p>Financed Amount: {item["Financed Amount"]}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     );
   };
