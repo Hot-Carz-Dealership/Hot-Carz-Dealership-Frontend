@@ -239,7 +239,7 @@ const TechnicianPage = () => {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Appointment Status: {aptStatus}
           </Typography>
-          {aptStatus != "Done" ? (
+          {aptStatus !== "Done" ? (
             <div>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Update Appointment:

@@ -1844,6 +1844,7 @@ const AddMemberVehicle = () => {
   };
 
   // Function to dynamically populate the year dropdown based on the selected model
+  /*
   const handleModelChange = (e) => {
     const selectedModel = e.target.value;
     setFormData({
@@ -1852,6 +1853,7 @@ const AddMemberVehicle = () => {
       year: "", // Reset year when model changes
     });
   };
+  */
 
   return (
     <div style={styles.container}>

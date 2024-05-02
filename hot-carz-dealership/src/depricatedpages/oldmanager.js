@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +22,9 @@ const ManagerPage = () => {
 
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
+
+  //const [salesReport, setSalesReport] = useState([]);
+
   const [serviceAppointments, setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
@@ -29,36 +32,16 @@ const ManagerPage = () => {
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
-  const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-      const [testDrives, setTestDrives] = useState([]);
-      const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
 
+      const [testDrives, setTestDrives] = useState([]);
 
   const navigate = useNavigate(); // Initialize useNavigate
-
-  const handleTabSelect = (tabIndex) => {
-    if (selectedTab !== tabIndex) {
-      setSelectedTab(tabIndex);
-      setRenderTable(true); // Set renderTable to true when a new tab is selected
-    }
-  };
-
-  const renderTableCall = () => {
-    if (renderTable) {
-      return <RenderTable />;
-    } else {
-      return null;
-    }
-  };
-
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
-        setUser(user);
-        // Store the session ID
-        setSessionId(user.employeeID);
+
         // Check if user role is either "Manager" or "superAdmin"
         if (
           user.employeeType !== "Manager" &&
@@ -67,12 +50,12 @@ const ManagerPage = () => {
           throw new Error("Unauthorized access");
         }
 
-        /*
         setUser(user);
         // Store the session ID
         setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
-*/
+
         // Fetch service appointments and members data
+        await fetchData(); // Move fetchData here
       } catch (error) {
         console.log("Not Authenticated or Unauthorized");
         navigate("/login");
@@ -80,17 +63,15 @@ const ManagerPage = () => {
     })();
   }, [navigate]);
 
-
-
   const handleGetStarted = () => {
-    setShowWelcomeScreen(false);
     setShowTable(true);
-    handleTabSelect(0);
   };
 
   const logOutUser = async () => {
     await httpClient.post(`${BASE_URL}/api/logout`);
     window.location.href = "/";
+  };
+  const fetchData = async () => {
   };
 
   const fetchDataSelection = async (selectedTab) => {
@@ -244,6 +225,53 @@ const ManagerPage = () => {
     }
   };
 
+  // Function to get member details by memberID
+  /*
+  const getMemberDetails = (memberID) => {
+    const member = members.find((member) => member.memberID === memberID);
+    return member
+      ? {
+        memberID: member.memberID,
+        first_name: member.first_name,
+        last_name: member.last_name,
+        email: member.email,
+        phone: member.phone,
+        address: member.address,
+        state: member.state,
+        zipcode: member.zipcode,
+        join_date: member.join_date,
+      }
+      : null;
+  };
+  
+
+  const handleSelectionChange = (appointmentId) => async (event) => {
+    console.log("APP: " + appointmentId);
+    console.log("EMPL: " + event.target.value);
+    // Get the selected technician ID from the dropdown
+    const selectedTechnicianId = event.target.value;
+
+    // Call the assignTechnician function with appointment ID, selected technician ID, and session ID
+    try {
+      await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
+      // Update the appointment object with the newly selected technician ID
+      const updatedAppointments = serviceAppointments.map(appointment => {
+        if (appointment.appointment_id === appointmentId) {
+          return {
+            ...appointment,
+            employeeID: selectedTechnicianId
+          };
+        }
+        return appointment;
+      });
+      // Update the state with the updated appointments
+      setServiceAppointments(updatedAppointments);
+    } catch (error) {
+      console.error('Error assigning technician:', error.message);
+    }
+  };
+
+  */
 
   const assignTechnician = (appointmentId, technicianId, sessionId) => {
     // Create a JSON object with appointment_id, employee_id, and session_id
@@ -283,15 +311,19 @@ const ManagerPage = () => {
   const [selectedTab, setSelectedTab] = useState(null);
   const [shouldRenderTable, setShouldRenderTable] = useState(true); // Flag to control table rendering
 
+// UseEffect to monitor changes in selectedTab
+useEffect(() => {
+  // Set shouldRenderTable to true if it's a new selected tab
+  setShouldRenderTable(true);
+}, [selectedTab]);
 
   const RenderTable = () => {
-console.log(selectedTab);
+
     switch (selectedTab) {
       case null:
         return <WelcomeScreen user={user} handleGetStarted={handleGetStarted} />
       case 0: // If "ALL" is selected, render all tables with borders
         return (
-
           <div style={styles.tableWrapper}>
             <TODO />
           </div>
@@ -299,19 +331,25 @@ console.log(selectedTab);
       case 1: // Render selected table with border
         return (
           <div style={styles.tableWrapper}>
-            <ServiceCenter  applyFilter={false}/>
+            <ServiceCenter   applyFilter={false} />
           </div>
         );
       case 2:
         return (
           <div style={styles.tableWrapper}>
-            <BidsTable   applyFilter={false}/>
+            <BidsTable />
           </div>
         );
       case 3:
         return (
           <div style={styles.tableWrapper}>
-            <TestDrivesTable   applyFilter={false}/>
+            <TestDrivesTable />
+          </div>
+        );
+      case 4:
+        return (
+          <div style={styles.tableWrapper}>
+            <CustomersTable />
           </div>
         );
       case 5:
@@ -332,7 +370,12 @@ console.log(selectedTab);
             <TechnicianTable />
           </div>
         );
-
+      case 8:
+        return (
+          <div style={styles.tableWrapper}>
+            <PurchaseTable />
+          </div>
+        );
       default:
         return null;
     }
@@ -340,12 +383,12 @@ console.log(selectedTab);
 
   const TODO = () => {
     // Get today's date
-    const [selectedTab, setSelectedTab] = useState('');
+    const [selectedTab, setSelectedTab] = useState('serviceCenter');
 
     const renderSelectedTable = () => {
       switch (selectedTab) {
         case 'serviceCenter':
-          return <ServiceCenterForTODO />;
+          return <ServiceCenter applyFilter={true} />;
         case 'testDrives':
           return <TestDrivesTable applyFilter={true} />;
         case 'bids':
@@ -643,13 +686,20 @@ console.log(selectedTab);
       </div>
     );
   };
-  const ServiceCenter = () => {
+
+  const ServiceCenter = ({ applyFilter }) => {
+    console.log("entering service center");
     const [services, setServices] = useState([]);
+
     const [newServiceName, setNewServiceName] = useState('');
     const [newServicePrice, setNewServicePrice] = useState('');
     const [assignmentMessage, setAssignmentMessage] = useState('');
-    const [serviceAppointments, setServiceAppointments] = useState([]);
+
+
+    const [scheduledServiceAppointments, setScheduledServiceAppointments] = useState([]);
+
     const [selectedAppointment, setSelectedAppointment] = useState(null);
+
     const [vehicleInfo, setVehicleInfo] = useState(null);
     const [memberInfo, setMemberInfo] = useState(null);
     const [technicians, setTechnicians] = useState([]);
@@ -659,528 +709,482 @@ console.log(selectedTab);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState('');
     const [editedPrice, setEditedPrice] = useState('');
+
     const [editedService, setEditedService] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [deleteError, setDeleteError] = useState(false);
 
 
+
+    const openModal = (appointment) => {
+      setSelectedAppointment(appointment);
+    };
+
+
+
     useEffect(() => {
-        fetchServiceAppointments();
-        fetchServices();
-        fetchTechnicians();
-    }, []);
+      fetchServices();
+      fetchTechnicians();
+    
+      if (!applyFilter) {
+        fetchServiceAppointments(); // Fetch service appointments only when applyFilter is false
+      } else {
+        fetchScheduledServiceAppointments();
+      }
+    }, [applyFilter]);
 
     const fetchTechnicians = async () => {
       try {
-          const response = await fetch(`${BASE_URL}/api/employees/technicians`);
-          if (!response.ok) {
-              throw new Error("Failed to fetch technicians");
-          }
-          const data = await response.json();
-          setTechnicians(data);
+        const response = await fetch(`${BASE_URL}/api/employees/technicians`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch technicians");
+        }
+        const data = await response.json();
+        setTechnicians(data);
       } catch (error) {
-          console.error("Error fetching technicians:", error.message);
+        console.error("Error fetching technicians:", error.message);
+      } finally {
       }
-  };
+    };
 
     const fetchServices = async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/api/service-menu`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch services");
-            }
-            const data = await response.json();
-            setServices(data);
-        } catch (error) {
-            console.error("Error fetching services:", error.message);
+      try {
+        const response = await fetch(`${BASE_URL}/api/service-menu`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch services");
         }
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        console.error("Error fetching services:", error.message);
+      } finally {
+      }
     };
-
     const fetchServiceAppointments = async () => {
-        try {
-            setIsLoading(true);
-            const response = await fetch(`${BASE_URL}/api/service-appointments`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch service appointments");
-            }
-            const data = await response.json();
-            setServiceAppointments(data);
-        } catch (error) {
-            console.error("Error fetching service appointments:", error.message);
-        } finally {
-            setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${BASE_URL}/api/service-appointments`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch service appointments");
         }
+        const data = await response.json();
+        setServiceAppointments(data);
+      } catch (error) {
+        console.error("Error fetching service appointments:", error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    const fetchScheduledServiceAppointments = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${BASE_URL}/api/pending-service-appointments`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch pending service appointments");
+        }
+        const data = await response.json();
+        setScheduledServiceAppointments(data);
+      } catch (error) {
+        console.error("Error fetching pending service appointments:", error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     const fetchVehicleAndMemberInfo = async (appointment) => {
-        try {
-            const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!vehicleResponse.ok) {
-                throw new Error('Failed to fetch vehicle information');
-            }
-            const vehicleData = await vehicleResponse.json();
-            setVehicleInfo(vehicleData);
-
-            const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ memberID: appointment.memberID }),
-            });
-            if (!memberResponse.ok) {
-                throw new Error('Failed to fetch member information');
-            }
-            const memberData = await memberResponse.json();
-            setMemberInfo(memberData);
-        } catch (error) {
-            console.error('Error fetching vehicle and member information:', error.message);
+      try {
+        const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!vehicleResponse.ok) {
+          throw new Error('Failed to fetch vehicle information');
         }
+        const vehicleData = await vehicleResponse.json();
+        setVehicleInfo(vehicleData);
+
+        const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ memberID: appointment.memberID }),
+        });
+        if (!memberResponse.ok) {
+          throw new Error('Failed to fetch member information');
+        }
+        const memberData = await memberResponse.json();
+        setMemberInfo(memberData);
+      } catch (error) {
+        console.error('Error fetching vehicle and member information:', error.message);
+      } finally {
+      }
     };
+
 
     const handleAddService = async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
-            });
-            if (!response.ok) {
-                throw new Error("Failed to add service");
-            }
-            await fetchServices();
-            setNewServiceName('');
-            setNewServicePrice('');
-        } catch (error) {
-            console.error("Error adding service:", error.message);
+      try {
+        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add service");
         }
+        await fetchServices();
+        setNewServiceName('');
+        setNewServicePrice('');
+      } catch (error) {
+        console.error("Error adding service:", error.message);
+      }
     };
 
-    const handleDeleteService = async (serviceID) => {
-        try {
-            const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({ service_id: serviceID })
-            });
-            if (!response.ok) {
-                throw new Error("Failed to delete service");
-            }
-            await fetchServices();
-            setShowEditModal(false);
-        } catch (error) {
-            console.error("Error deleting service:", error.message);
-            setDeleteError(true);
-        }
-    };
+// Function to handle deletion of a service
+const handleDeleteService = async (serviceID) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ service_id: serviceID })
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete service");
+    }
+    // If deletion is successful, fetch the updated list of services
+    await fetchServices();
+    setShowEditModal(false);
 
-    const updateService = async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    edit_or_add: 2,
-                    serviceID: editedService.serviceID,
-                    service_name: editedName,
-                    price: editedPrice
-                })
-            });
-            if (!response.ok) {
-                throw new Error("Failed to update service");
-            }
-            await fetchServices();
-        } catch (error) {
-            console.error("Error updating service:", error.message);
-        }
-        setShowEditModal(false);
-    };
+  } catch (error) {
+    console.error("Error deleting service:", error.message);
+    setDeleteError(true);
 
-    const handleEditService = (service) => {
-        setEditedService(service);
-        setEditedName(service.service_name);
-        setEditedPrice(service.price);
-        setShowEditModal(true);
-    };
+  }
 
-    const openModal = (appointment) => {
-      setShowEditModal(true);
-      setEditedService(appointment);
-      setEditedName(appointment.service_name);
-      setEditedPrice(appointment.price);
-  };
-
-    const closeModal = () => {
-        setShowReplacementModal(false);
-        setSelectedAppointment(null);
-        setVehicleInfo(null);
-        setMemberInfo(null);
-        setSelectedTechnician(null);
-    };
-
-    return (
-        <div>
-            {/* Service Appointments */}
-            <div className="table-responsive" style={styles.tableHeight}>
-                <h2>Service Appointments</h2>
-                <table className="table table-bordered table-striped" style={styles.tableHeight}>
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Appointment Date</th>
-                            <th>Service Type</th>
-                            <th>Status</th>
-                            <th>Comments</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-    {isLoading ? (
-        <tr>
-            <td colSpan="5">Loading service appointments...</td>
-        </tr>
-    ) : (
-        serviceAppointments.map(appointment => (
-            <tr key={appointment.appointment_id}>
-                <td>{appointment.appointment_date}</td>
-                <td>{appointment.service_name}</td>
-                <td>{appointment.status}</td>
-                <td>{appointment.comments}</td> {/* New column for comments */}
-            </tr>
-        ))
-    )}
-    {!isLoading && serviceAppointments.length === 0 && (
-        <tr>
-            <td colSpan="5">No service appointments available</td>
-        </tr>
-    )}
-</tbody>
-                </table>
-            </div>
-            {/* Add Service */}
-            <h2>Add Service</h2>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Enter service name"
-                    value={newServiceName}
-                    onChange={(e) => setNewServiceName(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Enter service price"
-                    value={newServicePrice}
-                    onChange={(e) => setNewServicePrice(e.target.value)}
-                />
-                <button onClick={handleAddService}>Add Service</button>
-            </div>
-            {/* Current Available Services */}
-            <h2>Current Available Services</h2>
-            <table className="table table-bordered table-striped" style={styles.tableHeight}>
-                <thead className="thead-dark">
-                    <tr>
-                        <th>Service Name</th>
-                        <th>Service Price</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {services.map((service) => (
-                        <tr key={service.serviceID}>
-                            <td>{service.service_name}</td>
-                            <td>{service.price}</td>
-                            <td>
-                                <button className="btn btn-primary mr-2" onClick={() => handleEditService(service)}>Edit</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {/* Edit Service Modal */}
-            {showEditModal && (
-                <div className="modal-container">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Edit Service</h5>
-                                <button type="button" className="close" onClick={() => setShowEditModal(false)}>
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <div>
-                                    <label htmlFor="editedName">Service Name:</label>
-                                    <input
-                                        id="editedName"
-                                        type="text"
-                                        value={editedName}
-                                        onChange={(e) => setEditedName(e.target.value)}
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="editedPrice">Service Price:</label>
-                                    <input
-                                        id="editedPrice"
-                                        type="text"
-                                        value={editedPrice}
-                                        onChange={(e) => setEditedPrice(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                {deleteError && (
-                                    <p className="text-danger">Cannot delete this service. (Hint: You may still have outstanding warranties on this service and must honor them.)</p>
-                                )}
-                                <button type="button" className="btn btn-primary" onClick={updateService}>Save Changes</button>
-                                <button type="button" className="btn btn-danger" onClick={() => handleDeleteService(editedService.serviceID)}>Delete</button>
-                                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
 };
 
-  const ServiceCenterForTODO = () => {
-    const [scheduledServiceAppointments, setScheduledServiceAppointments] = useState([]);
-    const [technicians, setTechnicians] = useState([]);
-    const [selectedAppointment, setSelectedAppointment] = useState(null);
-    const [selectedTechnician, setSelectedTechnician] = useState(null);
-    const [showTechnicianWarning, setShowTechnicianWarning] = useState(false);
-    const [showReplacementModal, setShowReplacementModal] = useState(false);
-    const [assignmentMessage, setAssignmentMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [vehicleInfo, setVehicleInfo] = useState(null);
-    const [memberInfo, setMemberInfo] = useState(null);
 
-    useEffect(() => {
-        fetchScheduledServiceAppointments();
-        fetchTechnicians();
-    }, []);
+  // Function to update a service
+  const updateService = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          edit_or_add: 2,
+          serviceID: editedService.serviceID,
+          service_name: editedName,
+          price: editedPrice
+        })
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update service");
+      }
+      // If update is successful, fetch the updated list of services
+      await fetchServices();
+    } catch (error) {
+      console.error("Error updating service:", error.message);
+    }
+    setShowEditModal(false);
+  };
 
-    const fetchScheduledServiceAppointments = async () => {
-        try {
-            setIsLoading(true);
-            const response = await fetch(`${BASE_URL}/api/pending-service-appointments`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch pending service appointments");
-            }
-            const data = await response.json();
-            setScheduledServiceAppointments(data);
-        } catch (error) {
-            console.error("Error fetching pending service appointments:", error.message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
-    const fetchTechnicians = async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/api/employees/technicians`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch technicians");
-            }
-            const data = await response.json();
-            setTechnicians(data);
-        } catch (error) {
-            console.error("Error fetching technicians:", error.message);
-        }
-    };
-    const fetchVehicleAndMemberInfo = async (appointment) => {
-        try {
-            const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!vehicleResponse.ok) {
-                throw new Error('Failed to fetch vehicle information');
-            }
-            const vehicleData = await vehicleResponse.json();
-            setVehicleInfo(vehicleData);
+  // Function to handle editing of service
+  const handleEditService = (service) => {
+    setEditedService(service);
+    setEditedName(service.service_name);
+    setEditedPrice(service.price);
+    setShowEditModal(true);
+  };
 
-            const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ memberID: appointment.memberID }),
-            });
-            if (!memberResponse.ok) {
-                throw new Error('Failed to fetch member information');
-            }
-            const memberData = await memberResponse.json();
-            setMemberInfo(memberData);
-        } catch (error) {
-            console.error('Error fetching vehicle and member information:', error.message);
-        }
-    };
+
+
+
 
     const handleTechnicianChange = (event) => {
-        setSelectedTechnician(event.target.value);
+      setSelectedTechnician(event.target.value);
     };
 
     const confirmTechnician = async () => {
-        if (selectedTechnician) {
-            try {
-                const message = await assignTechnician(selectedAppointment.appointment_id, selectedTechnician, sessionId);
-                setAssignmentMessage(message);
-                setShowReplacementModal(true);
-                await fetchScheduledServiceAppointments();
-            } catch (error) {
-                setAssignmentMessage('Error assigning technician: ' + error.message);
-                setShowReplacementModal(true); // Still show modal to display error message
-            }
-        } else {
-            setShowTechnicianWarning(true); // Show the warning text
+
+      if (selectedTechnician) {
+        try {
+          const message = await assignTechnician(selectedAppointment.appointment_id, selectedTechnician, sessionId);
+          setAssignmentMessage(message);
+          setShowReplacementModal(true);
+          await fetchScheduledServiceAppointments();
+        } catch (error) {
+          setAssignmentMessage('Error assigning technician: ' + error.message);
+          setShowReplacementModal(true); // Still show modal to display error message
         }
+      } else {
+        setShowTechnicianWarning(true); // Show the warning text
+      }
     };
 
-    const openModal = (appointment) => {
-        setSelectedAppointment(appointment);
-        fetchVehicleAndMemberInfo(appointment);
-    };
+
 
     const closeModal = () => {
-        setSelectedAppointment(null);
-        setVehicleInfo(null);
-        setMemberInfo(null);
-        setSelectedTechnician(null);
-        setShowReplacementModal(false);
+      setShowReplacementModal(false);
+      setSelectedAppointment(null);
+      setVehicleInfo(null);
+      setMemberInfo(null);
+      setSelectedTechnician(null);
     };
 
     return (
-        <div>
-            <div className="table-responsive" style={styles.tableHeight}>
-                <h2>Scheduled Service Appointments</h2>
-                <table className="table table-bordered table-striped" style={styles.tableHeight}>
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Appointment Date</th>
-                            <th>Service Type</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-          {isLoading ? (
-            <tr>
-              <td colSpan="4">Loading scheduled appointments...</td>
-            </tr>
-          ) : scheduledServiceAppointments.length === 0 ? (
-            <tr>
-              <td colSpan="4">No scheduled service appointments available</td>
-            </tr>
-          ) : (
-            scheduledServiceAppointments.map(appointment => (
-              <tr key={appointment.appointment_id}>
-                <td>{appointment.appointment_date}</td>
-                <td>{appointment.service_name}</td>
-                <td>{appointment.status}</td>
-                <td>
-                  <button onClick={() => openModal(appointment)} className="btn btn-primary">View</button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-                </table>
+      <div>
+    {/* Service Appointments */}
+    <div className="table-responsive" style={styles.tableHeight}>
+    <h2>{applyFilter ? 'Scheduled Service Appointments' : 'Service Appointments'}</h2>
+    <table className="table table-bordered table-striped" style={styles.tableHeight}>
+      <thead className="thead-dark">
+        <tr>
+          <th>Appointment Date</th>
+          <th>Service Type</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {isLoading ? (
+  <tr>
+    <td colSpan="4">Loading {applyFilter ? 'scheduled' : 'service'} appointments...</td>
+  </tr>
+) : (
+  <>
+    {applyFilter ? (
+      scheduledServiceAppointments.map(appointment => (
+        <tr key={appointment.appointment_id}>
+          <td>{appointment.appointment_date}</td>
+          <td>{appointment.service_name}</td>
+          <td>{appointment.status}</td>
+          <td>
+            <button onClick={() => { openModal(appointment); fetchVehicleAndMemberInfo(appointment); }} className="btn btn-primary">View</button>
+          </td>
+        </tr>
+      ))
+    ) : (
+      serviceAppointments.map(appointment => (
+        <tr key={appointment.appointment_id}>
+          <td>{appointment.appointment_date}</td>
+          <td>{appointment.service_name}</td>
+          <td>{appointment.status}</td>
+          <td>
+            <button onClick={() => { openModal(appointment); fetchVehicleAndMemberInfo(appointment); }} className="btn btn-primary">View</button>
+          </td>
+        </tr>
+      ))
+    )}
+    {applyFilter ? (
+      scheduledServiceAppointments.length === 0 && (
+        <tr>
+          <td colSpan="4">No scheduled service appointments available</td>
+        </tr>
+      )
+    ) : (
+      services.length === 0 && (
+        <tr>
+          <td colSpan="4">No service appointments available</td>
+        </tr>
+      )
+    )}
+  </>
+)}
+
+      </tbody>
+    </table>
+  </div>
+
+        {/* Modal for viewing appointment details */}
+        {selectedAppointment && (
+          <div className="modal-container">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Appointment Details</h5>
+                  <button type="button" className="close" onClick={closeModal}>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <p>Appointment Date: {selectedAppointment.appointment_date}</p>
+                  <p>Service Type: {selectedAppointment.service_name}</p>
+                  <p>Status: {selectedAppointment.status}</p>
+                  {vehicleInfo && (
+                    <div>
+                      <h5>Vehicle Information</h5>
+                      <p>VIN: {vehicleInfo.VIN_carID}</p>
+                      <p>Make: {vehicleInfo.make}</p>
+                      <p>Model: {vehicleInfo.model}</p>
+                      <p>Year: {vehicleInfo.year}</p>
+                      <p>Color: {vehicleInfo.color}</p>
+                      {/* Add more vehicle info fields as needed */}
+                    </div>
+                  )}
+                  {memberInfo && (
+                    <div>
+                      <h5>Member Information</h5>
+                      <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
+                      <p>Email: {memberInfo.email}</p>
+                      <p>Phone: {memberInfo.phone}</p>
+                      <p>Address: {memberInfo.address}</p>
+
+                      {/* Add more member info fields as needed */}
+                    </div>
+                  )}
+                </div>
+                <div className="modal-footer">
+                  <label htmlFor="technician">Select Technician:</label>
+                  <select id="technician" value={selectedAppointment.employeeID} onChange={handleTechnicianChange}>
+                    <option value="-">-</option>
+                    {technicians.map(technician => (
+                      <option key={technician.employeeID} value={technician.employeeID}>
+                        {technician.first_name} {technician.last_name}
+                      </option>
+                    ))}
+                  </select>
+                  {showTechnicianWarning && <span style={{ color: 'red' }}>Please select a technician</span>}
+
+                  <button type="button" className="btn btn-primary" onClick={confirmTechnician}>Confirm</button>
+                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                </div>
+
+              </div>
             </div>
+          </div>
+        )}
 
-            {selectedAppointment && (
-                <div className="modal-container">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Appointment Details</h5>
-                                <button type="button" className="close" onClick={closeModal}>
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <p>Appointment Date: {selectedAppointment.appointment_date}</p>
-                                <p>Service Type: {selectedAppointment.service_name}</p>
-                                <p>Status: {selectedAppointment.status}</p>
-                                {vehicleInfo && (
-                                    <div>
-                                        <h5>Vehicle Information</h5>
-                                        <p>VIN: {vehicleInfo.VIN_carID}</p>
-                                        <p>Make: {vehicleInfo.make}</p>
-                                        <p>Model: {vehicleInfo.model}</p>
-                                        <p>Year: {vehicleInfo.year}</p>
-                                        <p>Color: {vehicleInfo.color}</p>
-                                        {/* Add more vehicle info fields as needed */}
-                                    </div>
-                                )}
-                                {memberInfo && (
-                                    <div>
-                                        <h5>Member Information</h5>
-                                        <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
-                                        <p>Email: {memberInfo.email}</p>
-                                        <p>Phone: {memberInfo.phone}</p>
-                                        <p>Address: {memberInfo.address}</p>
-                                        {/* Add more member info fields as needed */}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="modal-footer">
-                                <label htmlFor="technician">Select Technician:</label>
-                                <select id="technician" value={selectedTechnician} onChange={handleTechnicianChange}>
-                                    <option value="-">-</option>
-                                    {technicians.map(technician => (
-                                        <option key={technician.employeeID} value={technician.employeeID}>
-                                            {technician.first_name} {technician.last_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {showTechnicianWarning && <span style={{ color: 'red' }}>Please select a technician</span>}
-                                <button type="button" className="btn btn-primary" onClick={confirmTechnician}>Confirm</button>
-                                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                            </div>
-                        </div>
-                    </div>
+        {showReplacementModal && (
+          <div className="modal-container">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Service Status</h5>
+                  <button type="button" className="close" onClick={closeModal}>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-            )}
+                <div className="modal-body">
+                  <p>Service Type: {selectedAppointment.service_name}</p>
+                  {assignmentMessage !== null && <p>{assignmentMessage}</p>}
 
-            {showReplacementModal && (
-                <div className="modal-container">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Service Status</h5>
-                                <button type="button" className="close" onClick={closeModal}>
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <p>Service Type: {selectedAppointment.service_name}</p>
-                                {assignmentMessage && <p>{assignmentMessage}</p>}
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                            </div>
-                        </div>
-                    </div>
+                  {/* Add more summary information here */}
                 </div>
-            )}
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      {/* Render the "Current Available Services" table when applyFilter is false */}
+      {!applyFilter && (
+        <>
+          <h2>Current Available Services</h2>
+          {/* Add Service Input Fields */}
+          {/* Render input fields for adding new service */}
+          <div>
+            <input
+              type="text"
+              placeholder="Enter service name"
+              value={newServiceName}
+              onChange={(e) => setNewServiceName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Enter service price"
+              value={newServicePrice}
+              onChange={(e) => setNewServicePrice(e.target.value)}
+            />
+            <button onClick={handleAddService}>Add Service</button>
+          </div>
+          <br />
+          {/* Render table for current available services */}
+          <table className="table table-bordered table-striped" style={styles.tableHeight}>
+            {/* Table headers */}
+            <thead className="thead-dark">
+              <tr>
+                <th>Service Name</th>
+                <th>Service Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {services.map((service) => (
+                <tr key={service.serviceID}>
+                  <td>{service.service_name}</td>
+                  <td>{service.price}</td>
+                  <td>
+                    {/* Button for editing service */}
+                    <button className="btn btn-primary mr-2" onClick={() => handleEditService(service)}>Edit</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {/* Edit Service Modal */}
+      {showEditModal && (
+        <div className="modal-container">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit Service</h5>
+                <button type="button" className="close" onClick={() => setShowEditModal(false)}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div>
+                  <label htmlFor="editedName">Service Name:</label>
+                  <input
+                    id="editedName"
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="editedPrice">Service Price:</label>
+                  <input
+                    id="editedPrice"
+                    type="text"
+                    value={editedPrice}
+                    onChange={(e) => setEditedPrice(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+              {deleteError && (
+            <p className="text-danger">Cannot delete this service. (Hint: You may still have outstanding warranties on this service and must honor them.)</p>
+          )}
+                <button type="button" className="btn btn-primary" onClick={updateService}>Save Changes</button>
+                <button type="button" className="btn btn-danger" onClick={() => handleDeleteService(editedService.serviceID)}>Delete</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
         </div>
+      )}
+      </div>
     );
-};
+  };
 
 
   const TechnicianTable = () => {
@@ -1610,7 +1614,7 @@ console.log(selectedTab);
         }
       };
       fetchData();
-    },  [applyFilter]);
+    }, [applyFilter]);
 
     // Function to handle confirmation update
     const handleConfirmationUpdate = async (testDriveId, confirmationValue) => {
@@ -1732,7 +1736,43 @@ console.log(selectedTab);
   };
 
 
+  // Similarly, update the other table components in the same way
 
+  const CustomersTable = () => (
+    <div className="table-responsive" style={styles.tableHeight}>
+      <h2>Customers</h2>
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone #</th>
+            <th>Email</th>
+            <th>Join Date</th>
+            <th>memberID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {members &&
+            members.map((member, index) => (
+              <tr key={index}>
+                <td>{member.first_name}</td>
+                <td>{member.last_name}</td>
+                <td>{member.phone}</td>
+                <td>{member.email}</td>
+                <td>{member.join_date}</td>
+                <td>{member.memberID}</td>
+              </tr>
+            ))}
+          {!members && (
+            <tr>
+              <td colSpan="6">No customers available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
 
   const VehicleListingsTable = () => (
     <div className="table-responsive" style={styles.tableHeight}>
@@ -1785,6 +1825,8 @@ console.log(selectedTab);
     const [selectedYear, setSelectedYear] = useState("");
     const [totalSales, setTotalSales] = useState("");
 
+    useEffect(() => {
+    }, []);
 
     // Function to handle changes in the month dropdown
     const handleMonthChange = (event) => {
@@ -1922,54 +1964,71 @@ const WelcomeScreen = ({ user, handleGetStarted }) => (
   </div>
 );
 
+
   return (
-    
     <div >
-
       <div className="sidebarEmployees">
-      <div style={{ marginBottom: '10px' }}>
-          <button
-            className="btn btn-block btn-dark"
-            style={selectedTab === 0 ? styles.selected : {}}
-            onClick={() => handleTabSelect(0)}
-          >
-            To-Do's
-          </button>
-        </div>
-
-
         <div style={{ marginBottom: '10px' }}>
+          <button className="btn btn-block btn-dark" style={selectedTab === 0 ? styles.selected : {}} onClick={() => { setSelectedTab(0); fetchDataSelection(0); }}>To-Do's</button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
           <button
             className="btn btn-block btn-dark"
             style={selectedTab === 1 ? styles.selected : {}}
-            onClick={() => {handleTabSelect(1);             console.log("Clicked on Service Center button");
-          }}
+            onClick={() => {
+              setSelectedTab(1);
+              fetchDataSelection(1);
+            }}
           >
             Service Center
           </button>
         </div>
+        {/*
 
-{/*
+        <div style={{ marginBottom: "10px" }}>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 2 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(2);
+              fetchDataSelection(2);
+            }}
+          >
+            Bids
+          </button>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <button
+            className="btn btn-block btn-dark"
+            style={selectedTab === 3 ? styles.selected : {}}
+            onClick={() => {
+              setSelectedTab(3);
+              fetchDataSelection(3);
+            }}
+          >
+            Test Drives
+          </button>
+        </div>
+          */}
+
         <div style={{ marginBottom: "10px" }}>
           <button
             className="btn btn-block btn-dark"
             style={selectedTab === 4 ? styles.selected : {}}
             onClick={() => {
-              handleTabSelect(4);
+              setSelectedTab(4);
               fetchDataSelection(4);
             }}
           >
             Customers
           </button>
         </div>
-
-          */}
         <div style={{ marginBottom: "10px" }}>
           <button
             className="btn btn-block btn-dark"
             style={selectedTab === 5 ? styles.selected : {}}
             onClick={() => {
-              handleTabSelect(5);
+              setSelectedTab(5);
               fetchDataSelection(5);
             }}
           >
@@ -1977,11 +2036,11 @@ const WelcomeScreen = ({ user, handleGetStarted }) => (
           </button>
         </div>
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { handleTabSelect(6); fetchDataSelection(6);}}>Sales Report</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { setSelectedTab(6); fetchDataSelection(6);}}>Sales Report</button>
         </div>
 
         <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
+          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { setSelectedTab(7); fetchDataSelection(7); }}>Technicians</button>
         </div>
 
         {/*
@@ -2010,18 +2069,9 @@ const WelcomeScreen = ({ user, handleGetStarted }) => (
           Log Out
         </Button>
       </div>
-
-
       <div className="main-content">
-      {showWelcomeScreen && (
-        <WelcomeScreen user={user} handleGetStarted={handleGetStarted} />
-      )}
-      {console.log("Rendering RenderTable...")}
-
-      {showTable && renderTableCall()}
-    </div>
-
-
+      {shouldRenderTable && <RenderTable />}
+          </div>
     </div>
   );
 };

@@ -154,7 +154,7 @@ function VehicleDetails({
       requestData
     );
     const responseData = await response.json();
-    window.location.href = "/account";
+    //window.location.href = "/account";
   };
 
   return (
