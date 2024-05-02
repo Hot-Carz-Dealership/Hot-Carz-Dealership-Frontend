@@ -4,6 +4,7 @@
 
 #root {
   background-color: #ebebeb;
+  min-height: 100vh;
 }
 
 div {
@@ -60,9 +61,8 @@ a.cooler-reder-button {
 .carDisplay {
   padding: 30px 0;
   margin: 30px 0;
-  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 15px;
-  background-color: rgb(37, 37, 37);
+  background-color: rgb(34, 32, 30);
 }
 
 .footer {

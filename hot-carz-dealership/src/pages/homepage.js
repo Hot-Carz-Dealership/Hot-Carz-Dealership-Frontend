@@ -14,6 +14,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
+import Footer from "../components/common/Footer";
 
 import styles from "../css/loginhome.css";
 
@@ -53,11 +54,14 @@ const HomePage = () => {
     };
   }, []);
 
-  const fetchRandomVehicles = async (abortController) => {
+  const fetchRandomVehicles = async (abortController, numVehicles = 5) => {
     try {
-      const response = await httpClient.get(`${BASE_URL}/api/vehicles/random`, {
-        signal: abortController.signal,
-      });
+      const response = await httpClient.get(
+        `${BASE_URL}/api/vehicles/random?num=${numVehicles}`,
+        {
+          signal: abortController.signal,
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Failed to fetch random vehicles:", error);
@@ -111,8 +115,11 @@ const HomePage = () => {
   return (
     <div className="homepage">
       <div className="p-5" style={styles.homepage}>
-        <div className="image-container text-white">
-          <img src={heroBanner}></img>
+        <div className="image-container text-white relative overflow-hidden h-[600px]">
+          <img
+            src={heroBanner}
+            class="absolute inset-0 w-full h-full object-cover"
+          ></img>
           <div className="text-overlay">
             {renderWelcomeMessage()}
             {/* <div className="text-white hero-text">
@@ -237,7 +244,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <footer className="footer"> Copyright 2024. Arce Industries. </footer>
+      <Footer />
     </div>
   );
 };

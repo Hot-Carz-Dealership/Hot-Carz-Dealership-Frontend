@@ -61,6 +61,8 @@ function App() {
         <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
 
       </Routes>
+
+      
     </>
   );
 }
