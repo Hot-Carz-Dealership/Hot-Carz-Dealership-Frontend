@@ -2,80 +2,67 @@
 import React from "react";
 import "./index.css";
 import "./App.css";
-import { Link, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/common/Navbar";
+
+// Public Pages
 import Homepage from "./pages/homepage";
 import Services from "./pages/services";
 import Cars from "./pages/cars";
 import CarDetails from "./pages/CarDetails";
 import LogIn from "./pages/logIn";
-import ManagerPage from "./pages/managerPage";
+import SignUp from "./pages/SignUp";
+
+// User Account Pages
 import Account from "./pages/account";
 import EditAccount from "./pages/editAccount";
-import EmployeeLogIn from "./pages/employeeLogin";
-import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
-import AddNewVehicle from "./pages/AddNewVehicle";
-import SignUp from "./pages/SignUp";
 import BookAppointment from "./pages/bookAppointment";
-import TechnicianPage from "./pages/TechnicianPage";
-import PurchaseCheckout from "./pages/PurchaseCheckout";
-import PurchaseConfirmation from "./pages/PurchaseConfirmation";
-import AddMemberVehicle from "./pages/addMemberVehicle";
 import ApplyFinancing from "./pages/ApplyFinancing";
 import AddonsPage from "./pages/AddonsPage";
 import Checkout from "./pages/Checkout";
+import AddMemberVehicle from "./pages/addMemberVehicle";
+
+// Employee Pages
+import EmployeeLogIn from "./pages/employeeLogin";
+import ManagerPage from "./pages/managerPage";
+import TechnicianPage from "./pages/TechnicianPage";
+import CreateEmployeeAccount from "./pages/CreateEmployeeAccount";
+import AddNewVehicle from "./pages/AddNewVehicle";
 
 function App() {
   return (
     <>
-      <header className="header">
-        <Link to="/" className="logo ">
-          Hot Carz
-        </Link>
-        <nav className="nav">
-          <Link to="/" className="button">
-            Home
-          </Link>
-          <Link to="/cars" className="button">
-            Cars
-          </Link>
-          <Link to="/services" className="button">
-            Services
-          </Link>
-          <Link to="/account" className="button">
-            Account
-          </Link>
-        </nav>
-      </header>
+      <Navbar />
 
-      <Routes>
+      <Routes >
+        {/* Public Routes */}
         <Route path="/" element={<Homepage />} />
         <Route path="/cars" element={<Cars />} />
         <Route path="/cars/:id" element={<CarDetails />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/account" element={<Account />} />
         <Route path="/logIn" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
-        <Route path="/managerPage" element={<ManagerPage />} />
+
+        {/* User Private Routes - Requires Authentication */}
+        <Route path="/account" element={<Account />} />
         <Route path="/editAccount" element={<EditAccount />} />
-        <Route path="/TechnicianPage" element={<TechnicianPage />} />
-        <Route path="/PurchaseCheckout" element={<PurchaseCheckout />} />
-        <Route
-          path="/PurchaseConfirmation"
-          element={<PurchaseConfirmation />}
-        />
-        <Route
-          path="/create-employee-account"
-          element={<CreateEmployeeAccount />}
-        />
-        <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
-        <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
         <Route path="/bookAppt" element={<BookAppointment />} />
         <Route path="/apply-financing" element={<ApplyFinancing />} />
         <Route path="/addons" element={<AddonsPage />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
+
+        {/* Employee Routes - Requires Special Authentication */}
+        <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
+        <Route path="/managerPage" element={<ManagerPage />} />
+        <Route path="/TechnicianPage" element={<TechnicianPage />} />
+        <Route path="/create-employee-account" element={<CreateEmployeeAccount />} />
+        <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
+
       </Routes>
+
+      
     </>
   );
 }

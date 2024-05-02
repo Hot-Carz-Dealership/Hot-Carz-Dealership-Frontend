@@ -1,28 +1,29 @@
 .homepage {
-  textalign: center;
-  fontfamily: Arial, sans-serif;
+  text-align: center;
+  /* font-family: Arial, sans-serif; */
+  min-height: 100vh;
 }
 
 .welcome {
-  fontsize: 2em;
+  font-size: 2em;
   color: black;
-  fontweight: bold;
+  font-weight: bold;
 }
 
 .servicesDisplayTitle {
   color: red;
-  fontsize: 3em;
+  font-size: 3em;
 }
 
 .bookApptButton {
-  backgroundcolor: red;
+  background-color: red;
   color: white;
   padding: 5px 10px;
-  margintop: 10px;
+  margin-top: 10px;
 }
 
 .carDisplayTitle {
-  fontsize: 1.5em;
+  font-size: 1.5em;
   color: red;
 }
 
@@ -30,11 +31,11 @@
   list-style: none;
   padding: 0;
   display: flex;
-  justifycontent: space-between;
+  justify-content: space-between;
 }
 
 .featuredCarItem {
-  textalign: center;
+  text-align: center;
   flex: 1;
 }
 
@@ -45,18 +46,18 @@
 }
 
 .searchButton {
-  backgroundcolor: red;
+  background-color: red;
   color: white;
   padding: 5px 10px;
 }
 
 .servicesItem {
-  marginleft: 2%;
-  marginright: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
   width: 30%;
-  textalign: center;
+  text-align: center;
   display: inline-block;
-  marginbottom: 20px;
+  margin-bottom: 20px;
 }
 
 .serviceImage {
@@ -70,14 +71,13 @@
 }
 
 .footer {
-  margintop: 32px;
   width: 100%;
-  backgroundcolor: black;
-  minheight: 287px;
-  maxwidth: 100%;
+  background-color: black;
+  padding: 15px;
+  margin-top: 100px;
 }
 
 .vehicleName {
   color: black;
-  textdecoration: none;
+  text-decoration: none;
 }

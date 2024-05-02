@@ -16,7 +16,6 @@ import dateFormat from "dateformat";
 
 import styles from "../css/employees.css";
 
-
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,38 +38,52 @@ const Account = () => {
         setUser(resp.data);
 
         setLoading(false);
-        
+
         const requestData = {
           method: "GET",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          credentials: 'include',
-        }
-  
+          credentials: "include",
+        };
+
         // Fetch Vehicle Listings
-        const vehicleListingsResponse = await fetch(`${BASE_URL}/api/member/vehicles`, requestData);
+        const vehicleListingsResponse = await fetch(
+          `${BASE_URL}/api/member/vehicles`,
+          requestData
+        );
         const vehicleListingsData = await vehicleListingsResponse.json();
-        console.log("Member Vehicle Listings fetched successfully:", vehicleListingsData);
+        console.log(
+          "Member Vehicle Listings fetched successfully:",
+          vehicleListingsData
+        );
         setVehicleListings(vehicleListingsData);
 
-        const serviceResponse = await fetch(`${BASE_URL}/api/members/service-appointments`, requestData);
+        const serviceResponse = await fetch(
+          `${BASE_URL}/api/members/service-appointments`,
+          requestData
+        );
         const serviceData = await serviceResponse.json();
         setServiceAppointments(serviceData);
 
-        const invoiceResponse = await fetch(`${BASE_URL}/api/member/order_history`, requestData)
-        const invoiceData = await invoiceResponse.json();
-        console.log(invoiceData)
-        setInvoices(invoiceData);
+        // const invoiceResponse = await fetch(`${BASE_URL}/api/member/order_history`, requestData)
+        // const invoiceData = await invoiceResponse.json();
+        // console.log(invoiceData)
+        // setInvoices(invoiceData);
 
-        const bidResponse = await fetch(`${BASE_URL}/api/member/current-bids`, requestData)
+        const bidResponse = await fetch(
+          `${BASE_URL}/api/member/current-bids`,
+          requestData
+        );
         const bidData = await bidResponse.json();
         setBids(bidData);
 
-        const driveResponse = await fetch(`${BASE_URL}/api/member/test_drive_data`, requestData)
+        const driveResponse = await fetch(
+          `${BASE_URL}/api/member/test_drive_data`,
+          requestData
+        );
         const driveData = await driveResponse.json();
         setTestDrives(driveData);
-
       } catch (error) {
         console.log("Not Authenticated");
         setLoading(false);
@@ -130,7 +143,7 @@ const Account = () => {
 
   const handleOpen = (vehicleVIN, testdrive_id) => {
     setOpen(true);
-    setTestDrivesID(testdrive_id)
+    setTestDrivesID(testdrive_id);
     console.log({ vehicleVIN });
     if (user) {
       console.log(user.memberID);
@@ -336,8 +349,10 @@ const Account = () => {
             <th>Bid Date</th>
           </tr>
         </thead>
-        <tbody> 
-        {bids.map(bid => ( bid.bidStatus === "Confirmed" &&
+        <tbody>
+          {bids.map(
+            (bid) =>
+              bid.bidStatus === "Confirmed" && (
                 <tr key={bid.bidID}>
                   <td>{bid.bidID}</td>
                   <td>{bid.VIN_carID}</td>
@@ -345,7 +360,8 @@ const Account = () => {
                   <td>{bid.bidStatus}</td>
                   <td>{bid.bidTimestamp}</td>
                 </tr>
-              ))}
+              )
+          )}
         </tbody>
       </table>
     </div>
@@ -365,17 +381,23 @@ const Account = () => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody> 
-        {bids.map(bid => ( bid.bidStatus === "Processing" &&
+        <tbody>
+          {bids.map(
+            (bid) =>
+              bid.bidStatus === "Processing" && (
                 <tr key={bid.bidID}>
                   <td>{bid.bidID}</td>
                   <td>{bid.VIN_carID}</td>
                   <td>{bid.bidValue}</td>
                   <td>{bid.bidStatus}</td>
                   <td>{bid.bidTimestamp}</td>
-                  <td><button>Counter Offer</button><button>Decline</button></td>
+                  <td>
+                    <button>Counter Offer</button>
+                    <button>Decline</button>
+                  </td>
                 </tr>
-              ))}
+              )
+          )}
         </tbody>
       </table>
     </div>
@@ -398,18 +420,26 @@ const Account = () => {
           </tr>
         </thead>
         <tbody>
-        {testDrives.map(drive => (
-                <tr key={drive.testdrive_id}>
-                  <td>{drive.testdrive_id}</td>
-                  <td>{drive.VIN_carID}</td>
-                  <td>{drive.appointment_date}</td>
-                  <td>{drive.confirmation}</td>
-                  <td>{drive.make}</td>
-                  <td>{drive.model}</td>
-                  <td>{drive.year}</td>
-                  <td><button onClick={() => handleOpen(drive.VIN_carID, drive.testdrive_id)}>Edit Test Drive</button></td>
-                </tr>
-              ))}
+          {testDrives.map((drive) => (
+            <tr key={drive.testdrive_id}>
+              <td>{drive.testdrive_id}</td>
+              <td>{drive.VIN_carID}</td>
+              <td>{drive.appointment_date}</td>
+              <td>{drive.confirmation}</td>
+              <td>{drive.make}</td>
+              <td>{drive.model}</td>
+              <td>{drive.year}</td>
+              <td>
+                <button
+                  onClick={() =>
+                    handleOpen(drive.VIN_carID, drive.testdrive_id)
+                  }
+                >
+                  Edit Test Drive
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <ValueModal open={open} onClose={handleClose} />
@@ -433,16 +463,16 @@ const Account = () => {
           </tr>
         </thead>
         <tbody>
-        {serviceAppointments.map(appt => (
-                <tr key={appt.appointment_id}>
-                  <td>{appt.appointment_id}</td>
-                  <td>{appt.VIN_carID}</td>
-                  <td>{appt.service_name}</td>
-                  <td>{appt.appointment_date}</td>
-                  <td>{appt.comments}</td>
-                  <td>{appt.status}</td>
-                </tr>
-              ))}
+          {serviceAppointments.map((appt) => (
+            <tr key={appt.appointment_id}>
+              <td>{appt.appointment_id}</td>
+              <td>{appt.VIN_carID}</td>
+              <td>{appt.service_name}</td>
+              <td>{appt.appointment_date}</td>
+              <td>{appt.comments}</td>
+              <td>{appt.status}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
@@ -463,23 +493,21 @@ const Account = () => {
           </tr>
         </thead>
         <tbody>
-        {vehicleListings.map(vehicle => (
-                <tr key={vehicle.VIN_carID}>
-                  <td>{vehicle.make}</td>
-                  <td>{vehicle.model}</td>
-                  <td>{vehicle.color}</td>
-                  <td>{vehicle.year}</td>
-                  <td>{vehicle.VIN_carID}</td>
-                  <td>{vehicle.mileage}</td>
-                </tr>
-              ))}
+          {vehicleListings.map((vehicle) => (
+            <tr key={vehicle.VIN_carID}>
+              <td>{vehicle.make}</td>
+              <td>{vehicle.model}</td>
+              <td>{vehicle.color}</td>
+              <td>{vehicle.year}</td>
+              <td>{vehicle.VIN_carID}</td>
+              <td>{vehicle.mileage}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
   const SalesReportTable = () => {
-
-
     return (
       <div>
         {invoices.map((sale, index) => (
@@ -569,7 +597,9 @@ const Account = () => {
             setSelectedTab(4);
             renderSection();
           }}
-        >Service Appointments</button>
+        >
+          Service Appointments
+        </button>
         <button
           className="btn btn-block btn-dark mb-3"
           style={selectedTab === 5 ? styles.selected : {}}
