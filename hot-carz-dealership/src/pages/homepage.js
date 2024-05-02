@@ -117,6 +117,7 @@ const HomePage = () => {
       <div className="p-5" style={styles.homepage}>
         <div className="image-container text-white relative overflow-hidden h-[600px]">
           <img
+            alt="heroPic"
             src={heroBanner}
             class="absolute inset-0 w-full h-full object-cover"
           ></img>

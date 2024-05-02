@@ -3,17 +3,14 @@ import engineImage from "../imgs/engine.png";
 import oilChangeImage from "../imgs/oilChange.png";
 import tiresImage from "../imgs/tires.png";
 import { Button } from "@mui/material";
-import { BASE_URL } from "../utilities/constants";
+
 import { Link } from "react-router-dom";
-import httpClient from "../httpClient";
-import VehicleImage from "../utilities/VehicleImage";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
-import Footer from "../components/common/Footer";
 
 import styles from "../css/loginhome.css";
 
