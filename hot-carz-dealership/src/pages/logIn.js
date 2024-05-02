@@ -69,6 +69,7 @@ export default function LogIn() {
       } else {
         const errorData = await response.json();
         setError(errorData.error);
+        console.error("Error", error);
       }
     } catch (error) {
       setError("An error occurred while logging in. Please try again.");
