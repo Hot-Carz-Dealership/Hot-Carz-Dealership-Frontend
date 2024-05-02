@@ -206,7 +206,7 @@ function VehicleDetails({
   );
 }
 
-function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
+function PurchaseOptions({ onBid, VIN, price, vehicleName }) {
   const [bidPrice, setBidPrice] = React.useState("");
   const [loggedIn, setLoggedIn] = React.useState("");
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
