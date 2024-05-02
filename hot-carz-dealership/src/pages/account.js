@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BASE_URL, FINANCE_URL } from "../utilities/constants";
+import { BASE_URL } from "../utilities/constants";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
@@ -23,6 +23,7 @@ const Account = () => {
   const [selectedTab, setSelectedTab] = useState(1);
   const [vehicleListings, setVehicleListings] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
+
   const [invoices, setInvoices] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
@@ -99,7 +100,6 @@ const Account = () => {
   };
 
   const ValueModal = ({ open, onClose }) => {
-    const [value, setValue] = useState("");
     const [newValue, setNewValue] = useState(null);
 
     return (
@@ -153,7 +153,7 @@ const Account = () => {
   };
 
   const handleCancel = async (value) => {
-    var x = document.getElementById("date");
+   // var x = document.getElementById("date");
     var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
 
     console.log(tdDate);
@@ -180,7 +180,7 @@ const Account = () => {
   };
 
   const handleTestdriveSubmit = async (value) => {
-    var x = document.getElementById("date");
+    //var x = document.getElementById("date");
     var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
 
     console.log(tdDate);

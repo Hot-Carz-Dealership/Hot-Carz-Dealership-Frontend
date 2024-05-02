@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -281,7 +281,6 @@ const ManagerPage = () => {
 
 
   const [selectedTab, setSelectedTab] = useState(null);
-  const [shouldRenderTable, setShouldRenderTable] = useState(true); // Flag to control table rendering
 
 
   const RenderTable = () => {
@@ -653,7 +652,6 @@ const ManagerPage = () => {
     const [services, setServices] = useState([]);
     const [newServiceName, setNewServiceName] = useState('');
     const [newServicePrice, setNewServicePrice] = useState('');
-    const [assignmentMessage, setAssignmentMessage] = useState('');
     const [serviceAppointments, setServiceAppointments] = useState([]);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [vehicleInfo, setVehicleInfo] = useState(null);
@@ -661,7 +659,6 @@ const ManagerPage = () => {
     const [technicians, setTechnicians] = useState([]);
     const [selectedTechnician, setSelectedTechnician] = useState(null);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
-    const [showTechnicianWarning, setShowTechnicianWarning] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState('');
     const [editedPrice, setEditedPrice] = useState('');
