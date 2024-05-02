@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import engineImage from "../imgs/engine.png";
 import oilChangeImage from "../imgs/oilChange.png";
 import tiresImage from "../imgs/tires.png";
+import heroBanner from "../imgs/hero-banner.jpg";
 import { Button } from "@mui/material";
 import { BASE_URL } from "../utilities/constants";
 import { Link } from "react-router-dom";
@@ -92,7 +93,7 @@ const HomePage = () => {
                 bodyType={vehicle.body}
               />
             </div>
-            <h2 className="font-semibold mt-auto text">{`${vehicle.make} ${vehicle.model}`}</h2>
+            <h2 className="font-semibold mt-auto text text-white">{`${vehicle.make} ${vehicle.model}`}</h2>
           </div>
         </Link>
       </li>
@@ -101,19 +102,35 @@ const HomePage = () => {
 
   const renderWelcomeMessage = () => {
     const welcomeText = user
-      ? `Welcome to Hot Carz ${user.first_name}`
+      ? `Welcome to Hot Carz, ${user.first_name}`
       : `Welcome to Hot Carz`;
-    return <header className=" title">{welcomeText}</header>;
+
+    return <header className="text-white hero-title">{welcomeText}</header>;
   };
 
   return (
     <div className="homepage">
-      <div className="p-3" style={styles.homepage}>
-        {/* Header */}
-        {renderWelcomeMessage()}
+      <div className="p-5" style={styles.homepage}>
+        <div className="image-container text-white">
+          <img src={heroBanner}></img>
+          <div className="text-overlay">
+            {renderWelcomeMessage()}
+            {/* <div className="text-white hero-text">
+              Welcome to Hot Carz, your premier destination for top-quality
+              vehicles and exceptional service. Whether you're in the market for
+              a sleek sedan, a rugged SUV, or a high-performance sports car,
+              we've got you covered. With an extensive inventory of the hottest
+              cars on the market, finding your dream ride has never been easier.
+              Browse our collection online or visit our showroom today to
+              experience the thrill of driving your next Hot Carz purchase. Get
+              ready to turn heads and hit the road in style with Hot Carz –
+              where every journey begins with passion and performance.
+            </div> */}
+          </div>
+        </div>
 
         <div className="carDisplay p-4" style={styles.carDisplay}>
-          <header className="sub-title mb-5">Featured Cars</header>
+          <header className="sub-title mb-5 text-white">Featured Cars</header>
 
           <ul className="featuredCarList grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {renderRandomVehicles()}

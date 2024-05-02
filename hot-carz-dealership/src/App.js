@@ -35,7 +35,7 @@ function App() {
     <>
       <Navbar />
 
-      <Routes>
+      <Routes >
         {/* Public Routes */}
         <Route path="/" element={<Homepage />} />
         <Route path="/cars" element={<Cars />} />

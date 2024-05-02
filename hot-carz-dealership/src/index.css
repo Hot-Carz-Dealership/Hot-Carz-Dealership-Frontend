@@ -7,21 +7,29 @@
 }
 
 div {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .title {
   font-size: 3rem;
   color: black;
+  font-weight: 700;
   /*Roboto, bold/strong */
+}
+
+.hero-title {
+  font-size: 5rem;
+  font-weight: 700;
 }
 
 .sub-title {
   font-size: 3rem;
   color: red;
+  font-weight: 500;
+  margin-bottom: 20px;
 }
 
-.rounded-box > image {
+.rounded-box > div {
   padding: 5px;
   border-radius: 5%;
   background-color: white;
@@ -38,5 +46,54 @@ a.cooler-reder-button {
   padding: 10px 20px;
   background-color: red;
   color: white;
-  font-size: 2.25rem;
+  font-size: 1.5rem;
+}
+
+.hero-text {
+  text-align: center;
+  font-size: 3.5rem;
+  color: red;
+  margin: 50px 0px;
+  /* roboto */
+}
+
+.carDisplay {
+  padding: 30px 0;
+  margin: 30px 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  background-color: rgb(37, 37, 37);
+}
+
+.footer {
+  color: white;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  /* transform: translate(-50%, -50%); */
+  text-align: center;
+  padding: 20px;
+}
+
+.hero-title {
+  text-align: left;
+}
+
+.hero-text {
+  font-size: 2rem;
 }

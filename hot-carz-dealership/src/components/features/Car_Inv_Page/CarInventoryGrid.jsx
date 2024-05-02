@@ -314,7 +314,7 @@ const CarInventoryGrid = ({ searchResults }) => {
 
 const CarCard = ({ car }) => {
   return (
-    <Card sx={{ maxWidth: 345, margin: 2 }}>
+    <Card sx={{ maxWidth: 345, margin: 2, padding: 3 }}>
       <div
         style={{
           height: 200,
