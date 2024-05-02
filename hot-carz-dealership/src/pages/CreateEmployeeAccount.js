@@ -32,34 +32,34 @@ const CreateEmployeeAccount = () => {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
 
-        // Check if user role is either "Manager" or "superAdmin"
-        if (
-          user.employeeType !== "Manager" &&
-          user.employeeType !== "superAdmin"
-        ) {
-          throw new Error("Unauthorized access");
+            // Check if user role is either "Manager" or "superAdmin"
+            if (user.employeeType !== "Manager" && user.employeeType !== "superAdmin") {
+                throw new Error("Unauthorized access");
+            }
+
+            setUser(user);
+            // Store the session ID
+            setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
+
+            // Fetch service appointments and members data
+        } catch (error) {
+            console.log("Not Authenticated or Unauthorized");
+            window.alert("You are not authorized to access this page.");
+            navigate("/login");
         }
-
-        setUser(user);
-        // Store the session ID
-        setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
-
-        // Fetch service appointments and members data
-      } catch (error) {
-        console.log("Not Authenticated or Unauthorized");
-        window.alert("You are not authorized to access this page.");
-        navigate("/login");
-      }
     })();
-  }, [navigate]);
+}, );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+    
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -2,8 +2,8 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import httpClient from "../httpClient";
-import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL, FINANCE_URL } from "../utilities/constants";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utilities/constants";
 
 import styles from "../css/editaccount.css";
 
@@ -12,7 +12,7 @@ const EditAccount = () => {
   
   
 
-  const [loading, setLoading] = useState(true);
+  const [/*loading,*/ setLoading] = useState(true);
   const navigate = useNavigate(); // Initialize useNavigate
   const [user, setUser] = useState([]);
 
@@ -30,7 +30,7 @@ const EditAccount = () => {
         navigate("/login");
       }
     })();
-  }, [navigate]); // Add navigate to the dependency array
+  }, ); // Add navigate to the dependency array
 
 
   const handleSubmit = async () => {
@@ -79,6 +79,7 @@ const EditAccount = () => {
     }
     const response = await fetch(`${BASE_URL}/api/members/update`, requestData);
     const responseData = await response.json()
+     console.log(responseData);
     window.location.href = "/account";
   };
 
