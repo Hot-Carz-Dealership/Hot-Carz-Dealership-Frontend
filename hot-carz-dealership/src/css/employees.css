@@ -5,19 +5,27 @@
   .table {
     border-collapse: collapse;
     width: 100%;
-    border: 2px solid black;
+    /*border: 2px solid black;*/
+    border-top: #000;
+    border-bottom: #000;
   }
   
   .th {
-    border: 2px solid black;
     padding: 8px;
     text-align: left;
   }
   
   .td {
-    border: 2px solid black;
     padding: 8px;
     text-align: left;
+  }
+  
+  .bookApptButton {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    margin-top: 10px;
   }
   
   .creationButton {
@@ -152,15 +160,21 @@ margin-bottom:30%;
   .modal-footer {
     border-top: 1px solid #ddd;
   }
-  .sidebar {
+  .sidebarEmployees {
     width: 200px;
-    height: 100vh;
+    min-height: 100vh; /* Set minimum height to fill the viewport */
     overflow-y: auto;
     position: fixed;
-    top: 0;
+    top: var(--header-height); /* Position beneath the header */
     left: 0;
-    background-color: #343a40;
-    color: white;
+    background-color: #444444;
+    color: black;
+ 
+  }
+  .sidebar-content {
+    margin-bottom: 0%;
+    padding-bottom: 1000px;
+    flex-grow: 1; /* Allow sidebar content to grow and fill the remaining space */
   }
   
   .sidebar button {
