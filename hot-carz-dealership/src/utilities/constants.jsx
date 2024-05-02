@@ -6,6 +6,6 @@
 //GO TO YOUR .env FILE TO CHANGE FROM PRODUCTION TO LOCAL URLS
 
 export const BASE_URL =
-  "http://hot-carz-dealership-backend-production.up.railway.app";
+  "https://hot-carz-dealership-backend-production.up.railway.app";
 export const FINANCE_URL =
   "https://hot-carz-financial-service-stub-production.up.railway.app";
