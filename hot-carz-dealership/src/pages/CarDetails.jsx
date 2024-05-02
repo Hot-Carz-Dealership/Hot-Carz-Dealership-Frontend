@@ -289,7 +289,11 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
 
   const userWantsFinancing = () => {
     console.log("User wants financing");
-    navigate(`/apply-financing?VIN_carID=${VIN}&price=${price}`);
+    navigate(
+      `/apply-financing?VIN_carID=${VIN}&price=${price}&vehicleName=${encodeURIComponent(
+        vehicleName
+      )}`
+    );
   };
 
   const userNoFinancing = async () => {

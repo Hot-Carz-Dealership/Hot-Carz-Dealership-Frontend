@@ -77,7 +77,7 @@ function ItemCard({ item }) {
 function Footer() {
   const handleCheckout = () => {
     // Implement redirection to /checkout
-    window.location.href = "/purchaseCheckout";
+    window.location.href = "/checkout";
   };
 
   return (
