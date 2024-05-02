@@ -1733,52 +1733,192 @@ console.log(selectedTab);
 
 
 
+  const VehicleListingsTable = () => {
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [editedVehicle, setEditedVehicle] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [page, setPage] = useState(0); // Current page number
+    const pageSize = 15; // Number of vehicles per page
+  
+    const handleEditVehicle = (vehicle) => {
+      setSelectedVehicle(vehicle);
+      setEditedVehicle(vehicle); // Initialize edited vehicle with the selected vehicle data
+      setIsModalOpen(true);
+    };
+  
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setEditedVehicle({ ...editedVehicle, [name]: value });
+    };
+  
+    const handleSubmit = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/vehicles/edit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editedVehicle),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update vehicle');
+        }
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error updating vehicle:', error.message);
+      }
+    };
+  
+    const closeModal = () => {
+      setSelectedVehicle(null);
+      setEditedVehicle(null);
+      setIsModalOpen(false);
+    };
 
-  const VehicleListingsTable = () => (
-    <div className="table-responsive" style={styles.tableHeight}>
-      <h2>Vehicle Listings</h2>
-      <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>Make</th>
-            <th>Model</th>
-            <th>Year</th>
-            <th>VIN</th>
-            <th>Page Views</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Image</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vehicleListings &&
-            vehicleListings.map((vehicle, index) => (
-              <tr key={index}>
-                <td>{vehicle.make}</td>
-                <td>{vehicle.model}</td>
-                <td>{vehicle.year}</td>
-                <td>{vehicle.VIN_carID}</td>
-                <td>{vehicle.viewsOnPage}</td>
-                <td>{vehicle.price}</td>
-                <td>{/* Render status here */}</td>
-                <td>
-                  <VehicleImage
-                    className="w-[150px] "
-                    vin={vehicle.VIN_carID}
-                    bodyType={vehicle.body}
-                  />
-                </td>
+      // Function to handle pagination
+  const nextPage = () => {
+    setPage(page + 1);
+  };
+
+  const prevPage = () => {
+    setPage(page - 1);
+  };
+
+    // Calculate the start and end indexes based on the current page
+    const startIndex = page * pageSize;
+    const endIndex = startIndex + pageSize;
+    return (
+      <div>
+        <div className="table-responsive" style={styles.tableHeight}>
+          <h2>Vehicle Listings</h2>
+          <table className="table table-bordered table-striped">
+            <thead className="thead-dark">
+              <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Page Views</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Image</th>
+                <th>Edit</th>
               </tr>
-            ))}
-          {!vehicleListings && (
-            <tr>
-              <td colSpan="8">No vehicle listings available</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {vehicleListings &&
+                vehicleListings.map((vehicle, index) => (
+                  <tr key={index}>
+                    <td>{vehicle.make}</td>
+                    <td>{vehicle.model}</td>
+                    <td>{vehicle.year}</td>
+                    <td>{vehicle.viewsOnPage}</td>
+                    <td>{vehicle.price}</td>
+                    <td>{vehicle.status}</td>
+                    <td>
+                      <VehicleImage
+                        className="w-[150px] "
+                        vin={vehicle.VIN_carID}
+                        bodyType={vehicle.body}
+                      />
+                    </td>
+                    <td>
+                      <button className="btn btn-primary mr-2" onClick={() => handleEditVehicle(vehicle)}>Edit</button>
+                    </td>
+                  </tr>
+                ))}
+              {!vehicleListings && (
+                <tr>
+                  <td colSpan="8">No vehicle listings available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+                {/* Pagination arrows */}
+                <div>
+          <button className="btn btn-primary mr-2" onClick={prevPage} disabled={page === 0}>Previous</button>
+          <button className="btn btn-primary" onClick={nextPage} disabled={vehicleListings.length <= endIndex}>Next</button>
+        </div>
+{/* Modal for editing vehicle details */}
+{isModalOpen && selectedVehicle && (
+  <div className="modal-container">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Edit Vehicle Details</h5>
+          <button type="button" className="close" onClick={closeModal}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <div className="form-group">
+            <label htmlFor="make">Make:</label>
+            <input type="text" className="form-control" name="make" value={editedVehicle.make} onChange={handleInputChange} />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="model">Model:</label>
+            <input type="text" className="form-control" name="model" value={editedVehicle.model} onChange={handleInputChange} />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="year">Year:</label>
+            <input type="text" className="form-control" name="year" value={editedVehicle.year} onChange={handleInputChange} pattern="\d{4}" />
+            {/* Regex pattern ensures year is in YYYY format */}
+            <small className="form-text text-danger">
+              {!/^\d{4}$/.test(editedVehicle.year) && "Year must be in YYYY format"}
+            </small>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="price">Price:</label>
+            <input type="text" className="form-control" name="price" value={editedVehicle.price} onChange={handleInputChange} pattern="\d+(\.\d{2})?" />
+            {/* Regex pattern ensures price is in format x.xx */}
+            <small className="form-text text-danger">
+              {!/^\d+(\.\d{2})?$/.test(editedVehicle.price) && "Price must be in format x.xx"}
+            </small>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="mileage">Mileage:</label>
+            <input type="text" className="form-control" name="mileage" value={editedVehicle.mileage} onChange={handleInputChange} pattern="\d+" />
+            {/* Regex pattern ensures mileage is a positive integer */}
+          </div>
+          <div className="form-group">
+            <label htmlFor="status">Status:</label>
+            <select className="form-control" name="status" value={editedVehicle.status} onChange={handleInputChange}>
+              <option value="new">New</option>
+              <option value="being watched">Being Watched</option>
+              <option value="low-milage">Low Milage</option>
+            </select>
+          </div>
+          
+          {/* Add input fields for other attributes */}
+          
+
+          
+          <div className="form-group">
+            <label htmlFor="description">Description:</label>
+            <textarea className="form-control" name="description" value={editedVehicle.description} onChange={handleInputChange} rows="4" />
+          </div>
+          
+          {/* Add input fields for other attributes */}
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+          <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
+        </div>
+      </div>
     </div>
-  );
+  </div>
+)}
+
+
+
+      </div>
+    );
+  };
+  
   const SalesReportTable = () => {
     const [salesReport, setSalesReport] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState("");
