@@ -8,6 +8,12 @@ import { Link } from "react-router-dom";
 import httpClient from "../httpClient";
 import VehicleImage from "../utilities/VehicleImage";
 
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { Grid } from "@mui/material";
+
 import styles from "../css/loginhome.css";
 
 const HomePage = () => {
@@ -78,15 +84,15 @@ const HomePage = () => {
           to={`/cars/${vehicle.VIN_carID}`}
           className="block text-black no-underline"
         >
-          <div className="flex flex-col items-center">
-            <div className="h-auto w-auto mb-2">
+          <div className="flex flex-col items-center rounded-box">
+            <div className="h-auto w-auto mb-2 image">
               <VehicleImage
                 className="w-full  "
                 vin={vehicle.VIN_carID}
                 bodyType={vehicle.body}
               />
             </div>
-            <h2 className="text-xl font-semibold mt-auto">{`${vehicle.make} ${vehicle.model}`}</h2>
+            <h2 className="font-semibold mt-auto text">{`${vehicle.make} ${vehicle.model}`}</h2>
           </div>
         </Link>
       </li>
@@ -97,102 +103,124 @@ const HomePage = () => {
     const welcomeText = user
       ? `Welcome to Hot Carz ${user.first_name}`
       : `Welcome to Hot Carz`;
-    return (
-      <header className="flex justify-center items-center h-24 text-4xl font-bold leading-6 ">
-        {welcomeText}
-      </header>
-    );
+    return <header className=" title">{welcomeText}</header>;
   };
 
   return (
-    <div className="homepage" style={styles.homepage}>
-      {/* Header */}
-      {renderWelcomeMessage()}
+    <div className="homepage">
+      <div className="p-3" style={styles.homepage}>
+        {/* Header */}
+        {renderWelcomeMessage()}
 
-      <div className="carDisplay p-4" style={styles.carDisplay}>
-        <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
-          Featured Cars
-        </header>
+        <div className="carDisplay p-4" style={styles.carDisplay}>
+          <header className="sub-title mb-5">Featured Cars</header>
 
-        <ul className="featuredCarList grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {renderRandomVehicles()}
-        </ul>
+          <ul className="featuredCarList grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {renderRandomVehicles()}
+          </ul>
 
-        <Button
-          variant="contained"
-          className="searchButton"
-          style={styles.searchButton}
-          component={Link}
-          to="/cars"
-        >
-          Search Cars
-        </Button>
+          <Button className="cooler-reder-button" component={Link} to="/cars">
+            Search Cars
+          </Button>
+        </div>
+
+        <div className="" style={styles.carDisplay}>
+          <header className="flex justify-center items-center sub-title">
+            Our Services
+          </header>
+          {/* <div
+          className="d-flex w-100 justify-between gap-3 columns-3"
+          style={styles.featuredCarList}
+        > */}
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Card sx={{ height: 400 }}>
+                <CardMedia sx={{ height: 140 }} image={oilChangeImage} />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5 text-black"
+                    component="div"
+                  >
+                    <h1 className="oilChangePrice" style={styles.price}>
+                      $40
+                    </h1>
+                    <h2>Oil Change Service</h2>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <p>
+                      Oil is the lifeblood of your car's engine. A high mileage
+                      synthetic blend service and fully synthetic oil change
+                      service with 120 PT. inspection included free.
+                    </p>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Card sx={{ height: 400 }}>
+                <CardMedia sx={{ height: 140 }} image={engineImage} />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5 text-black"
+                    component="div"
+                  >
+                    <h1 className="enginePrice" style={styles.price}>
+                      $120
+                    </h1>
+                    <h2>Engine Tune Up</h2>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <p>
+                      Get complete and comprehensive engine diagnostics and
+                      system evaluations for you vehicle. While Keeping your car
+                      running like new.
+                    </p>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Card sx={{ height: 400 }}>
+                <CardMedia sx={{ height: 140 }} image={tiresImage} />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5 text-black"
+                    component="div"
+                  >
+                    <h1 className="tiresPrice" style={styles.price}>
+                      $100
+                    </h1>
+                    <h2>Tire Services</h2>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <p>
+                      We offer tire repair, alignments, tire balancing and tire
+                      rotation to help keep your tires healthy.
+                    </p>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          <Button
+            variant="contained"
+            className="cooler-reder-button mt-5"
+            style={styles.searchButton}
+            component={Link}
+            to="/services"
+          >
+            GO TO SERVICE PAGE
+          </Button>
+        </div>
       </div>
 
-      <div className="servicesDisplay" style={styles.carDisplay}>
-        <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 ">
-          Our Services
-        </header>
-        <ul className="servicesList" style={styles.featuredCarList}>
-          {/* Oil Change Service */}
-          <li style={styles.servicesItem}>
-            <img
-              src={oilChangeImage}
-              style={styles.serviceImage}
-              alt="Vehicle"
-            />
-            <h1 className="oilChangePrice" style={styles.price}>
-              $40
-            </h1>
-            <h2>Oil Change Service</h2>
-            <p>
-              Oil is the lifeblood of your car's engine. A high mileage
-              synthetic blend service and fully synthetic oil change service
-              with 120 PT. inspection included free.
-            </p>
-          </li>
-
-          {/* Engine Tune Up */}
-          <li style={styles.servicesItem}>
-            <img src={engineImage} style={styles.serviceImage} alt="Vehicle" />
-            <h1 className="enginePrice" style={styles.price}>
-              $120
-            </h1>
-            <h2>Engine Tune Up</h2>
-            <p>
-              Get complete and comprehensive engine diagnostics and system
-              evaluations for you vehicle. While Keeping your car running like
-              new.
-            </p>
-          </li>
-
-          {/* Tire Services */}
-          <li style={styles.servicesItem}>
-            <img src={tiresImage} style={styles.serviceImage} alt="Vehicle" />
-            <h1 className="tiresPrice" style={styles.price}>
-              $100
-            </h1>
-            <h2>Tire Services</h2>
-            <p>
-              We offer tire repair, alignments, tire balancing and tire rotation
-              to help keep your tires healthy.
-            </p>
-          </li>
-        </ul>
-
-        <Button
-          variant="contained"
-          className="servicesButton"
-          style={styles.searchButton}
-          component={Link}
-          to="/services"
-        >
-          GO TO SERVICE PAGE
-        </Button>
-      </div>
-
-      {/* Footer */}
-      <footer className="self-stretch" style={styles.footer} />
+      <footer className="footer"> Copyright 2024. Arce Industries. </footer>
     </div>
   );
 };
