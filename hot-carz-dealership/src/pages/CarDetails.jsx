@@ -273,7 +273,7 @@ function PurchaseOptions({ onBuyNow, onBid, VIN, price, vehicleName }) {
           onClick={handleOpenFinancingModal}
           className="justify-center self-center px-6 py-2 mt-8 text-base font-medium leading-7 text-white bg-red-700 rounded shadow-md max-md:px-5"
         >
-          BID
+          Bid Now
         </button>
       </div>
       <FinancingModal
