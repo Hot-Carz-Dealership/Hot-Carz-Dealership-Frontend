@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import httpClient from "../httpClient";
+// import httpClient from "../httpClient";
 import { BASE_URL } from "../utilities/constants";
 
 function Copyright(props) {
@@ -38,34 +38,40 @@ const defaultTheme = createTheme();
 export default function LogIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
+      console.log(BASE_URL);
       console.log(username);
       console.log(password);
       const loginData = {
         username,
         password,
-        // Any additional required fields
       };
 
-      const resp = await httpClient.post(`${BASE_URL}/api/login`, loginData);
+      const response = await fetch(`${BASE_URL}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+        credentials: "include",
+      });
 
-      if (resp.status === 200) {
-        // Assuming the backend sets a session or token that needs to be handled
-        // This could be setting a cookie or storing a token in local storage
-        // Example: localStorage.setItem('token', resp.data.token);
+      if (response.ok) {
+        const userData = await response.json();
+        // Handle successful login response here
+        console.log(userData);
         window.location.href = "/account";
       } else {
-        // Handle non-200 responses, such as displaying an error message
-
-        console.error("Login failed:", resp.data);
-        
+        const errorData = await response.json();
+        setError(errorData.error);
       }
     } catch (error) {
+      setError("An error occurred while logging in. Please try again.");
       setUsername("");
       setPassword("");
       window.alert("User account does not exist. Please sign up.");
