@@ -65,6 +65,7 @@ export default function LogIn() {
         const userData = await response.json();
         // Handle successful login response here
         console.log(userData);
+        window.location.href = "/account";
       } else {
         const errorData = await response.json();
         setError(errorData.error);
