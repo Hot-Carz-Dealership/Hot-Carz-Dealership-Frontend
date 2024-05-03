@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stepBox {
+    width: 90%;
+    height: auto;
+    background-color: #e0e0e0;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .vehicleScroll {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent wrapping of vehicle items */
+  }
+  
+  .vehicleItem {
+    display: inline-block;
+    width: 150px;
+    height: 100px;
+    background-color: #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 100px;
+    font-size: 16px;
+  }
+  
+  .vehicleItem:last-child {
+    margin-right: 0; /* Remove margin from last item to prevent unnecessary space */
+  }
+  
+  .serviceScroll {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent wrapping of service items */
+  }
+  
+  .serviceItem {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .serviceItem label {
+    margin-left: 5px;
+  }
+  
+  .serviceItem:last-child {
+    margin-right: 0; /* Remove margin from last item to prevent unnecessary space */
+  }
+
+  .stepBox h2 {
+    font-size: 24px;
+  }
+  
