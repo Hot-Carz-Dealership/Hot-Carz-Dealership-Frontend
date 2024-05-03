@@ -22,15 +22,15 @@ const ManagerPage = () => {
 
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
-  const [serviceAppointments, setServiceAppointments] = useState([]);
+  const [ /*serviceAppointments*/ , setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [purchases, setPurchases] = useState([]);
+  const [ /*purchases*/  , setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-  const [testDrives, setTestDrives] = useState([]);
+  const [ /*testDrives*/ , setTestDrives] = useState([]);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
 
 
@@ -67,11 +67,6 @@ const ManagerPage = () => {
           throw new Error("Unauthorized access");
         }
 
-        /*
-        setUser(user);
-        // Store the session ID
-        setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
-*/
         // Fetch service appointments and members data
       } catch (error) {
         console.log("Not Authenticated or Unauthorized");
@@ -653,12 +648,12 @@ const ManagerPage = () => {
     const [newServiceName, setNewServiceName] = useState('');
     const [newServicePrice, setNewServicePrice] = useState('');
     const [serviceAppointments, setServiceAppointments] = useState([]);
-    const [selectedAppointment, setSelectedAppointment] = useState(null);
-    const [vehicleInfo, setVehicleInfo] = useState(null);
-    const [memberInfo, setMemberInfo] = useState(null);
-    const [technicians, setTechnicians] = useState([]);
-    const [selectedTechnician, setSelectedTechnician] = useState(null);
-    const [showReplacementModal, setShowReplacementModal] = useState(false);
+   // const [ /*selectedAppointment*/ , setSelectedAppointment] = useState(null);
+   // const [ /*vehicleInfo */, setVehicleInfo] = useState(null);
+   // const [ /* memberInfo*/ , setMemberInfo] = useState(null);
+    const [ /*technicians*/ , setTechnicians] = useState([]);
+   // const [/*selectedTechnician*/, setSelectedTechnician] = useState(null);
+  //  const [/*showReplacementModal*/ , setShowReplacementModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState('');
     const [editedPrice, setEditedPrice] = useState('');
@@ -718,6 +713,8 @@ const ManagerPage = () => {
       }
     };
 
+
+/*
     const fetchVehicleAndMemberInfo = async (appointment) => {
       try {
         const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
@@ -748,6 +745,8 @@ const ManagerPage = () => {
         console.error('Error fetching vehicle and member information:', error.message);
       }
     };
+
+*/
 
     const handleAddService = async () => {
       try {
@@ -823,6 +822,8 @@ const ManagerPage = () => {
       setShowEditModal(true);
     };
 
+
+    /*
     const openModal = (appointment) => {
       setShowEditModal(true);
       setEditedService(appointment);
@@ -837,6 +838,7 @@ const ManagerPage = () => {
       setMemberInfo(null);
       setSelectedTechnician(null);
     };
+*/
 
       // Function to handle pagination
   const nextPage = () => {
@@ -1562,7 +1564,7 @@ const ManagerPage = () => {
 
   };
 
-
+/*
   const PurchaseTable = () => (
     <div className="table-responsive" style={styles.tableHeight}>
       <h2>Purchases</h2>
@@ -1595,6 +1597,7 @@ const ManagerPage = () => {
       </table>
     </div>
   );
+*/
 
   const TestDrivesTable = ({ applyFilter }) => {
 
@@ -1760,7 +1763,7 @@ const ManagerPage = () => {
 
   const CustomersTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10); 
+    const [pageSize, /*setPageSize*/ ] = useState(10); 
     const [zipcodeFilter, setZipcodeFilter] = useState('');
     const [sortingOption, setSortingOption] = useState('recent');
 

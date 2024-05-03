@@ -206,12 +206,10 @@ function VehicleDetails({
   );
 }
 
-function PurchaseOptions({ onBid, VIN, price, vehicleName }) {
-  const [bidPrice, setBidPrice] = React.useState("");
+function PurchaseOptions({ VIN, price, vehicleName }) {
   const [loggedIn, setLoggedIn] = React.useState("");
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
   const navigate = useNavigate();
-  // const loggedIn = null;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -243,14 +241,17 @@ function PurchaseOptions({ onBid, VIN, price, vehicleName }) {
     setFinancingModalOpen(false);
   };
 
+  /*
   const handleBidPriceChange = (event) => {
     setBidPrice(event.target.value);
   };
-
+*/
+/*
   const handleBidSubmit = (event) => {
     event.preventDefault();
     onBid(bidPrice);
   };
+*/
 
   return (
     <section className="flex gap-5 justify-between pr-28 mt-32 max-w-full w-[921px] max-md:flex-wrap max-md:pr-5 max-md:mt-10">

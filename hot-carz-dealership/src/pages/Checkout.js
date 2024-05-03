@@ -191,22 +191,6 @@ export default function Checkout() {
       const queryParams = new URLSearchParams(location.search);
       if(queryParams.get("appointment_date") != null){
         
-        const apptData = {
-          VIN_carID: queryParams.get("VIN_carID"),
-          appointment_date: queryParams.get("appointment_date"),
-          serviceID: queryParams.get("servID")
-        }
-        const apptResponse = await fetch(
-          `${BASE_URL}/api/member/book-service-appointment`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify(apptData),
-          }
-        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

@@ -8,8 +8,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../css/creation.css";
 
 const AddNewVehicle = () => {
-  const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [formData, setFormData] = useState({
@@ -31,19 +29,17 @@ const AddNewVehicle = () => {
     (async () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
-        const user = resp.data;
-
+        const userData = resp.data;
         // Check if user role is either "Manager" or "superAdmin"
+        console.log(userData.employeeType);
         if (
-          user.employeeType !== "Manager" &&
-          user.employeeType !== "superAdmin"
+          userData.employeeType !== "Manager" &&
+          userData.employeeType !== "superAdmin"
         ) {
           throw new Error("Unauthorized access");
         }
 
-        setUser(user);
         // Store the session ID
-        setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
 
         // Fetch service appointments and members data
       } catch (error) {
@@ -1857,15 +1853,6 @@ const AddNewVehicle = () => {
     });
   };
 
-  // Function to dynamically populate the year dropdown based on the selected model
-  const handleModelChange = (e) => {
-    const selectedModel = e.target.value;
-    setFormData({
-      ...formData,
-      model: selectedModel,
-      year: "", // Reset year when model changes
-    });
-  };
 
   return (
     <div style={styles.container}>

@@ -12,7 +12,6 @@ const EditAccount = () => {
   
   
 
-  const [/*loading,*/ setLoading] = useState(true);
   const navigate = useNavigate(); // Initialize useNavigate
   const [user, setUser] = useState([]);
 
@@ -21,16 +20,13 @@ const EditAccount = () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         setUser(resp.data);
-        setLoading(false);
-
       } catch (error) {
         console.log("Not Authenticated");
-        setLoading(false);
         // Redirect to login page if user is not authenticated
         navigate("/login");
       }
     })();
-  }, ); // Add navigate to the dependency array
+  }, [navigate]); // Add navigate to the dependency array
 
 
   const handleSubmit = async () => {
