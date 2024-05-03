@@ -5,11 +5,8 @@ import { BASE_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import styles from "../css/creation.css";
 
 const AddMemberVehicle = () => {
-  const [ /*user, */ setUser] = useState(null);
-  const [ /*sessionId, */ setSessionId] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [formData, setFormData] = useState({
@@ -26,11 +23,16 @@ const AddMemberVehicle = () => {
     (async () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
-        const user = resp.data;
+        const userData = resp.data;
+        // Check if user role is either "Manager" or "superAdmin"
+        console.log(userData);
+        if (
+          !userData.memberID
+        ) {
+          throw new Error("Unauthorized access");
+        }
 
-        setUser(user);
         // Store the session ID
-        setSessionId(user.memberID); // Assuming user.employeeID contains the session ID
 
         // Fetch service appointments and members data
       } catch (error) {
@@ -39,7 +41,7 @@ const AddMemberVehicle = () => {
         navigate("/login");
       }
     })();
-  }, [navigate, setSessionId, setUser]);
+  }, [navigate]);
   const years = Array.from({ length: 25 }, (_, i) => 2024 - i);
 
   const carData = {
@@ -398,21 +400,18 @@ const AddMemberVehicle = () => {
       model: "", // Reset model when make changes
     });
   };
-
-  // Function to dynamically populate the year dropdown based on the selected model
-
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <Link to="/account" style={styles.sidebarButton}>
+    <div className="container">
+      <div className="sidebar">
+        <Link to="/account" className="sidebarButton">
           Return to Account Page
         </Link>
       </div>
-      <div style={styles.mainContent}>
-        <h2 style={styles.heading}>Add New Vehicle</h2>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label htmlFor="VIN_carID" style={styles.label}>
+      <div className="mainContent">
+        <h2 className="heading">Add New Vehicle</h2>
+        <form onSubmit={handleSubmit} className="form">
+          <div className="formGroup">
+            <label htmlFor="VIN_carID" className="label">
               Vin:
             </label>
             <input
@@ -421,13 +420,13 @@ const AddMemberVehicle = () => {
               name="VIN_carID"
               value={formData.VIN_carID}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label htmlFor="make" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="make" className="label">
               Make:
             </label>
             <select
@@ -435,7 +434,7 @@ const AddMemberVehicle = () => {
               name="make"
               value={formData.make}
               onChange={handleMakeChange}
-              style={styles.input}
+              className="input"
               required
             >
               <option value="">Select make</option>
@@ -447,8 +446,8 @@ const AddMemberVehicle = () => {
               ))}
             </select>
           </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="model" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="model" className="label">
               Model:
             </label>
             <select
@@ -456,7 +455,7 @@ const AddMemberVehicle = () => {
               name="model"
               value={formData.model}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
               disabled={!formData.make} // Disable model dropdown if make is not selected
             >
@@ -471,8 +470,8 @@ const AddMemberVehicle = () => {
             </select>
           </div>
 
-          <div style={styles.formGroup}>
-            <label htmlFor="body" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="body" className="label">
               Body:
             </label>
             <select
@@ -480,24 +479,22 @@ const AddMemberVehicle = () => {
               name="body"
               value={formData.body}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
             >
-          <option value="">Select Body Type</option>
-          <option value="Sedan">Sedan</option>
-          <option value="Coupe">Coupe</option>
-          <option value="Hatchback">Hatchback</option>
-          <option value="Convertible">Convertible</option>
-          <option value="SUV">SUV</option>
-          <option value="Van">Van</option>
-
-          <option value="Pickup Truck">Pickup Truck</option>
-
+              <option value="">Select Body Type</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Coupe">Coupe</option>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Convertible">Convertible</option>
+              <option value="SUV">SUV</option>
+              <option value="Van">Van</option>
+              <option value="Pickup Truck">Pickup Truck</option>
             </select>
           </div>
 
-          <div style={styles.formGroup}>
-            <label htmlFor="year" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="year" className="label">
               Year:
             </label>
             <select
@@ -505,7 +502,7 @@ const AddMemberVehicle = () => {
               name="year"
               value={formData.year}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
               disabled={!formData.model} // Disable year dropdown if model is not selected
             >
@@ -520,8 +517,8 @@ const AddMemberVehicle = () => {
             </select>
           </div>
 
-          <div style={styles.formGroup}>
-            <label htmlFor="color" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="color" className="label">
               Color:
             </label>
             <input
@@ -530,12 +527,12 @@ const AddMemberVehicle = () => {
               name="color"
               value={formData.color}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
             />
           </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="mileage" style={styles.label}>
+          <div className="formGroup">
+            <label htmlFor="mileage" className="label">
               Mileage:
             </label>
             <input
@@ -544,12 +541,12 @@ const AddMemberVehicle = () => {
               name="mileage"
               value={formData.mileage}
               onChange={handleChange}
-              style={styles.input}
+              className="input"
               required
             />
           </div>
 
-          <button type="submit" style={styles.submitButton}>
+          <button type="submit" className="submitButton">
             Add Vehicle
           </button>
         </form>
