@@ -1766,7 +1766,9 @@ const ManagerPage = () => {
     const [pageSize, /*setPageSize*/ ] = useState(10); 
     const [zipcodeFilter, setZipcodeFilter] = useState('');
     const [sortingOption, setSortingOption] = useState('recent');
-
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [financeInfo, setFinanceInfo] = useState([]);
 
   const fetchMembers = async () => {
     try {
@@ -1795,6 +1797,13 @@ const ManagerPage = () => {
     setCurrentPage(currentPage - 1);
   };
 
+  const handleViewFinancial = async (customer) => {
+    setSelectedCustomer(customer);
+    await fetchFinanceInfo(customer.memberID);
+
+    setShowModal(true);
+  };
+
  // Check if members is null before applying any operations
 // Check if members is null before applying any operations
 const filteredMembers = members && members.filter(member => member.zipcode && member.zipcode.includes(zipcodeFilter));
@@ -1808,6 +1817,28 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
      return a.first_name.localeCompare(b.first_name);
    }
  });
+
+ const fetchFinanceInfo = async (memberId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        member_id: memberId
+      })
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch finance information');
+    }
+
+    const financeData = await response.json();
+    setFinanceInfo(financeData);
+  } catch (error) {
+    console.error('Error fetching finance information:', error.message);
+  }
+};
 
   // Calculate the starting and ending indexes for the current page
   const startIndex = currentPage * pageSize;
@@ -1847,8 +1878,8 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
             <th>Last Name</th>
             <th>Phone #</th>
             <th>Email</th>
-            <th>Join Date</th>
-            <th>memberID</th>
+            <th>Action</th> {/* New column for Action */}
+
           </tr>
         </thead>
         <tbody>
@@ -1859,8 +1890,9 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
                 <td>{member.last_name}</td>
                 <td>{member.phone}</td>
                 <td>{member.email}</td>
-                <td>{member.join_date}</td>
-                <td>{member.memberID}</td>
+                <td>
+                    <button className="btn btn-primary" onClick={() => handleViewFinancial(member)}>View Financial</button>
+                  </td>
               </tr>
             ))}
             {!sortedMembers.length && (
@@ -1871,6 +1903,38 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
         </tbody>
       </table>
     </div>
+    {showModal && (
+  <div className="modal-container">
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title">Customer Financial Stub</h5>
+        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+
+        </div>
+        <div className="modal-body">
+
+            <h2>Customer Information</h2>
+            <p>First Name: {selectedCustomer.first_name}</p>
+            <p>Last Name: {selectedCustomer.last_name}</p>
+            <p>Phone #: {selectedCustomer.phone}</p>
+            <p>Email: {selectedCustomer.email}</p>
+            {/* Add more customer information as needed */}
+
+            {financeInfo.length > 0 && (
+                    <div>
+                      <h5>Finance Information</h5>
+
+                      <p>Income: {financeInfo[0].income}</p>
+                      <p>Credit Score: {financeInfo[0].credit_score}</p>
+                    </div>
+                  )}
+
+            </div>
+              </div>
+            </div>
+          </div>
+      )}
     </div>
   );
   }
@@ -2170,6 +2234,8 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
             <label htmlFor="year">Year:</label>
             <select id="year" value={selectedYear} onChange={handleYearChange}>
               <option value="">Select Year</option>
+              <option value="2024">2024</option>
+
               <option value="2023">2023</option>
               <option value="2022">2022</option>
               <option value="2021">2021</option>
@@ -2217,117 +2283,108 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
 
   // Define the WelcomeScreen component
   const WelcomeScreen = ({ user, handleGetStarted }) => (
-    <div style={styles.welcomeScreen}>
-      <h1 style={styles.welcomeScreenHeading}>
+    <div className="welcomeScreen">
+      <h1 className="welcomeScreenHeading">
         Hi {user && user.first_name}.
       </h1>
       <img
-        src="logo512.png"
+        src="carzoom.gif"
         alt="Logo"
-        style={{ width: "200px", margin: "0 auto" }}
+        className="welcomeScreenLogo"
       />
       <br />
-      <p style={styles.welcomeScreenText}>
+      <p className="welcomeScreenText">
         Click the button below to get started as{" "}
         {user && user.employeeType}.
       </p>
       <button
         onClick={handleGetStarted}
-        style={styles.welcomeScreenButton}
-        className="btn btn-primary"
+        className="welcomeScreenButton btn btn-primary"
       >
         Get Started
       </button>
     </div>
   );
-
+  
   return (
 
-    <div >
-
-      <div className="sidebarEmployees">
-        <div style={{ marginBottom: '10px' }}>
-          <button
-            className="btn btn-block btn-dark"
-            style={selectedTab === 0 ? styles.selected : {}}
-            onClick={() => handleTabSelect(0)}
-          >
-            To-Do's
-          </button>
-        </div>
-
-
-        <div style={{ marginBottom: '10px' }}>
-          <button
-            className="btn btn-block btn-dark"
-            style={selectedTab === 1 ? styles.selected : {}}
-            onClick={() => {
-              handleTabSelect(1); console.log("Clicked on Service Center button");
-            }}
-          >
-            Service Center
-          </button>
-        </div>
-
-        <div style={{ marginBottom: "10px" }}>
-          <button
-            className="btn btn-block btn-dark"
-            style={selectedTab === 4 ? styles.selected : {}}
-            onClick={() => {
-              handleTabSelect(4);
-              fetchDataSelection(4);
-            }}
-          >
-            Customers
-          </button>
-        </div>
-
-        <div style={{ marginBottom: "10px" }}>
-          <button
-            className="btn btn-block btn-dark"
-            style={selectedTab === 5 ? styles.selected : {}}
-            onClick={() => {
-              handleTabSelect(5);
-              fetchDataSelection(5);
-            }}
-          >
-            Vehicle Listings
-          </button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 6 ? styles.selected : {}} onClick={() => { handleTabSelect(6); fetchDataSelection(6); }}>Sales Report</button>
-        </div>
-
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 7 ? styles.selected : {}} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
-        </div>
-
-        {/*
-        <div style={{ marginBottom: "10px" }}>
-          <button className="btn btn-block btn-dark" style={selectedTab === 8 ? styles.selected : {}} onClick={() => { setSelectedTab(8); fetchDataSelection(8); }}>Purchases</button>
-        </div>
-          */}
-
-
-        <div style={{ marginBottom: "10px" }}>
-          {user && (user.employeeType === "superAdmin") && (
-            <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
-          )}</div>
-        <div>
-          <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
-            Add new Vehicle
-          </Link>
-        </div>
-
-        <Button
-          className="btn btn-block btn-danger "
-          style={styles.bookApptButton}
-          onClick={logOutUser}
-          variant="contained"
+  <div>
+  {!showWelcomeScreen && (
+    <div className="sidebarEmployees">
+      <div style={{ marginBottom: '10px' }}>
+        <button
+          className={`btn btn-block btn-dark ${selectedTab === 0 ? 'selected' : ''}`}
+          onClick={() => handleTabSelect(0)}
         >
-          Log Out
-        </Button>
+          To-Do's
+        </button>
       </div>
+
+      <div style={{ marginBottom: '10px' }}>
+        <button
+          className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
+          onClick={() => {
+            handleTabSelect(1); console.log("Clicked on Service Center button");
+          }}
+        >
+          Service Center
+        </button>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        <button
+          className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
+          onClick={() => {
+            handleTabSelect(4);
+            fetchDataSelection(4);
+          }}
+        >
+          Customers
+        </button>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        <button
+          className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
+          onClick={() => {
+            handleTabSelect(5);
+            fetchDataSelection(5);
+          }}
+        >
+          Vehicle Listings
+        </button>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        <button className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`} onClick={() => { handleTabSelect(6); fetchDataSelection(6); }}>Sales Report</button>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        <button className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        {user && (user.employeeType === "superAdmin") && (
+          <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
+        )}
+      </div>
+      <div>
+        <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
+          Add new Vehicle
+        </Link>
+      </div>
+
+      <Button
+        className="btn btn-block btn-danger "
+        style={styles.bookApptButton}
+        onClick={logOutUser}
+        variant="contained"
+      >
+        Log Out
+      </Button>
+    </div>
+  )}
+
 
 
       <div className="main-content">
