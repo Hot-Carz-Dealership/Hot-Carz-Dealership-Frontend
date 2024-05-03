@@ -7,8 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../css/creation.css";
 
 const CreateEmployeeAccount = () => {
-  const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [formData, setFormData] = useState({
@@ -23,32 +21,33 @@ const CreateEmployeeAccount = () => {
     confirmPassword: "",
     driverID: "",
     SSN: "",
-    employeeType: "manager", // Default value
+    employeeType: "Manager", // Default value
   });
 
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
-        const user = resp.data;
-
-            // Check if user role is either "Manager" or "superAdmin"
-            if (user.employeeType !== "Manager" && user.employeeType !== "superAdmin") {
-                throw new Error("Unauthorized access");
-            }
-
-            setUser(user);
-            // Store the session ID
-            setSessionId(user.employeeID); // Assuming user.employeeID contains the session ID
-
-            // Fetch service appointments and members data
-        } catch (error) {
-            console.log("Not Authenticated or Unauthorized");
-            window.alert("You are not authorized to access this page.");
-            navigate("/login");
+        const userData = resp.data;
+        // Check if user role is either "Manager" or "superAdmin"
+        console.log(userData.employeeType);
+        if (
+          userData.employeeType !== "Manager" &&
+          userData.employeeType !== "superAdmin"
+        ) {
+          throw new Error("Unauthorized access");
         }
+
+        // Store the session ID
+
+        // Fetch service appointments and members data
+      } catch (error) {
+        console.log("Not Authenticated or Unauthorized");
+        window.alert("You are not authorized to access this page.");
+        navigate("/login");
+      }
     })();
-}, );
+  }, [navigate]);
 
 
     const handleChange = (e) => {

@@ -12,12 +12,11 @@ const TechnicianPage = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
-  const [serviceAppointments, setServiceAppointments] = useState([]);
-  const [members, setMembers] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [technicians, setTechnicians] = useState([]);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [ /*sessionId,*/ setSessionId] = useState(null);
+  const [ /*serviceAppointments, */ setServiceAppointments] = useState([]);
+  const [ /*members, */ setMembers] = useState([]);
+  const [ /*employees,*/ setEmployees] = useState([]);
+  const [ /*technicians,*/ setTechnicians] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [assignedAppointments, setAssignedAppointments] = useState([]);
   const currentDate = new Date().toLocaleDateString();
@@ -63,40 +62,12 @@ const TechnicianPage = () => {
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, setEmployees, setMembers, setServiceAppointments, setSessionId, setTechnicians]);
 
   const logOutUser = async () => {
     await httpClient.post(`${BASE_URL}/api/logout`);
     window.location.href = "/";
   };
-
-  const handleSelectionChange = (appointmentId) => async (event) => {
-    const selectedTechnicianId = event.target.value;
-
-    try {
-      await assignTechnician(appointmentId, selectedTechnicianId, sessionId);
-    } catch (error) {
-      console.error("Error assigning technician:", error.message);
-    }
-  };
-
-  const getMemberDetails = (memberID) => {
-    const member = members.find((member) => member.memberID === memberID);
-    return member
-      ? {
-          memberID: member.memberID,
-          first_name: member.first_name,
-          last_name: member.last_name,
-          email: member.email,
-          phone: member.phone,
-          address: member.address,
-          state: member.state,
-          zipcode: member.zipcode,
-          join_date: member.join_date,
-        }
-      : null;
-  };
-
   const handleGetStarted = () => {
     setShowTable(true);
   };
@@ -182,7 +153,7 @@ const TechnicianPage = () => {
   const [apptStatus, setApptStatus] = React.useState(null);
   const [apptComment, setApptComment] = React.useState(null);
 
-  const [newStatus, setNewStatus] = React.useState(null);
+ // const [ /*newStatus,*/ setNewStatus] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = (
@@ -214,7 +185,7 @@ const TechnicianPage = () => {
     aptComment,
     onClose,
   }) => {
-    const [value, setValue] = useState("");
+    const [value /*, setValue*/ ] = useState("");
 
     return (
       <Modal
@@ -280,9 +251,11 @@ const TechnicianPage = () => {
       </Modal>
     );
   };
+  /*
   const handleStatusChange = (e) => {
     setNewStatus(e.target.value);
   };
+*/
 
   const handleUpdateSubmit = async () => {
     var x = document.getElementById("newStatus");
@@ -312,13 +285,16 @@ const TechnicianPage = () => {
       requestData
     );
     const responseData = await response.json();
+    console.log(responseData);
   };
 
+/*
   const assignTechnician = (appointmentId, technicianId, sessionId) => {
     const data = {
       appointment_id: appointmentId,
       employee_id: technicianId,
     };
+    
 
     fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
       method: "POST",
@@ -338,6 +314,8 @@ const TechnicianPage = () => {
         console.error("Error assigning technician:", error.message);
       });
   };
+*/
+
 
   const renderTable = () => {
     return (

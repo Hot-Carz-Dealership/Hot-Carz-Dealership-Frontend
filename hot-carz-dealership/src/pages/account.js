@@ -24,7 +24,7 @@ const Account = () => {
   const [vehicleListings, setVehicleListings] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
 
-  const [invoices, setInvoices] = useState([]);
+  const [invoices /*, setInvoices */] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
   const [testDrivesID, setTestDrivesID] = useState([]);
@@ -66,11 +66,6 @@ const Account = () => {
         );
         const serviceData = await serviceResponse.json();
         setServiceAppointments(serviceData);
-
-        // const invoiceResponse = await fetch(`${BASE_URL}/api/member/order_history`, requestData)
-        // const invoiceData = await invoiceResponse.json();
-        // console.log(invoiceData)
-        // setInvoices(invoiceData);
 
         const bidResponse = await fetch(
           `${BASE_URL}/api/member/current-bids`,
@@ -153,7 +148,7 @@ const Account = () => {
   };
 
   const handleCancel = async (value) => {
-   // var x = document.getElementById("date");
+    // var x = document.getElementById("date");
     var tdDate = dateFormat(value, "yyyy-mm-dd HH:MM:ss");
 
     console.log(tdDate);
@@ -176,6 +171,7 @@ const Account = () => {
       requestData
     );
     const responseData = await response.json();
+    console.log(responseData);
     window.location.href = "/account";
   };
 
@@ -203,6 +199,7 @@ const Account = () => {
       requestData
     );
     const responseData = await response.json();
+    console.log(responseData);
     window.location.href = "/account";
   };
 

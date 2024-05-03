@@ -8,8 +8,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../css/creation.css";
 
 const AddMemberVehicle = () => {
-  const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
+  const [ /*user, */ setUser] = useState(null);
+  const [ /*sessionId, */ setSessionId] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const AddMemberVehicle = () => {
         navigate("/login");
       }
     })();
-  }, [navigate]);
+  }, [navigate, setSessionId, setUser]);
 
   const carData = {
     Acura: {
@@ -1844,16 +1844,6 @@ const AddMemberVehicle = () => {
   };
 
   // Function to dynamically populate the year dropdown based on the selected model
-  /*
-  const handleModelChange = (e) => {
-    const selectedModel = e.target.value;
-    setFormData({
-      ...formData,
-      model: selectedModel,
-      year: "", // Reset year when model changes
-    });
-  };
-  */
 
   return (
     <div style={styles.container}>

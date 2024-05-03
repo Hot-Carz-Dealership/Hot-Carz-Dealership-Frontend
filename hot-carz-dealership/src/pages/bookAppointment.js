@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -9,8 +9,8 @@ import Button from "@mui/material/Button";
 import httpClient from "../httpClient";
 import { BASE_URL } from "../utilities/constants";
 
-import { Select } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
+//import { Select } from "@mui/material";
+//import MenuItem from "@mui/material/MenuItem";
 import dateFormat from "dateformat";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -19,17 +19,17 @@ import Typography from "@mui/material/Typography";
 import styles from "../css/cars.css";
 
 const BookAppointment = () => {
-  const [user, setUser] = useState(null);
-  const [formSubmitted, setFormSubmitted] = React.useState(false);
+  const [ /*user, */ setUser] = useState(null);
+//  const [ formSubmitted, setFormSubmitted] = React.useState(false);
   const [availService, setAvailService] = useState([]);
   const [cars, setCars] = useState([]);
   const [vin, setVin] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const [newService, setNewService] = useState([]);
+//  const [newService, setNewService] = useState([]);
 
   const [serviceID, setServiceID] = useState("");
-  const [serviceName, setServiceName] = useState("");
-  const [servicePrice, setServicePrice] = useState("");
+//  const [serviceName, setServiceName] = useState("");
+//  const [servicePrice, setServicePrice] = useState("");
 
   
   const handleClose = () => setOpen(false);
@@ -42,10 +42,10 @@ const BookAppointment = () => {
         setUser(resp.data);
       } catch (error) {
         console.log("Not Authenticated");
-        window.location.href = "/login";
+      //  window.location.href = "/login";
       }
     })();
-  }, []);
+  }, [setUser]);
 
   const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
 
@@ -55,7 +55,7 @@ const BookAppointment = () => {
 
     console.log(tdDate);
     console.log(serviceID);
-    const name = availService.find(item => item.serviceID == serviceID);
+    const name = availService.find(item => item.serviceID === serviceID);
     console.log(availService);
 
     const data = {
@@ -78,6 +78,7 @@ const BookAppointment = () => {
       requestData
     );
     const responseData = await response.json();
+    console.log(responseData);
     window.location.href = `/checkout?VIN_carID=${vin}&appointment_date=${tdDate}&servID=${serviceID}`;
   };
 
@@ -114,7 +115,6 @@ const BookAppointment = () => {
   };
 
   const ValueModal = ({ open, onClose }) => {
-    const [value, setValue] = useState([]);
     const [newValue, setNewValue] = useState(null);
 
 
