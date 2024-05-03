@@ -80,26 +80,50 @@
   }
   
   .welcomeScreen {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    margin-top: 100px;
-    padding: 50px;
+    padding: 30px;
     background-color: #f0f0f0;
     border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   }
   
+  
   .welcomeScreenHeading {
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    font-size: 2em; /* Decrease the font size */
+    margin-bottom: 10px; /* Reduce the bottom margin */
+    color: #333;
+  }
+  
+  .welcomeScreenLogo {
+    width: 100%; /* Set the width of the logo */
+    margin-bottom: 20px; /* Increase the bottom margin */
   }
   
   .welcomeScreenText {
-    font-size: 1.2em;
-    margin-bottom: 30px;
+    font-size: 1em; /* Decrease the font size */
+    margin-bottom: 20px; /* Reduce the bottom margin */
+    color: #666;
   }
   
   .welcomeScreenButton {
-    font-size: 1.2em;
+    font-size: 1em; /* Decrease the font size */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
+  
+  .welcomeScreenButton:hover {
+    background-color: #0056b3;
+  }
+  
   
   .largeTextStyle {
     font-size: 2em;
@@ -195,7 +219,9 @@ margin-bottom:30%;
     transition: background-color 0.3s ease;
   }
   
-  
+  .sidebar button.selected {
+    background-color: red;
+  }
   
   .main-content {
     margin-left: 200px;
