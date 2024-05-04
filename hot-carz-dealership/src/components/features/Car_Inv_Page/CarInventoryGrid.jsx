@@ -37,7 +37,11 @@ const CarInventoryGrid = ({ searchResults }) => {
   const [maxYear, setMaxYear] = useState("");
   const [minMileage, setMinMileage] = useState("");
   const [maxMileage, setMaxMileage] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [carColors, setCarColors] = useState([]);
   useEffect(() => {
     fetchCars();
   }, []);
@@ -66,6 +70,9 @@ const CarInventoryGrid = ({ searchResults }) => {
           models[make] = ["None", ...new Set(makeModels)];
         });
         setCarModels(models);
+        // Extract unique colors
+        const colors = [...new Set(data.map((car) => car.color))];
+        setCarColors(["Any", ...colors]);
       })
       .catch((error) => console.error("Error fetching data:", error));
   };
@@ -106,11 +113,41 @@ const CarInventoryGrid = ({ searchResults }) => {
         (!minYear || parseInt(car.year) >= parseInt(minYear)) &&
         (!maxYear || parseInt(car.year) <= parseInt(maxYear)) &&
         (!minMileage || parseInt(car.mileage) >= parseInt(minMileage)) &&
-        (!maxMileage || parseInt(car.mileage) <= parseInt(maxMileage))
+        (!maxMileage || parseInt(car.mileage) <= parseInt(maxMileage)) &&
+        (!selectedColor || car.color === selectedColor) &&
+        (!minPrice || parseInt(car.price) >= parseInt(minPrice)) &&
+        (!maxPrice || parseInt(car.price) <= parseInt(maxPrice))
       );
     });
     return filteredCars;
   };
+
+  const resetFilters = () => {
+    setSelectedCarMake(null);
+    setSelectedCarModel(null);
+    setMinYear("");
+    setMaxYear("");
+    setMinMileage("");
+    setMaxMileage("");
+    setSelectedColor("");
+    setMinPrice("");
+    setMaxPrice("");
+  };
+
+  // Apply filtering function after resetting filters using useEffect
+  useEffect(() => {
+    setCars(handleFilter());
+  }, [
+    selectedCarMake,
+    selectedCarModel,
+    minYear,
+    maxYear,
+    minMileage,
+    maxMileage,
+    selectedColor,
+    minPrice,
+    maxPrice,
+  ]);
 
   const buttonStyle = {
     minWidth: "160px", // Set a constant minimum width for the buttons
@@ -204,6 +241,66 @@ const CarInventoryGrid = ({ searchResults }) => {
               </List>
             </ListItem>
 
+            {/* Price */}
+            <ListItem disablePadding>
+              <List disablePadding>
+                <ListItem>
+                  <span>Price </span>
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    id="minPrice-number"
+                    label="Min"
+                    type="number"
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                  />
+                  <span className="mr-2 ml-2">to</span>
+                  <TextField
+                    id="maxPrice-number"
+                    label="Max"
+                    type="number"
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                  />
+                </ListItem>
+              </List>
+            </ListItem>
+            {/* Color */}
+            <ListItem disablePadding>
+              <List disablePadding>
+                <ListItem>
+                  <span>Color </span>
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    id="color-select"
+                    select
+                    // label="Select"
+                    value={selectedColor}
+                    size="small"
+                    onChange={(e) => setSelectedColor(e.target.value)}
+                    SelectProps={{
+                      native: true,
+                    }}
+                  >
+                    {carColors.map((color, index) => (
+                      <option key={index} value={color}>
+                        {color}
+                      </option>
+                    ))}
+                  </TextField>
+                </ListItem>
+              </List>
+            </ListItem>
             {/* Select Make */}
             <ListItem>
               <List disablePadding>
@@ -294,6 +391,15 @@ const CarInventoryGrid = ({ searchResults }) => {
                     onClick={() => setCars(handleFilter)}
                   >
                     Apply Filter
+                  </Button>
+                </ListItem>
+                <ListItem>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "grey" }}
+                    onClick={resetFilters}
+                  >
+                    Reset Filters
                   </Button>
                 </ListItem>
               </List>
