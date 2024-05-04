@@ -3,9 +3,17 @@
   }
   
   .sidebar {
-    flex: 0 0 200px;
-    background-color: #f4f4f4;
-    padding: 20px;
+    width: 200px;
+    min-height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
   }
   
   .sidebarButton {
@@ -21,6 +29,7 @@
   .mainContent {
     flex: 1;
     padding: 20px;
+    width: 80%;
   }
   
   .heading {

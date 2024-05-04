@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/creation.css";
 
 
 const AddMemberVehicle = () => {
@@ -424,7 +425,7 @@ const AddMemberVehicle = () => {
               required
             />
           </div>
-
+  
           <div className="formGroup">
             <label htmlFor="make" className="label">
               Make:
@@ -469,7 +470,7 @@ const AddMemberVehicle = () => {
                 ))}
             </select>
           </div>
-
+  
           <div className="formGroup">
             <label htmlFor="body" className="label">
               Body:
@@ -492,7 +493,7 @@ const AddMemberVehicle = () => {
               <option value="Pickup Truck">Pickup Truck</option>
             </select>
           </div>
-
+  
           <div className="formGroup">
             <label htmlFor="year" className="label">
               Year:
@@ -516,7 +517,7 @@ const AddMemberVehicle = () => {
                 ))}
             </select>
           </div>
-
+  
           <div className="formGroup">
             <label htmlFor="color" className="label">
               Color:
@@ -545,7 +546,7 @@ const AddMemberVehicle = () => {
               required
             />
           </div>
-
+  
           <button type="submit" className="submitButton">
             Add Vehicle
           </button>
@@ -553,6 +554,7 @@ const AddMemberVehicle = () => {
       </div>
     </div>
   );
+  
 };
 
 export default AddMemberVehicle;
