@@ -72,7 +72,9 @@ const BookAppointment = () => {
       });
   
       if (response.ok) {
+        window.location.href = `/checkout?VIN_carID=${vin}&appointment_date=${tdDate}&servID=${selectedService}`;
         // Appointment added successfully, now book service appointment
+        /*
         const serviceAppointmentData = {
           appointment_date: tdDate,
           serviceID: selectedService,
@@ -97,6 +99,7 @@ const BookAppointment = () => {
           console.error("Error booking service appointment:", responseData);
           // Optionally display an error message to the user
         }
+        */
       } else {
         // Handle error response for adding to cart
         const responseData = await response.json();

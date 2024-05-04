@@ -560,8 +560,7 @@ const Account = () => {
         }}
       >
         <button
-          className="btn btn-block btn-dark mb-3"
-          style={selectedTab === 1 ? styles.selected : {}}
+          className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
           onClick={() => {
             // fetchDataSelection("");
             setSelectedTab(1);
@@ -571,8 +570,7 @@ const Account = () => {
           Account Info
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
-          style={selectedTab === 2 ? styles.selected : {}}
+          className={`btn btn-block btn-dark ${selectedTab === 2 ? 'selected' : ''}`}
           onClick={() => {
             // fetchDataSelection("");
             setSelectedTab(2);
@@ -582,7 +580,7 @@ const Account = () => {
           Bids
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
+          className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`}
           style={selectedTab === 7 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("");
@@ -593,7 +591,7 @@ const Account = () => {
           Active Bids
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
+          className={`btn btn-block btn-dark ${selectedTab === 3 ? 'selected' : ''}`}
           style={selectedTab === 3 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("testdrives");
@@ -604,7 +602,7 @@ const Account = () => {
           Test Drives
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
+          className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
           style={selectedTab === 4 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("vehicles/search");
@@ -615,7 +613,7 @@ const Account = () => {
           Service Appointments
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
+          className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
           style={selectedTab === 5 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("vehicles/search");
@@ -626,7 +624,7 @@ const Account = () => {
           Owned Vehicles
         </button>
         <button
-          className="btn btn-block btn-dark mb-3"
+          className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`}
           style={selectedTab === 6 ? styles.selected : {}}
           onClick={() => {
             setSelectedTab(6);
