@@ -137,6 +137,7 @@ const CarInventoryGrid = ({ searchResults }) => {
   // Apply filtering function after resetting filters using useEffect
   useEffect(() => {
     setCars(handleFilter());
+    // eslint-disable-next-line
   }, [
     selectedCarMake,
     selectedCarModel,
