@@ -73,10 +73,10 @@ export default function ApplyFinancing() {
     zip_code: false,
     state_code: false,
     monthly_income: false,
-    vin: true, // Set to true since VIN is provided in the URL
-    ssn: false,
-    down_payment: false,
-    vehicle_price: true, // Set to true since Price is provided in the URL
+    // vin: true, // Set to true since VIN is provided in the URL
+    // ssn: false,
+    // down_payment: false,
+    // vehicle_price: true, // Set to true since Price is provided in the URL
   });
   const [formSubmitted, setFormSubmitted] = React.useState(false);
 
@@ -89,7 +89,8 @@ export default function ApplyFinancing() {
       name === "first_name" ||
       name === "last_name" ||
       name === "city" ||
-      name === "state_code"
+      name === "state_code" ||
+      name === "driverID" // Add validation rule for driverID
     ) {
       isValid = /^[a-zA-Z]+$/.test(value.trim()); // Only allow letters
     } else if (name === "email") {
@@ -168,7 +169,7 @@ export default function ApplyFinancing() {
           city: formData.get("city"),
           state: formData.get("state_code"),
           zipcode: formData.get("zip_code"),
-          // driverID: formData.get("driverID"),
+          driverID: formData.get("driverID"),
           // SSN: formData.get("ssn"),
         }),
         headers: {
@@ -378,6 +379,21 @@ export default function ApplyFinancing() {
                         </option>
                       ))}
                     </TextField>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="driverID"
+                      label="Driver ID"
+                      name="driverID"
+                      onChange={handleChange}
+                      error={formSubmitted && !fields.driverID}
+                      helperText={
+                        formSubmitted && !fields.driverID && "Required"
+                      }
+                      defaultValue={userData?.driverID || ""}
+                    />
                   </Grid>
                 </>
               )}
