@@ -38,7 +38,7 @@ const defaultTheme = createTheme();
 export default function LogIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [ /*error*/  , setError] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,6 +69,7 @@ export default function LogIn() {
       } else {
         const errorData = await response.json();
         setError(errorData.error);
+        console.error("Error", error);
       }
     } catch (error) {
       setError("An error occurred while logging in. Please try again.");

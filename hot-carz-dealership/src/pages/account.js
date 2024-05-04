@@ -16,6 +16,20 @@ import dateFormat from "dateformat";
 
 import styles from "../css/employees.css";
 
+const style = {
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    // width: 400,
+
+    // boxShadow: 24,
+    // p: 4,
+  },
+};
+
+
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,47 +53,48 @@ const Account = () => {
         setUser(resp.data);
 
         setLoading(false);
+        if((resp.data).hasOwnProperty("memberID")){
+          const requestData = {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          };
 
-        const requestData = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        };
+          // Fetch Vehicle Listings
+          const vehicleListingsResponse = await fetch(
+            `${BASE_URL}/api/member/vehicles`,
+            requestData
+          );
+          const vehicleListingsData = await vehicleListingsResponse.json();
+          console.log(
+            "Member Vehicle Listings fetched successfully:",
+            vehicleListingsData
+          );
+          setVehicleListings(vehicleListingsData);
 
-        // Fetch Vehicle Listings
-        const vehicleListingsResponse = await fetch(
-          `${BASE_URL}/api/member/vehicles`,
-          requestData
-        );
-        const vehicleListingsData = await vehicleListingsResponse.json();
-        console.log(
-          "Member Vehicle Listings fetched successfully:",
-          vehicleListingsData
-        );
-        setVehicleListings(vehicleListingsData);
+          const serviceResponse = await fetch(
+            `${BASE_URL}/api/members/service-appointments`,
+            requestData
+          );
+          const serviceData = await serviceResponse.json();
+          setServiceAppointments(serviceData);
 
-        const serviceResponse = await fetch(
-          `${BASE_URL}/api/members/service-appointments`,
-          requestData
-        );
-        const serviceData = await serviceResponse.json();
-        setServiceAppointments(serviceData);
+          const bidResponse = await fetch(
+            `${BASE_URL}/api/member/current-bids`,
+            requestData
+          );
+          const bidData = await bidResponse.json();
+          setBids(bidData);
 
-        const bidResponse = await fetch(
-          `${BASE_URL}/api/member/current-bids`,
-          requestData
-        );
-        const bidData = await bidResponse.json();
-        setBids(bidData);
-
-        const driveResponse = await fetch(
-          `${BASE_URL}/api/member/test_drive_data`,
-          requestData
-        );
-        const driveData = await driveResponse.json();
-        setTestDrives(driveData);
+          const driveResponse = await fetch(
+            `${BASE_URL}/api/member/test_drive_data`,
+            requestData
+          );
+          const driveData = await driveResponse.json();
+          setTestDrives(driveData);
+        }
       } catch (error) {
         console.log("Not Authenticated");
         setLoading(false);
@@ -104,7 +119,8 @@ const Account = () => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Box sx={styles.modal}>
+        <Box sx={style.modal}>
+         <div className="rounded-lg bg-white p-8 shadow-2xl">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Select Date and Time for Test Drive:
           </Typography>
@@ -120,17 +136,18 @@ const Account = () => {
           </LocalizationProvider>
 
           <div>
-            <Button onClick={() => handleTestdriveSubmit(newValue)}>
+            <button className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onClick={() => handleTestdriveSubmit(newValue)}>
               Submit Test Drive
-            </Button>
+            </button>
           </div>
           <div>
-            <Button onClick={() => handleCancel(newValue)}>
+            <button className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-red-600" onClick={() => handleCancel(newValue)}>
               Cancel Test Drive
-            </Button>
+            </button>
           </div>
 
-          <Button onClick={onClose}>Close</Button>
+          <button className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onClick={onClose}>Close</button>
+          </div>
         </Box>
       </Modal>
     );
