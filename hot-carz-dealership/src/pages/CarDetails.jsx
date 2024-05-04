@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { BASE_URL } from "../utilities/constants";
+import { BASE_URL, FINANCE_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
 import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
@@ -209,6 +210,8 @@ function VehicleDetails({
 function PurchaseOptions({ VIN, price, vehicleName }) {
   const [loggedIn, setLoggedIn] = React.useState("");
   const [financingModalOpen, setFinancingModalOpen] = useState(false);
+  const [bidModalOpen, setBidModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -241,17 +244,73 @@ function PurchaseOptions({ VIN, price, vehicleName }) {
     setFinancingModalOpen(false);
   };
 
-  /*
-  const handleBidPriceChange = (event) => {
-    setBidPrice(event.target.value);
+  const handleOpenBidModal = () => {
+    // Check if the user is logged in
+    if (!loggedIn) {
+      // If not logged in, redirect to the login page
+      navigate("/login");
+      return;
+    }
+    setBidModalOpen(true);
   };
-*/
-/*
-  const handleBidSubmit = (event) => {
-    event.preventDefault();
-    onBid(bidPrice);
+
+  const handleCloseBidModal = () => {
+    setBidModalOpen(false);
   };
-*/
+
+  const handleBidSubmit = async (bidPrice) => {
+    console.log("Bid submitted:", bidPrice);
+    try {
+      // Check if the user is logged in
+      if (!loggedIn) {
+        // If not logged in, redirect to the login page
+        navigate("/login");
+        return;
+      }
+
+      // Prepare data for the bid submission
+      const bidData = {
+        vin: VIN,
+        bid_value: bidPrice,
+      };
+
+      // Define headers
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      // Define fetch options
+      const options = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(bidData),
+        credentials: "include", // Include credentials with the request
+      };
+
+      // Make a POST request to submit the bid with headers and credentials
+      const response = await fetch(
+        `${BASE_URL}/forward?route=${FINANCE_URL}/api/vehicle-purchase/new-bid-insert`,
+        options
+      );
+
+      // Check if the bid was successfully inserted
+      if (response.status === 201) {
+        console.log("Bid successfully inserted");
+        // Optionally, you can perform any additional actions here, such as closing the bid modal
+        handleCloseBidModal();
+        window.alert("Bid Succefully Submited");
+      } else {
+        const responseData = await response.json();
+        console.log("Failed to insert bid:", responseData.message);
+        window.alert("Bid Submission Failure. Resubmit Bid");
+
+        // Handle error scenario if necessary
+      }
+    } catch (error) {
+      console.error("Error submitting bid:", error);
+      // Handle error scenario if necessary
+    }
+  };
 
   return (
     <section className="flex gap-5 justify-between pr-28 mt-32 max-w-full w-[921px] max-md:flex-wrap max-md:pr-5 max-md:mt-10">
@@ -271,7 +330,7 @@ function PurchaseOptions({ VIN, price, vehicleName }) {
           Enter A Bid{" "}
         </h2>
         <button
-          onClick={handleOpenFinancingModal}
+          onClick={handleOpenBidModal}
           className="justify-center self-center px-6 py-2 mt-8 text-base font-medium leading-7 text-white bg-red-700 rounded shadow-md max-md:px-5"
         >
           Bid Now
@@ -283,6 +342,12 @@ function PurchaseOptions({ VIN, price, vehicleName }) {
         VIN={VIN}
         price={price}
         vehicleName={vehicleName}
+      />
+
+      <BidModal
+        open={bidModalOpen}
+        onClose={handleCloseBidModal}
+        onBidSubmit={handleBidSubmit}
       />
     </section>
   );
@@ -351,6 +416,89 @@ const FinancingModal = ({ open, onClose, VIN, price, vehicleName }) => {
               className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
             >
               No
+            </button>
+          </div>
+        </div>
+      </Box>
+    </Modal>
+  );
+};
+
+const BidModal = ({ open, onClose, onBidSubmit }) => {
+  const [bidPrice, setBidPrice] = useState("");
+
+  const handleBidSubmit = () => {
+    // Ensure bid price is not empty
+    if (bidPrice.trim() === "") {
+      // You can show an error message here if needed
+      return;
+    }
+    // Remove trailing dot if present
+    let formattedBidPrice = bidPrice.replace(/\.$/, "");
+
+    // Add ".00" if only one decimal digit is present
+    if (/^\d+\.\d$/.test(formattedBidPrice)) {
+      formattedBidPrice += "0";
+    }
+    // Add ".00" if no decimal digits are present
+    else if (/^\d+$/.test(formattedBidPrice)) {
+      formattedBidPrice += ".00";
+    }
+
+    // Pass the formatted bid price to the parent component for further processing
+    onBidSubmit(formattedBidPrice);
+    setBidPrice("");
+    onClose();
+  };
+
+  const handlePriceChange = (event) => {
+    const inputPrice = event.target.value;
+    // Regex to match a price format: starts with a digit, followed by 0 or more digits, then a dot, then exactly 2 digits.
+    const regex = /^\d+(\.\d{0,2})?$/;
+
+    if (regex.test(inputPrice) || inputPrice === "") {
+      setBidPrice(inputPrice);
+    }
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+    >
+      <Box sx={{ ...styles.modal, width: 400 }}>
+        <div className="rounded-lg bg-white p-8 shadow-2xl">
+          <h2 className="text-lg font-bold">Enter Your Bid</h2>
+          <TextField
+            label="Bid Price"
+            variant="outlined"
+            fullWidth
+            value={bidPrice}
+            placeholder="0.00"
+            onChange={handlePriceChange}
+            error={
+              bidPrice.trim() !== "" && !/^\d+(\.\d{0,2})?$/.test(bidPrice)
+            }
+            helperText={
+              bidPrice.trim() !== "" && !/^\d+(\.\d{0,2})?$/.test(bidPrice)
+                ? "Invalid price format"
+                : ""
+            }
+          />
+          <div className="mt-4">
+            <button
+              onClick={handleBidSubmit}
+              className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
+            >
+              Submit Bid
+            </button>
+            <button
+              onClick={onClose}
+              className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+            >
+              Cancel
             </button>
           </div>
         </div>
