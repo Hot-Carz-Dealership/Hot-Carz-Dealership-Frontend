@@ -22,6 +22,9 @@ const BookAppointment = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [servicesUnderWarranty, setServicesUnderWarranty] = useState([]);
   const [allServices, setAllServices] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
+ 
+
 
   useEffect(() => {
     // Fetch user data when component mounts
@@ -36,41 +39,76 @@ const BookAppointment = () => {
     fetchData();
   }, []);
 
-  const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
-
-  const handleSubmit = async (value) => {
-    // Format date
-    const tdDate = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
-    console.log(tdDate);
-    console.log(serviceID);
-
+  
+  const handleSubmit = async () => {
+    const tdDate = selectedDateTime.format("YYYY-MM-DD HH:mm:ss");
+  
     // Find selected service
-    const selectedService = availService.find((item) => item.serviceID === serviceID);
-    console.log(availService);
-
+    const selectedServiceObj = servicesUnderWarranty.find((service) => service.serviceID === selectedService);
+    if (!selectedServiceObj) {
+      console.error("Selected service not found.");
+      return;
+    }
+  
     const data = {
-      item_name: selectedService.service_name,
-      item_price: selectedService.price,
-      serviceID: selectedService.serviceID,
+      item_name: selectedServiceObj.service_name,
+      item_price: selectedServiceObj.price,
+      serviceID: selectedServiceObj.serviceID,
     };
-
-    // Add to cart
-    const requestData = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    };
-
-    const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, requestData);
-    const responseData = await response.json();
-    console.log(responseData);
-
-    // Redirect to checkout page
-    window.location.href = `/checkout?VIN_carID=${vin}&appointment_date=${tdDate}&servID=${serviceID}`;
+  
+    // Debugging statements
+    console.log("Date:", tdDate);
+    console.log("Selected Service Object:", selectedServiceObj);
+    console.log("Data to be sent:", data);
+  
+    try {
+      const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        // Appointment added successfully, now book service appointment
+        const serviceAppointmentData = {
+          appointment_date: tdDate,
+          serviceID: selectedService,
+          VIN_carID: vin,
+        };
+  
+        const serviceAppointmentResponse = await fetch(`${BASE_URL}/api/member/book-service-appointment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(serviceAppointmentData),
+        });
+  
+        if (serviceAppointmentResponse.ok) {
+          // Both appointments added successfully, redirect to checkout page
+          window.location.href = `/checkout?VIN_carID=${vin}&appointment_date=${tdDate}&servID=${selectedService}`;
+        } else {
+          // Handle error response for service appointment
+          const responseData = await serviceAppointmentResponse.json();
+          console.error("Error booking service appointment:", responseData);
+          // Optionally display an error message to the user
+        }
+      } else {
+        // Handle error response for adding to cart
+        const responseData = await response.json();
+        console.error("Error adding appointment to cart:", responseData);
+        // Optionally display an error message to the user
+      }
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      // Optionally display an error message to the user
+    }
   };
+  
 
   useEffect(() => {
     // Fetch vehicles when component mounts
@@ -115,94 +153,6 @@ const BookAppointment = () => {
     setServiceID(selectedServiceID);
   };
 
-  /*
-  const ValueModal = ({ open, onClose }) => {
-    const [newValue, setNewValue] = useState(null);
-
-    return (
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <Box sx={styles.modal}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Select Date and Time for Test Drive:
-          </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              name="date"
-              id="date"
-              onChange={(newValue) => setNewValue(newValue)}
-              defaultValue={tomorrow}
-              minDate={tomorrow}
-              views={["year", "month", "day", "hours", "minutes"]}
-            />
-          </LocalizationProvider>
-          <select id="service" onChange={handleChange}>
-            {availService.map((opts, i) => (
-              <option key={i} value={opts.serviceID}>
-                {opts.service_name}
-              </option>
-            ))}
-          </select>
-          <div>
-            <Button onClick={() => handleSubmit(newValue)}>Submit</Button>
-          </div>
-          <Button onClick={onClose}>Close</Button>
-        </Box>
-      </Modal>
-    );
-  };
-*/
-
-  const handleOpen = async () => {
-    // Fetch available services when modal opens
-    const servData = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    };
-
-    try {
-      const response = await fetch(`${BASE_URL}/api/service-menu?vin=${vin}`, servData);
-      const data = await response.json();
-      setAvailService(data);
-    } catch (error) {
-      console.error("Error fetching available services:", error);
-    }
-  };
-/*
-  return (
-    <div>
-      <h1>Date And Time: </h1>
-
-      <select onChange={(e) => setVin(e.target.value)}>
-        {cars.map((opts, i) => (
-          <option key={i} value={opts.VIN_carID}>
-            {opts.VIN_carID}
-          </option>
-        ))}
-      </select>
-      <ValueModal open={open} onClose={() => setOpen(false)} />
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        onClick={handleOpen}
-        sx={{ mt: 3, mb: 2, bgcolor: "red" }}
-      >
-        Submit Appointment
-      </Button>
-    </div>
-  );
-  */
-
-
   // Function to fetch all services
   const fetchAllServices = async () => {
     try {
@@ -229,65 +179,97 @@ const fetchServicesUnderWarranty = async (vinID) => {
 useEffect(() => {
   fetchAllServices();
 }, []); 
-
-  return (
+return (
+  <div style={{ paddingTop: '30px' }}>
     <div className="container">
       <div className="stepBox">
-        <h2>Step 1</h2>
+        <h2>Step 1 - Vehicles</h2>
         <h3>Choose your owned vehicle that you want to get service on:</h3>
         <div className="horizontalVehicleSelection">
-        {cars.map((car, index) => (
-            <Button key={index} variant="outlined" onClick={() => { setSelectedVehicle(car.VIN_carID); fetchServicesUnderWarranty(car.VIN_carID); }}>
+          {cars.map((car, index) => (
+            <Button
+              key={index}
+              variant="outlined"
+              onClick={() => { 
+                setSelectedVehicle(car.VIN_carID); 
+                fetchServicesUnderWarranty(car.VIN_carID);
+                console.log("Selected Vehicle:", car.VIN_carID);
+              }}
+              style={{
+                backgroundColor: selectedVehicle === car.VIN_carID ? '#FFEFD5' : 'inherit', // Light orange color
+              }}
+            >
               {`${car.year} ${car.make} ${car.model}`}
             </Button>
           ))}
         </div>
       </div>
       <div className="stepBox">
-        <h2>Step 2</h2>
-        <h3>All Services:</h3>
-        <div className="horizontalVehicleSelection">
-
-        {allServices.map((service, index) => (
-          <button key={index}>{service.service_name} - Price: ${service.price}</button>
-        ))}
-
-        </div>
-        d
-        {selectedVehicle && (
+        <h2>Step 2 - Services</h2>
+        {selectedVehicle ? (
           <>
-            <h3>Services Under Warranty for Selected Vehicle:</h3>
-            {servicesUnderWarranty.map((service, index) => (
-              <div key={index}>{service.service_name} - Price: $0.00 (Under Warranty)</div>
-            ))}
+            <h3>Pick a service for your vehicle:</h3>
+            <div className="horizontalVehicleSelection">
+              {servicesUnderWarranty.map((service, index) => (
+                <Button
+                  key={index}
+                  variant="outlined"
+                  onClick={() => {
+                    setSelectedService(service.serviceID);
+                    console.log("Selected Service:", service.serviceID);
+                  }}
+                  style={{
+                    backgroundColor: selectedService === service.serviceID ? '#FFEFD5' : 'inherit', // Light orange color
+                  }}
+                >
+                  {service.service_name} - Price: ${service.price}
+                </Button>
+              ))}
+            </div>
           </>
+        ) : (
+          <h5>Select a vehicle first.</h5>
         )}
       </div>
       <div className="stepBox">
-      <h2>Step 3</h2>
-        <h3>Choose a time and date:</h3>
-        <div className="dateTimePicker">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              value={selectedDateTime}
-              onChange={(newValue) => setSelectedDateTime(newValue)}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
-        </div>
+        <h2>Step 3 - Scheduling</h2>
+        {selectedVehicle && selectedService ? (
+          <div className="stepBox">
+            <h3>Choose a time and date:</h3>
+            <div className="dateTimePicker">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  value={selectedDateTime}
+                  onChange={(newValue) => {
+                    setSelectedDateTime(newValue);
+                    console.log("Selected Date and Time:", newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </div>
+          </div>
+        ) : (
+          <h5>Select vehicle and service.</h5>
+        )}
       </div>
+ {selectedVehicle && selectedService && (
+  <Button
+    type="submit"
+    fullWidth
+    variant="contained"
+    onClick={handleSubmit}
+    sx={{ mt: 3, mb: 2, bgcolor: "red" }}
+  >
+    Submit Appointment
+  </Button>
+)}
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        onClick={handleOpen}
-        sx={{ mt: 3, mb: 2, bgcolor: "red" }}
-      >
-        Submit Appointment
-      </Button>
     </div>
-  );
+  </div>
+);
+
+
 };
 
 export default BookAppointment;
