@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/creation.css";
 
 
 const AddNewVehicle = () => {
@@ -410,232 +411,230 @@ const AddNewVehicle = () => {
 
 
   return (
-<div className="container">
-  <div className="sidebar">
-    <Link to="/managerPage" className="sidebarButton">
-      Return to Manager Page
-    </Link>
-  </div>
-  <div className="mainContent">
-    <h2 className="heading">Add New Vehicle</h2>
-    <form onSubmit={handleSubmit} className="form">
-      <div className="formGroup">
-        <label htmlFor="VIN_carID" className="label">
-          Vin:
-        </label>
-        <input
-          type="text"
-          id="VIN_carID"
-          name="VIN_carID"
-          value={formData.VIN_carID}
-          onChange={handleChange}
-          className="input"
-          required
-        />
+    <div className="container">
+      <div className="sidebar">
+        <Link to="/managerPage" className="sidebarButton">
+          Return to Manager Page
+        </Link>
       </div>
-
-      <div className="formGroup">
-        <label htmlFor="make" className="label">
-          Make:
-        </label>
-        <select
-          id="make"
-          name="make"
-          value={formData.make}
-          onChange={handleMakeChange}
-          className="input"
-          required
-        >
-          <option value="">Select make</option>
-          {/* Populate options dynamically based on carData */}
-          {Object.keys(carData).map((make) => (
-            <option key={make} value={make}>
-              {make}
-            </option>
-          ))}
-        </select>
+      <div className="mainContent">
+        <h2 className="heading">Add New Vehicle</h2>
+        <form onSubmit={handleSubmit} className="form">
+          <div className="formGroup">
+            <label htmlFor="VIN_carID" className="label">
+              Vin:
+            </label>
+            <input
+              type="text"
+              id="VIN_carID"
+              name="VIN_carID"
+              value={formData.VIN_carID}
+              onChange={handleChange}
+              className="input"
+              required
+            />
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="make" className="label">
+              Make:
+            </label>
+            <select
+              id="make"
+              name="make"
+              value={formData.make}
+              onChange={handleMakeChange}
+              className="input"
+              required
+            >
+              <option value="">Select make</option>
+              {/* Populate options dynamically based on carData */}
+              {Object.keys(carData).map((make) => (
+                <option key={make} value={make}>
+                  {make}
+                </option>
+              ))}
+            </select>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="model" className="label">
+              Model:
+            </label>
+            <select
+              id="model"
+              name="model"
+              value={formData.model}
+              onChange={handleChange}
+              className="input"
+              required
+              disabled={!formData.make} // Disable model dropdown if make is not selected
+            >
+              <option value="">Select model</option>
+              {/* Populate options dynamically based on selected make */}
+              {formData.make &&
+                Object.keys(carData[formData.make]).map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
+            </select>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="body" className="label">
+              Body:
+            </label>
+            <select
+              id="body"
+              name="body"
+              value={formData.body}
+              onChange={handleChange}
+              className="input"
+              required
+            >
+              <option value="">Select Body Type</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Coupe">Coupe</option>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Convertible">Convertible</option>
+              <option value="SUV">SUV</option>
+              <option value="Van">Van</option>
+              <option value="Pickup Truck">Pickup Truck</option>
+            </select>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="year" className="label">
+              Year:
+            </label>
+            <select
+              id="year"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              className="input"
+              required
+              disabled={!formData.model} // Disable year dropdown if model is not selected
+            >
+              <option value="">Select year</option>
+              {/* Populate options dynamically based on selected model */}
+              {formData.model &&
+                carData[formData.make][formData.model].map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+            </select>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="color" className="label">
+              Color:
+            </label>
+            <input
+              type="text"
+              id="color"
+              name="color"
+              value={formData.color}
+              onChange={handleChange}
+              className="input"
+              required
+            />
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="mileage" className="label">
+              Mileage:
+            </label>
+            <input
+              type="number"
+              id="mileage"
+              name="mileage"
+              value={formData.mileage}
+              onChange={handleChange}
+              className="input"
+              required
+            />
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="details" className="label">
+              Details:
+            </label>
+            <input
+              type="text"
+              id="details"
+              name="details"
+              value={formData.details}
+              onChange={handleChange}
+              className="input"
+              required
+            />
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="description" className="label">
+              Description:
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="textarea"
+              required
+            ></textarea>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="status" className="label">
+              Status:
+            </label>
+            <select
+              id="status"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="input"
+              required
+            >
+              <option value="new">New</option>
+              <option value="low-mileage">Low Mileage</option>
+              <option value="being-watched">Being Watched</option>
+            </select>
+          </div>
+  
+          <div className="formGroup">
+            <label htmlFor="price" className="label">
+              Price:
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              className="input"
+              required
+            />
+          </div>
+  
+          <input
+            type="hidden"
+            id="viewsOnPage"
+            name="viewsOnPage"
+            value={formData.viewsOnPage}
+          />
+  
+          <button type="submit" className="submitButton">
+            Add Vehicle
+          </button>
+        </form>
       </div>
-
-      <div className="formGroup">
-        <label htmlFor="model" className="label">
-          Model:
-        </label>
-        <select
-          id="model"
-          name="model"
-          value={formData.model}
-          onChange={handleChange}
-          className="input"
-          required
-          disabled={!formData.make} // Disable model dropdown if make is not selected
-        >
-          <option value="">Select model</option>
-          {/* Populate options dynamically based on selected make */}
-          {formData.make &&
-            Object.keys(carData[formData.make]).map((model) => (
-              <option key={model} value={model}>
-                {model}
-              </option>
-            ))}
-        </select>
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="body" className="label">
-          Body:
-        </label>
-        <select
-          id="body"
-          name="body"
-          value={formData.body}
-          onChange={handleChange}
-          className="input"
-          required
-        >
-          <option value="">Select Body Type</option>
-          <option value="Sedan">Sedan</option>
-          <option value="Coupe">Coupe</option>
-          <option value="Hatchback">Hatchback</option>
-          <option value="Convertible">Convertible</option>
-          <option value="SUV">SUV</option>
-          <option value="Van">Van</option>
-
-          <option value="Pickup Truck">Pickup Truck</option>
-
-        </select>
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="year" className="label">
-          Year:
-        </label>
-        <select
-          id="year"
-          name="year"
-          value={formData.year}
-          onChange={handleChange}
-          className="input"
-          required
-          disabled={!formData.model} // Disable year dropdown if model is not selected
-        >
-          <option value="">Select year</option>
-          {/* Populate options dynamically based on selected model */}
-          {formData.model &&
-            carData[formData.make][formData.model].map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-        </select>
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="color" className="label">
-          Color:
-        </label>
-        <input
-          type="text"
-          id="color"
-          name="color"
-          value={formData.color}
-          onChange={handleChange}
-          className="input"
-          required
-        />
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="mileage" className="label">
-          Mileage:
-        </label>
-        <input
-          type="number"
-          id="mileage"
-          name="mileage"
-          value={formData.mileage}
-          onChange={handleChange}
-          className="input"
-          required
-        />
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="details" className="label">
-          Details:
-        </label>
-        <input
-          type="text"
-          id="details"
-          name="details"
-          value={formData.details}
-          onChange={handleChange}
-          className="input"
-          required
-        />
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="description" className="label">
-          Description:
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          className="textarea"
-          required
-        ></textarea>
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="status" className="label">
-          Status:
-        </label>
-        <select
-          id="status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="input"
-          required
-        >
-          <option value="new">New</option>
-          <option value="low-mileage">Low Mileage</option>
-          <option value="being-watched">Being Watched</option>
-        </select>
-      </div>
-
-      <div className="formGroup">
-        <label htmlFor="price" className="label">
-          Price:
-        </label>
-        <input
-          type="number"
-          id="price"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          className="input"
-          required
-        />
-      </div>
-
-      <input
-        type="hidden"
-        id="viewsOnPage"
-        name="viewsOnPage"
-        value={formData.viewsOnPage}
-      />
-
-      <button type="submit" className="submitButton">
-        Add Vehicle
-      </button>
-    </form>
-  </div>
-</div>
-
+    </div>
   );
+  
 };
 
 export default AddNewVehicle;

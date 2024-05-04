@@ -10,10 +10,16 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {  TextField,  } from "@mui/material";
+import {Link, useNavigate } from "react-router-dom";
+
 
 import styles from "../css/bookappt.css";
 
+
 const BookAppointment = () => {
+  const navigate = useNavigate();
+
+
   const [availService, setAvailService] = useState([]);
   const [cars, setCars] = useState([]);
   const [vin, setVin] = useState(null);
@@ -34,6 +40,8 @@ const BookAppointment = () => {
       } catch (error) {
         console.log("Not Authenticated");
         // Redirect to login page or handle error
+        navigate("/login");
+
       }
     };
     fetchData();
@@ -150,11 +158,8 @@ const BookAppointment = () => {
     }
   }, [cars]);
 
-  const handleChange = (event) => {
-    // Update selected service ID
-    const selectedServiceID = event.target.value;
-    setServiceID(selectedServiceID);
-  };
+
+
 
   // Function to fetch all services
   const fetchAllServices = async () => {
@@ -185,9 +190,18 @@ useEffect(() => {
 return (
   <div style={{ paddingTop: '30px' }}>
     <div className="container">
+      {/* Check if no cars are fetched */}
+
       <div className="stepBox">
         <h2>Step 1 - Vehicles</h2>
         <h3>Choose your owned vehicle that you want to get service on:</h3>
+        {cars.length === 0 && (
+        <div className="warningMessage">
+          <h5>No vehicles found for the member.</h5>
+          <Link to="/add-member-vehicle" className="btn btn-block btn-danger">
+          Add new Vehicle
+        </Link>        </div>
+      )}
         <div className="horizontalVehicleSelection">
           {cars.map((car, index) => (
             <Button
