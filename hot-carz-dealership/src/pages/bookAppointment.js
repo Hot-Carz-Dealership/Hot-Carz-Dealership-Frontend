@@ -15,33 +15,47 @@ import styles from "../css/bookappt.css";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
-
-  // const [availService, setAvailService] = useState([]);
   const [cars, setCars] = useState([]);
   const [vin, setVin] = useState(null);
-  // const [serviceID, setServiceID] = useState("");
   const [selectedDateTime, setSelectedDateTime] = useState(
     dayjs().add(1, "day").set("hour", 9).startOf("hour")
   );
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [servicesUnderWarranty, setServicesUnderWarranty] = useState([]);
-  // const [allServices, setAllServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
 
   useEffect(() => {
     // Fetch user data when component mounts
     const fetchData = async () => {
       try {
-        // const resp = await httpClient.get(`${BASE_URL}/@me`);
-        await httpClient.get(`${BASE_URL}/@me`);
+        const resp = await httpClient.get(`${BASE_URL}/@me`);
+
+        const user = resp.data;
+        // Check if the user has a memberID
+        if (!user.memberID) {
+          // Display alert for employees
+          // Navigate to accounts page
+          navigate("/account");
+        }
+        else {
+          setIsAuthenticated(true); // Set authentication status
+        }
+
+       // await httpClient.get(`${BASE_URL}/@me`);
       } catch (error) {
         console.log("Not Authenticated");
         // Redirect to login page or handle error
         navigate("/login");
       }
     };
+  
     fetchData();
+
   }, [navigate]);
+  
 
   const handleSubmit = async () => {
     const tdDate = selectedDateTime.format("YYYY-MM-DD HH:mm:ss");
@@ -158,18 +172,6 @@ const BookAppointment = () => {
     }
   }, [cars]);
 
-  // Function to fetch all services
-  const fetchAllServices = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/service-menu`);
-      // const data = await response.json();
-      await response.json();
-      // setAllServices(data);
-    } catch (error) {
-      console.error("Error fetching all services:", error);
-    }
-  };
-
   // Function to get services under warranty by passing the VIN ID
   const fetchServicesUnderWarranty = async (vinID) => {
     try {
@@ -181,10 +183,7 @@ const BookAppointment = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAllServices();
-  }, []);
-  return (
+  return isAuthenticated ? (
     <div style={{ paddingTop: "30px" }}>
       <div className="container">
         {/* Check if no cars are fetched */}
@@ -203,25 +202,28 @@ const BookAppointment = () => {
               </Link>{" "}
             </div>
           )}
-          <div className="horizontalVehicleSelection">
-            {cars.map((car, index) => (
-              <Button
-                key={index}
-                variant="outlined"
-                onClick={() => {
-                  setSelectedVehicle(car.VIN_carID);
-                  fetchServicesUnderWarranty(car.VIN_carID);
-                  console.log("Selected Vehicle:", car.VIN_carID);
-                }}
-                style={{
-                  backgroundColor:
-                    selectedVehicle === car.VIN_carID ? "#FFEFD5" : "inherit", // Light orange color
-                }}
-              >
-                {`${car.year} ${car.make} ${car.model}`}
-              </Button>
-            ))}
-          </div>
+{cars.length > 0 && (
+  <div className="horizontalVehicleSelection">
+    {cars.map((car, index) => (
+      <Button
+        key={index}
+        variant="outlined"
+        onClick={() => {
+          setSelectedVehicle(car.VIN_carID);
+          fetchServicesUnderWarranty(car.VIN_carID);
+          console.log("Selected Vehicle:", car.VIN_carID);
+        }}
+        style={{
+          backgroundColor:
+            selectedVehicle === car.VIN_carID ? "#FFEFD5" : "inherit", // Light orange color
+        }}
+      >
+        {`${car.year} ${car.make} ${car.model}`}
+      </Button>
+    ))}
+  </div>
+)}
+
         </div>
         <div className="stepBox">
           <h2>Step 2 - Services</h2>
@@ -288,7 +290,7 @@ const BookAppointment = () => {
         )}
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default BookAppointment;
