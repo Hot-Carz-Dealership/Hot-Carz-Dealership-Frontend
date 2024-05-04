@@ -8,15 +8,23 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import styles from "../css/employees.css";
 
+const style = {
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    // width: 400,
+
+    // boxShadow: 24,
+    // p: 4,
+  },
+};
+
 const TechnicianPage = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
-  const [ /*sessionId,*/ setSessionId] = useState(null);
-  const [ /*serviceAppointments, */ setServiceAppointments] = useState([]);
-  const [ /*members, */ setMembers] = useState([]);
-  const [ /*employees,*/ setEmployees] = useState([]);
-  const [ /*technicians,*/ setTechnicians] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [assignedAppointments, setAssignedAppointments] = useState([]);
   const currentDate = new Date().toLocaleDateString();
@@ -26,33 +34,11 @@ const TechnicianPage = () => {
       try {
         const resp = await httpClient.get(`${BASE_URL}/@me`);
         const user = resp.data;
-
+        
         if (user.employeeType !== "Technician") {
           throw new Error("Unauthorized access");
         }
-
         setUser(user);
-        setSessionId(user.employeeID);
-
-        const appointmentsResponse = await fetch(
-          `${BASE_URL}/api/service-appointments`
-        );
-        const appointmentsData = await appointmentsResponse.json();
-        setServiceAppointments(appointmentsData);
-
-        const membersResponse = await fetch(`${BASE_URL}/api/members`);
-        const membersData = await membersResponse.json();
-        setMembers(membersData);
-
-        const employeeResponse = await fetch(`${BASE_URL}/api/employees`);
-        const employeeData = await employeeResponse.json();
-        setEmployees(employeeData);
-
-        const technicianResponse = await fetch(
-          `${BASE_URL}/api/employees/technicians`
-        );
-        const techniciansData = await technicianResponse.json();
-        setTechnicians(techniciansData);
 
         getTechnicianAppointments();
       } catch (error) {
@@ -62,7 +48,7 @@ const TechnicianPage = () => {
     };
 
     fetchData();
-  }, [navigate, setEmployees, setMembers, setServiceAppointments, setSessionId, setTechnicians]);
+  }, [navigate]);
 
   const logOutUser = async () => {
     await httpClient.post(`${BASE_URL}/api/logout`);
@@ -194,7 +180,8 @@ const TechnicianPage = () => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <Box sx={styles.modal}>
+        <Box sx={style.modal}>
+        <div className="rounded-lg bg-white p-8 shadow-2xl">
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Info for appointment {aptID}
           </Typography>
@@ -219,7 +206,7 @@ const TechnicianPage = () => {
                 Update Status:
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <select id="newStatus">
+                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="newStatus">
                   <option value={"Scheduled"}>Scheduled</option>
                   <option value={"Done"}>Done</option>
                   <option value={"Cancelled"}>Cancelled</option>
@@ -229,16 +216,17 @@ const TechnicianPage = () => {
                 Comment:
               </Typography>
               <textarea
+                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 id="comment"
                 name="comment"
                 rows="4"
                 cols="40"
                 placeholder={aptComment}
               ></textarea>
-
-              <Button onClick={() => handleUpdateSubmit(value)}>
+              <br></br>
+              <button className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onClick={() => handleUpdateSubmit(value)}>
                 Update Appointment
-              </Button>
+              </button>
             </div>
           ) : (
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -246,7 +234,8 @@ const TechnicianPage = () => {
             </Typography>
           )}
 
-          <Button onClick={onClose}>Close</Button>
+          <button className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onClick={onClose}>Close</button>
+          </div>
         </Box>
       </Modal>
     );
