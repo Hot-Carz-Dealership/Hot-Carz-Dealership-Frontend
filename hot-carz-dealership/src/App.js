@@ -35,33 +35,6 @@ function App() {
     <>
       <Navbar />
 
-      <Routes >
-        {/* Public Routes */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/cars" element={<Cars />} />
-        <Route path="/cars/:id" element={<CarDetails />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/logIn" element={<LogIn />} />
-        <Route path="/signup" element={<SignUp />} />
-
-        {/* User Private Routes - Requires Authentication */}
-        <Route path="/account" element={<Account />} />
-        <Route path="/editAccount" element={<EditAccount />} />
-        <Route path="/bookAppt" element={<BookAppointment />} />
-        <Route path="/apply-financing" element={<ApplyFinancing />} />
-        <Route path="/addons" element={<AddonsPage />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/add-member-vehicle" element={<AddMemberVehicle />} />
-
-        {/* Employee Routes - Requires Special Authentication */}
-        <Route path="/employeeLogIn" element={<EmployeeLogIn />} />
-        <Route path="/managerPage" element={<ManagerPage />} />
-        <Route path="/TechnicianPage" element={<TechnicianPage />} />
-        <Route path="/create-employee-account" element={<CreateEmployeeAccount />} />
-        <Route path="/add-new-vehicle" element={<AddNewVehicle />} />
-
-      </Routes>
-
       
     </>
   );
