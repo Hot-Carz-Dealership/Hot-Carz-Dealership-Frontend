@@ -9,6 +9,10 @@ import { BASE_URL } from "../utilities/constants";
 import { unstable_usePrompt as Prompt } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+import ReactRouterPrompt from "react-router-prompt";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+
 import Modal from "@mui/material/Modal";
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
@@ -100,95 +104,58 @@ function ItemCard({ item }) {
 
 function Footer() {
   const [blockUser, setBlockUser] = useState(true);
-  const [buttonPresed, setButtonPressed] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false); // New state to track button click
   const navigate = useNavigate();
-
-  const isPrompt = () => {
-    return true;
-  };
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
-    window.addEventListener("unload", () => {
-      console.log("unload");
-    });
+    window.addEventListener("unload", handleEndConcert);
+
     return () => {
       window.removeEventListener("beforeunload", alertUser);
-      window.removeEventListener("unload", () => {
-        console.log("unload");
-      });
-      console.log("HANDLE LEAVE");
+      window.removeEventListener("unload", handleEndConcert);
     };
-  }, []);
+  }, [buttonClicked]); // Added buttonClicked to dependency array
 
   const alertUser = (e) => {
-    e.preventDefault();
-    e.returnValue = "";
+    if (!buttonClicked) {
+      // Only prevent default if button hasn't been clicked
+      e.preventDefault();
+      e.returnValue = "";
+    }
   };
-
+  const handleEndConcert = async () => {
+    console.log("I did a thing plees");
+    // Delete the entire cart
+    await fetch(`${BASE_URL}/api/member/delete_cart`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+  };
   const unBlockUser = () => {
-    setButtonPressed(true);
+    setBlockUser(false);
   };
 
   const handleGoToCheckout = () => {
-    // unBlockUser();
-    // window.location.href = "/checkout";
+    unBlockUser();
+    setButtonClicked(true); // Set buttonClicked to true on button click
+    window.removeEventListener("beforeunload", alertUser); // Remove the event listener
     navigate("/checkout");
   };
 
-  function delayPromise(ms = 1000) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  }
+  var myElement = document.getElementById("checkout");
+
+  myElement?.addEventListener("click", function (event) {
+    unBlockUser();
+
+    // handleGoToCheckout();
+  });
+
+  console.log(blockUser);
 
   return (
     <>
-      <Prompt when={isPrompt()} message={"AHHHHHHHHH"} />
-      {/* <ReactRouterPrompt
-        when={blockUser && !buttonPresed}
-        beforeConfirm={async () => {
-          await delayPromise();
-        }}
-        beforeCancel={pr}
-      >
-        {({ isActive, onConfirm, onCancel }) =>
-          blockUser && (
-            <Modal
-              open={isActive}
-              onClose={onCancel}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <Box sx={styles.modal}>
-                <div className="rounded-lg bg-white p-8 shadow-2xl">
-                  <h2 className="text-lg font-bold">
-                    If you leave the page the cart will be deleted. Do you want
-                    to leave?{" "}
-                  </h2>
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => {
-                        unBlockUser();
-                        onConfirm();
-                      }}
-                      className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
-                    >
-                      Yes
-                    </button>
-                    <button
-                      onClick={onCancel}
-                      className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </Box>
-            </Modal>
-          )
-        }
-      </ReactRouterPrompt> */}
+      {blockUser && <Prompt when={blockUser} message={"AHHHHHHHHH"} />}
       <div
         style={{
           position: "fixed",
@@ -200,6 +167,7 @@ function Footer() {
         }}
       >
         <Button
+          id="checkout"
           onClick={handleGoToCheckout}
           variant="contained"
           color="primary"
