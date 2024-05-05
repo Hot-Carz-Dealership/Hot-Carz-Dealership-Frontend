@@ -25,6 +25,7 @@ import InfoMobile from "../components/features/checkout/InfoMobile";
 import PaymentForm from "../components/features/checkout/PaymentForm";
 import Review from "../components/features/checkout/Review";
 import { BASE_URL } from "../utilities/constants";
+import { unstable_usePrompt as Prompt } from "react-router-dom";
 
 const steps = ["Payment details", "Review your order"];
 
@@ -69,8 +70,6 @@ const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
   },
 }));
 
-
-
 function QontoStepIcon(props) {
   const { active, completed, className } = props;
 
@@ -107,6 +106,50 @@ export default function Checkout() {
   const [cartData, setCartData] = useState(null);
   const [routingNumber, setRoutingNumber] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+
+  const [blockUser, setBlockUser] = useState(true);
+  const buttonClicked = false; // New state to track button click
+
+  useEffect(() => {
+    const alertUser = (e) => {
+      if (!buttonClicked) {
+        // Only prevent default if button hasn't been clicked
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    const handleEndConcert = async () => {
+      // Delete the entire cart
+      await fetch(`${BASE_URL}/api/member/delete_cart`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      console.log("I did a thing plees");
+    };
+
+    window.addEventListener("beforeunload", alertUser);
+    window.addEventListener("unload", handleEndConcert);
+    window.addEventListener("pagehide", handleEndConcert);
+
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+      window.removeEventListener("unload", handleEndConcert);
+      window.removeEventListener("pagehide", handleEndConcert);
+    };
+  }, [buttonClicked]); // Added buttonClicked to dependency array
+
+  const unBlockUser = () => {
+    setBlockUser(false);
+  };
+
+  var myElement = document.getElementById("checkout");
+
+  myElement?.addEventListener("click", function (event) {
+    unBlockUser();
+
+    // handleGoToCheckout();
+  });
 
   // Callback functions to update routing and account numbers
   const handleRoutingNumberChange = (value) => {
@@ -189,7 +232,7 @@ export default function Checkout() {
       //Book service appointment if
 
       const queryParams = new URLSearchParams(location.search);
-      if(queryParams.get("appointment_date") != null){
+      if (queryParams.get("appointment_date") != null) {
         const apptVIN = queryParams.get("VIN_carID");
         const apptDate = queryParams.get("appointment_date");
         const apptServ = queryParams.get("servID");
@@ -200,20 +243,23 @@ export default function Checkout() {
           VIN_carID: apptVIN,
         };
 
-        const serviceAppointmentResponse = await fetch(`${BASE_URL}/api/member/book-service-appointment`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(serviceAppointmentData),
-        });
+        const serviceAppointmentResponse = await fetch(
+          `${BASE_URL}/api/member/book-service-appointment`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(serviceAppointmentData),
+          }
+        );
 
         if (!serviceAppointmentResponse.ok) {
           throw new Error("Network response was not ok");
         }
-
       }
+      setBlockUser(false);
       // Move to the next step
       setActiveStep(activeStep + 1);
       // Delete the entire cart
@@ -236,284 +282,298 @@ export default function Checkout() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
-      <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
-        <Grid
-          item
-          xs={12}
-          sm={5}
-          lg={4}
-          sx={{
-            display: { xs: "none", md: "flex" },
-            flexDirection: "column",
-            backgroundColor: "background.paper",
-            borderRight: { sm: "none", md: "1px solid" },
-            borderColor: { sm: "none", md: "divider" },
-            alignItems: "start",
-            pt: 4,
-            px: 10,
-            gap: 4,
-          }}
-        >
-          <Box
+    <>
+      {blockUser && (
+        <Prompt
+          when={blockUser}
+          message={"If you leave this page, then your cart will be lost."}
+        />
+      )}
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline />
+        <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
+          <Grid
+            item
+            xs={12}
+            sm={5}
+            lg={4}
             sx={{
-              display: "flex",
-              alignItems: "end",
-              height: 150,
-            }}
-          ></Box>
-          <Box
-            sx={{
-              display: "flex",
+              display: { xs: "none", md: "flex" },
               flexDirection: "column",
-              flexGrow: 1,
-              width: "100%",
-              maxWidth: 500,
-            }}
-          >
-            {cartData && <Info data={cartData} />}
-          </Box>
-        </Grid>
-        <Grid
-          item
-          sm={12}
-          md={7}
-          lg={8}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: "100%",
-            width: "100%",
-            backgroundColor: { xs: "transparent", sm: "background.default" },
-            alignItems: "start",
-            pt: { xs: 2, sm: 4 },
-            px: { xs: 2, sm: 10 },
-            gap: { xs: 4, md: 8 },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: { sm: "space-between", md: "flex-end" },
-              alignItems: "center",
-              width: "100%",
-              maxWidth: { sm: "100%", md: 600 },
+              backgroundColor: "background.paper",
+              borderRight: { sm: "none", md: "1px solid" },
+              borderColor: { sm: "none", md: "divider" },
+              alignItems: "start",
+              pt: 4,
+              px: 10,
+              gap: 4,
             }}
           >
             <Box
               sx={{
-                display: { xs: "flex", md: "none" },
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
+                display: "flex",
+                alignItems: "end",
+                height: 150,
               }}
             ></Box>
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
+                display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
                 flexGrow: 1,
-                height: 150,
+                width: "100%",
+                maxWidth: 500,
+              }}
+            >
+              {cartData && <Info data={cartData} />}
+            </Box>
+          </Grid>
+          <Grid
+            item
+            sm={12}
+            md={7}
+            lg={8}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              maxWidth: "100%",
+              width: "100%",
+              backgroundColor: { xs: "transparent", sm: "background.default" },
+              alignItems: "start",
+              pt: { xs: 2, sm: 4 },
+              px: { xs: 2, sm: 10 },
+              gap: { xs: 4, md: 8 },
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: { sm: "space-between", md: "flex-end" },
+                alignItems: "center",
+                width: "100%",
+                maxWidth: { sm: "100%", md: 600 },
+              }}
+            >
+              <Box
+                sx={{
+                  display: { xs: "flex", md: "none" },
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              ></Box>
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  flexGrow: 1,
+                  height: 150,
+                }}
+              >
+                <Stepper
+                  id="desktop-stepper"
+                  activeStep={activeStep}
+                  sx={{
+                    width: "100%",
+                    height: 40,
+                  }}
+                >
+                  {steps.map((label) => (
+                    <Step
+                      sx={{
+                        ":first-child": { pl: 0 },
+                        ":last-child": { pr: 0 },
+                      }}
+                      key={label}
+                    >
+                      <StepLabel StepIconComponent={QontoStepIcon}>
+                        {label}
+                      </StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              </Box>
+            </Box>
+            <Card
+              sx={{
+                display: { xs: "flex", md: "none" },
+                width: "100%",
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  ":last-child": { pb: 2 },
+                }}
+              >
+                <div>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Selected products
+                  </Typography>
+                  <Typography variant="body1">
+                    {`$${cartData && cartData["Grand Total"]}`}
+                  </Typography>
+                </div>
+                <InfoMobile data={cartData} />
+              </CardContent>
+            </Card>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: 1,
+                width: "100%",
+                maxWidth: { sm: "100%", md: 600 },
+                maxHeight: "720px",
+                gap: { xs: 5, md: "none" },
               }}
             >
               <Stepper
-                id="desktop-stepper"
+                id="mobile-stepper"
                 activeStep={activeStep}
-                sx={{
-                  width: "100%",
-                  height: 40,
-                }}
+                alternativeLabel
+                sx={{ display: { sm: "flex", md: "none" } }}
               >
                 {steps.map((label) => (
                   <Step
                     sx={{
                       ":first-child": { pl: 0 },
                       ":last-child": { pr: 0 },
+                      "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                     }}
                     key={label}
                   >
-                    <StepLabel StepIconComponent={QontoStepIcon}>
+                    <StepLabel
+                      sx={{
+                        ".MuiStepLabel-labelContainer": { maxWidth: "70px" },
+                      }}
+                    >
                       {label}
                     </StepLabel>
                   </Step>
                 ))}
               </Stepper>
-            </Box>
-          </Box>
-          <Card
-            sx={{
-              display: { xs: "flex", md: "none" },
-              width: "100%",
-            }}
-          >
-            <CardContent
-              sx={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "space-between",
-                ":last-child": { pb: 2 },
-              }}
-            >
-              <div>
-                <Typography variant="subtitle2" gutterBottom>
-                  Selected products
-                </Typography>
-                <Typography variant="body1">
-                  {`$${cartData && cartData["Grand Total"]}`}
-                </Typography>
-              </div>
-              <InfoMobile data={cartData} />
-            </CardContent>
-          </Card>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-              width: "100%",
-              maxWidth: { sm: "100%", md: 600 },
-              maxHeight: "720px",
-              gap: { xs: 5, md: "none" },
-            }}
-          >
-            <Stepper
-              id="mobile-stepper"
-              activeStep={activeStep}
-              alternativeLabel
-              sx={{ display: { sm: "flex", md: "none" } }}
-            >
-              {steps.map((label) => (
-                <Step
-                  sx={{
-                    ":first-child": { pl: 0 },
-                    ":last-child": { pr: 0 },
-                    "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
-                  }}
-                  key={label}
-                >
-                  <StepLabel
+              {activeStep === steps.length ? (
+                <Stack spacing={2} useFlexGap>
+                  <Typography variant="h1">📦🏎️</Typography>
+                  <Typography variant="h5">
+                    Thank you for your order!
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Your confirmation number is
+                    <strong>&nbsp;{confirmationNumber}</strong>.
+                  </Typography>
+                  <Button
+                    onClick={handleGoToMyOrders}
+                    variant="contained"
                     sx={{
-                      ".MuiStepLabel-labelContainer": { maxWidth: "70px" },
+                      alignSelf: "start",
+                      width: { xs: "100%", sm: "auto" },
+                      background: "red",
                     }}
                   >
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            {activeStep === steps.length ? (
-              <Stack spacing={2} useFlexGap>
-                <Typography variant="h1">📦🏎️</Typography>
-                <Typography variant="h5">Thank you for your order!</Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Your confirmation number is
-                  <strong>&nbsp;{confirmationNumber}</strong>.
-                </Typography>
-                <Button
-                  onClick={handleGoToMyOrders}
-                  variant="contained"
-                  sx={{
-                    alignSelf: "start",
-                    width: { xs: "100%", sm: "auto" },
-                    background: "red",
-                  }}
-                >
-                  Go to my orders
-                </Button>
-              </Stack>
-            ) : (
-              <React.Fragment>
-                {getStepContent(
-                  activeStep,
-                  cartData,
-                  handleRoutingNumberChange,
-                  handleAccountNumberChange
-                )}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: { xs: "column-reverse", sm: "row" },
-                    justifyContent:
-                      activeStep !== 0 ? "space-between" : "flex-end",
-                    alignItems: "end",
-                    flexGrow: 1,
-                    gap: 1,
-                    pb: { xs: 12, sm: 0 },
-                    mt: { xs: 2, sm: 0 },
-                    mb: "60px",
-                  }}
-                >
-                  {activeStep !== 0 && (
-                    <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="text"
-                      sx={{
-                        display: { xs: "none", sm: "flex", color: "red" },
-                      }}
-                    >
-                      Previous
-                    </Button>
+                    Go to my orders
+                  </Button>
+                </Stack>
+              ) : (
+                <React.Fragment>
+                  {getStepContent(
+                    activeStep,
+                    cartData,
+                    handleRoutingNumberChange,
+                    handleAccountNumberChange
                   )}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column-reverse", sm: "row" },
+                      justifyContent:
+                        activeStep !== 0 ? "space-between" : "flex-end",
+                      alignItems: "end",
+                      flexGrow: 1,
+                      gap: 1,
+                      pb: { xs: 12, sm: 0 },
+                      mt: { xs: 2, sm: 0 },
+                      mb: "60px",
+                    }}
+                  >
+                    {activeStep !== 0 && (
+                      <Button
+                        startIcon={<ChevronLeftRoundedIcon />}
+                        onClick={handleBack}
+                        variant="text"
+                        sx={{
+                          display: { xs: "none", sm: "flex", color: "red" },
+                        }}
+                      >
+                        Previous
+                      </Button>
+                    )}
 
-                  {activeStep !== 0 && (
-                    <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="outlined"
-                      backgroundcolor="red"
-                      fullWidth
-                      sx={{
-                        display: { xs: "flex", sm: "none", color: "red" },
-                      }}
-                    >
-                      Previous
-                    </Button>
-                  )}
-                  {activeStep === 0 && (
-                    <Button
-                      variant="contained"
-                      endIcon={<ChevronRightRoundedIcon />}
-                      onClick={handleNext}
-                      disabled={!routingNumber || !accountNumber}
-                      sx={{
-                        width: {
-                          xs: "100%",
-                          sm: "fit-content",
-                          background: "red",
-                        },
-                      }}
-                    >
-                      {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                    </Button>
-                  )}
+                    {activeStep !== 0 && (
+                      <Button
+                        startIcon={<ChevronLeftRoundedIcon />}
+                        onClick={handleBack}
+                        variant="outlined"
+                        backgroundcolor="red"
+                        fullWidth
+                        sx={{
+                          display: { xs: "flex", sm: "none", color: "red" },
+                        }}
+                      >
+                        Previous
+                      </Button>
+                    )}
+                    {activeStep === 0 && (
+                      <Button
+                        variant="contained"
+                        endIcon={<ChevronRightRoundedIcon />}
+                        onClick={handleNext}
+                        disabled={!routingNumber || !accountNumber}
+                        sx={{
+                          width: {
+                            xs: "100%",
+                            sm: "fit-content",
+                            background: "red",
+                          },
+                        }}
+                      >
+                        {activeStep === steps.length - 1
+                          ? "Place order"
+                          : "Next"}
+                      </Button>
+                    )}
 
-                  {activeStep === steps.length - 1 && (
-                    <Button
-                      variant="contained"
-                      endIcon={<ChevronRightRoundedIcon />}
-                      onClick={handlePlaceOrder}
-                      sx={{
-                        width: {
-                          xs: "100%",
-                          sm: "fit-content",
-                          background: "red",
-                        },
-                      }}
-                    >
-                      {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                    </Button>
-                  )}
-                </Box>
-              </React.Fragment>
-            )}
-          </Box>
+                    {activeStep === steps.length - 1 && (
+                      <Button
+                        variant="contained"
+                        endIcon={<ChevronRightRoundedIcon />}
+                        onClick={handlePlaceOrder}
+                        sx={{
+                          width: {
+                            xs: "100%",
+                            sm: "fit-content",
+                            background: "red",
+                          },
+                        }}
+                      >
+                        {activeStep === steps.length - 1
+                          ? "Place order"
+                          : "Next"}
+                      </Button>
+                    )}
+                  </Box>
+                </React.Fragment>
+              )}
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </ThemeProvider>
+      </ThemeProvider>
+    </>
   );
 }
