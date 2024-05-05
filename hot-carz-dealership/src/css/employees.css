@@ -227,3 +227,7 @@ margin-bottom:30%;
     margin-left: 200px;
     padding: 20px;
   }
+  .generate-report-button {
+    background-color: green;
+    color: white;
+  }

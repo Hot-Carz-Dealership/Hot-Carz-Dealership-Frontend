@@ -22,15 +22,15 @@ const ManagerPage = () => {
 
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
-  const [ /*serviceAppointments*/ , setServiceAppointments] = useState([]);
+  const [ /*serviceAppointments*/, setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [ /*purchases*/  , setPurchases] = useState([]);
+  const [ /*purchases*/, setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-  const [ /*testDrives*/ , setTestDrives] = useState([]);
+  const [ /*testDrives*/, setTestDrives] = useState([]);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
 
 
@@ -308,12 +308,12 @@ const ManagerPage = () => {
             <TestDrivesTable applyFilter={false} />
           </div>
         );
-        case 4:
-          return (
-            <div style={styles.tableWrapper}>
-              <CustomersTable />
-            </div>
-          );
+      case 4:
+        return (
+          <div style={styles.tableWrapper}>
+            <CustomersTable />
+          </div>
+        );
       case 5:
         return (
           <div style={styles.tableWrapper}>
@@ -523,7 +523,7 @@ const ManagerPage = () => {
                     <td>{contract.purchaseType}</td>
                     <td>{contract.purchaseDate}</td>
                     <td>
-                      <button onClick={() => handleViewContract(contract)}className="btn btn-primary ">View</button>
+                      <button onClick={() => handleViewContract(contract)} className="btn btn-primary ">View</button>
                     </td>
                   </tr>
                 ))}
@@ -648,12 +648,12 @@ const ManagerPage = () => {
     const [newServiceName, setNewServiceName] = useState('');
     const [newServicePrice, setNewServicePrice] = useState('');
     const [serviceAppointments, setServiceAppointments] = useState([]);
-   // const [ /*selectedAppointment*/ , setSelectedAppointment] = useState(null);
-   // const [ /*vehicleInfo */, setVehicleInfo] = useState(null);
-   // const [ /* memberInfo*/ , setMemberInfo] = useState(null);
-    const [ /*technicians*/ , setTechnicians] = useState([]);
-   // const [/*selectedTechnician*/, setSelectedTechnician] = useState(null);
-  //  const [/*showReplacementModal*/ , setShowReplacementModal] = useState(false);
+    // const [ /*selectedAppointment*/ , setSelectedAppointment] = useState(null);
+    // const [ /*vehicleInfo */, setVehicleInfo] = useState(null);
+    // const [ /* memberInfo*/ , setMemberInfo] = useState(null);
+    const [ /*technicians*/, setTechnicians] = useState([]);
+    // const [/*selectedTechnician*/, setSelectedTechnician] = useState(null);
+    //  const [/*showReplacementModal*/ , setShowReplacementModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState('');
     const [editedPrice, setEditedPrice] = useState('');
@@ -663,7 +663,7 @@ const ManagerPage = () => {
 
     const [page, setPage] = useState(0); // Current page number
     const pageSize = 10; // Number of service appointments per page
-  
+
 
     useEffect(() => {
       fetchServiceAppointments();
@@ -714,39 +714,39 @@ const ManagerPage = () => {
     };
 
 
-/*
-    const fetchVehicleAndMemberInfo = async (appointment) => {
-      try {
-        const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!vehicleResponse.ok) {
-          throw new Error('Failed to fetch vehicle information');
-        }
-        const vehicleData = await vehicleResponse.json();
-        setVehicleInfo(vehicleData);
-
-        const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ memberID: appointment.memberID }),
-        });
-        if (!memberResponse.ok) {
-          throw new Error('Failed to fetch member information');
-        }
-        const memberData = await memberResponse.json();
-        setMemberInfo(memberData);
-      } catch (error) {
-        console.error('Error fetching vehicle and member information:', error.message);
-      }
-    };
-
-*/
+    /*
+        const fetchVehicleAndMemberInfo = async (appointment) => {
+          try {
+            const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!vehicleResponse.ok) {
+              throw new Error('Failed to fetch vehicle information');
+            }
+            const vehicleData = await vehicleResponse.json();
+            setVehicleInfo(vehicleData);
+    
+            const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ memberID: appointment.memberID }),
+            });
+            if (!memberResponse.ok) {
+              throw new Error('Failed to fetch member information');
+            }
+            const memberData = await memberResponse.json();
+            setMemberInfo(memberData);
+          } catch (error) {
+            console.error('Error fetching vehicle and member information:', error.message);
+          }
+        };
+    
+    */
 
     const handleAddService = async () => {
       try {
@@ -840,17 +840,17 @@ const ManagerPage = () => {
     };
 */
 
-      // Function to handle pagination
-  const nextPage = () => {
-    setPage(page + 1);
-  };
+    // Function to handle pagination
+    const nextPage = () => {
+      setPage(page + 1);
+    };
 
-  const prevPage = () => {
-    setPage(page - 1);
-  };
+    const prevPage = () => {
+      setPage(page - 1);
+    };
 
-  const startIndex = page * pageSize;
-  const endIndex = startIndex + pageSize;
+    const startIndex = page * pageSize;
+    const endIndex = startIndex + pageSize;
 
     return (
       <div>
@@ -858,9 +858,9 @@ const ManagerPage = () => {
         <div className="table-responsive" style={styles.tableHeight}>
           <h2>Service Appointments</h2>
           <div>
-          <button className="btn btn-primary mr-2" onClick={prevPage} disabled={page === 0}>Previous</button>
-          <button className="btn btn-primary" onClick={nextPage} disabled={serviceAppointments.length <= endIndex}>Next</button>
-        </div>
+            <button className="btn btn-primary mr-2" onClick={prevPage} disabled={page === 0}>Previous</button>
+            <button className="btn btn-primary" onClick={nextPage} disabled={serviceAppointments.length <= endIndex}>Next</button>
+          </div>
           <table className="table table-bordered table-striped" style={styles.tableHeight}>
             <thead className="thead-dark">
               <tr>
@@ -871,23 +871,23 @@ const ManagerPage = () => {
               </tr>
             </thead>
             <tbody>
-  {!isLoading ? (
-  serviceAppointments
-  .sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)) // Sort appointments by date (from most recent to oldest)
-  .slice(startIndex, endIndex)
-  .map(appointment => (
-    <tr key={appointment.appointment_id}>
-      <td>{appointment.appointment_date}</td>
-      <td>{appointment.service_name}</td>
-      <td>{appointment.status}</td>
-      <td>{appointment.comments}</td> {/* New column for comments */}
-    </tr>
-  ))
-  ) : (
-    <tr>
-      <td colSpan="5">Loading service appointments...</td>
-    </tr>
-  )}
+              {!isLoading ? (
+                serviceAppointments
+                  .sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)) // Sort appointments by date (from most recent to oldest)
+                  .slice(startIndex, endIndex)
+                  .map(appointment => (
+                    <tr key={appointment.appointment_id}>
+                      <td>{appointment.appointment_date}</td>
+                      <td>{appointment.service_name}</td>
+                      <td>{appointment.status}</td>
+                      <td>{appointment.comments}</td> {/* New column for comments */}
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="5">Loading service appointments...</td>
+                </tr>
+              )}
               {!isLoading && serviceAppointments.length === 0 && (
                 <tr>
                   <td colSpan="5">No service appointments available</td>
@@ -1564,40 +1564,40 @@ const ManagerPage = () => {
 
   };
 
-/*
-  const PurchaseTable = () => (
-    <div className="table-responsive" style={styles.tableHeight}>
-      <h2>Purchases</h2>
-      <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>Purchase ID</th>
-            <th>Bid ID</th>
-            <th>VIN</th>
-            <th>Member ID</th>
-            <th>Confirmation Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {purchases && purchases.map((purchase, index) => (
-            <tr key={index}>
-              <td>{purchase.purchaseID}</td>
-              <td>{purchase.bidID}</td>
-              <td>{purchase.VIN_carID}</td>
-              <td>{purchase.memberID}</td>
-              <td>{purchase.confirmationNumber}</td>
-            </tr>
-          ))}
-          {!purchases && (
+  /*
+    const PurchaseTable = () => (
+      <div className="table-responsive" style={styles.tableHeight}>
+        <h2>Purchases</h2>
+        <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
             <tr>
-              <td colSpan="5">No purchases available</td>
+              <th>Purchase ID</th>
+              <th>Bid ID</th>
+              <th>VIN</th>
+              <th>Member ID</th>
+              <th>Confirmation Number</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-*/
+          </thead>
+          <tbody>
+            {purchases && purchases.map((purchase, index) => (
+              <tr key={index}>
+                <td>{purchase.purchaseID}</td>
+                <td>{purchase.bidID}</td>
+                <td>{purchase.VIN_carID}</td>
+                <td>{purchase.memberID}</td>
+                <td>{purchase.confirmationNumber}</td>
+              </tr>
+            ))}
+            {!purchases && (
+              <tr>
+                <td colSpan="5">No purchases available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  */
 
   const TestDrivesTable = ({ applyFilter }) => {
 
@@ -1763,165 +1763,165 @@ const ManagerPage = () => {
 
   const CustomersTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, /*setPageSize*/ ] = useState(10); 
+    const [pageSize, /*setPageSize*/] = useState(10);
     const [zipcodeFilter, setZipcodeFilter] = useState('');
     const [sortingOption, setSortingOption] = useState('recent');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [financeInfo, setFinanceInfo] = useState([]);
 
-  const fetchMembers = async () => {
-    try {
-      const response = await fetch('/api/members'); // Assuming your frontend and backend are served from the same origin
-      if (!response.ok) {
-        throw new Error('Failed to fetch members');
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch('/api/members'); // Assuming your frontend and backend are served from the same origin
+        if (!response.ok) {
+          throw new Error('Failed to fetch members');
+        }
+        const data = await response.json();
+        setMembers(data);
+      } catch (error) {
+        console.error('Error fetching members:', error.message);
       }
-      const data = await response.json();
-      setMembers(data);
-    } catch (error) {
-      console.error('Error fetching members:', error.message);
-    }
-  };
-  useEffect(() => {
-    fetchMembers();
-  }, [currentPage, pageSize]);
+    };
+    useEffect(() => {
+      fetchMembers();
+    }, [currentPage, pageSize]);
 
-    
-  // Function to handle moving to the next page
-  const nextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
 
-  // Function to handle moving to the previous page
-  const prevPage = () => {
-    setCurrentPage(currentPage - 1);
-  };
+    // Function to handle moving to the next page
+    const nextPage = () => {
+      setCurrentPage(currentPage + 1);
+    };
 
-  const handleViewFinancial = async (customer) => {
-    setSelectedCustomer(customer);
-    await fetchFinanceInfo(customer.memberID);
+    // Function to handle moving to the previous page
+    const prevPage = () => {
+      setCurrentPage(currentPage - 1);
+    };
 
-    setShowModal(true);
-  };
+    const handleViewFinancial = async (customer) => {
+      setSelectedCustomer(customer);
+      await fetchFinanceInfo(customer.memberID);
 
- // Check if members is null before applying any operations
-// Check if members is null before applying any operations
-const filteredMembers = members && members.filter(member => member.zipcode && member.zipcode.includes(zipcodeFilter));
+      setShowModal(true);
+    };
 
- const sortedMembers = filteredMembers && filteredMembers.sort((a, b) => {
-   if (sortingOption === 'recent') {
-     return new Date(b.join_date) - new Date(a.join_date);
-   } else if (sortingOption === 'oldest') {
-     return new Date(a.join_date) - new Date(b.join_date);
-   } else {
-     return a.first_name.localeCompare(b.first_name);
-   }
- });
+    // Check if members is null before applying any operations
+    // Check if members is null before applying any operations
+    const filteredMembers = members && members.filter(member => member.zipcode && member.zipcode.includes(zipcodeFilter));
 
- const fetchFinanceInfo = async (memberId) => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        member_id: memberId
-      })
+    const sortedMembers = filteredMembers && filteredMembers.sort((a, b) => {
+      if (sortingOption === 'recent') {
+        return new Date(b.join_date) - new Date(a.join_date);
+      } else if (sortingOption === 'oldest') {
+        return new Date(a.join_date) - new Date(b.join_date);
+      } else {
+        return a.first_name.localeCompare(b.first_name);
+      }
     });
-    if (!response.ok) {
-      throw new Error('Failed to fetch finance information');
-    }
 
-    const financeData = await response.json();
-    setFinanceInfo(financeData);
-  } catch (error) {
-    console.error('Error fetching finance information:', error.message);
-  }
-};
+    const fetchFinanceInfo = async (memberId) => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            member_id: memberId
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch finance information');
+        }
 
-  // Calculate the starting and ending indexes for the current page
-  const startIndex = currentPage * pageSize;
-  const endIndex = startIndex + pageSize;
-  return (
-    <div>
-    <div>
-      <label htmlFor="zipcodeFilter">Zipcode:</label>
-      <input type="text" id="zipcodeFilter" value={zipcodeFilter} onChange={(e) => setZipcodeFilter(e.target.value)} />
-    </div>
-    <div>
-      <label htmlFor="sortingOption">Sort by:</label>
-      <select id="sortingOption" value={sortingOption} onChange={(e) => setSortingOption(e.target.value)}>
-        <option value="recent">Most Recent</option>
-        <option value="oldest">Oldest</option>
-        <option value="alphabetical">Alphabetical</option>
-      </select>
-    </div>
-    <div className="table-responsive" style={{ ...styles.tableHeight }}>
-    <h2>Customers</h2>
-    <div>
-      <button className="btn btn-primary mr-2" onClick={prevPage} disabled={currentPage === 0}>
-        Previous
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={nextPage}
-        disabled={endIndex >= sortedMembers.length}
-      >
-        Next
-      </button>
-    </div>
-      <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone #</th>
-            <th>Email</th>
-            <th>Action</th> {/* New column for Action */}
+        const financeData = await response.json();
+        setFinanceInfo(financeData);
+      } catch (error) {
+        console.error('Error fetching finance information:', error.message);
+      }
+    };
 
-          </tr>
-        </thead>
-        <tbody>
-          {
-              sortedMembers.slice(startIndex, endIndex).map((member, index) => (
-                <tr key={index}>
-                <td>{member.first_name}</td>
-                <td>{member.last_name}</td>
-                <td>{member.phone}</td>
-                <td>{member.email}</td>
-                <td>
-                    <button className="btn btn-primary" onClick={() => handleViewFinancial(member)}>View Financial</button>
-                  </td>
-              </tr>
-            ))}
-            {!sortedMembers.length && (
-              <tr>
-                <td colSpan="6">No customers available</td>
-              </tr>
-            )}
-        </tbody>
-      </table>
-    </div>
-    {showModal && (
-  <div className="modal-container">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title">Customer Financial Stub</h5>
-        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-
+    // Calculate the starting and ending indexes for the current page
+    const startIndex = currentPage * pageSize;
+    const endIndex = startIndex + pageSize;
+    return (
+      <div>
+        <div>
+          <label htmlFor="zipcodeFilter">Zipcode:</label>
+          <input type="text" id="zipcodeFilter" value={zipcodeFilter} onChange={(e) => setZipcodeFilter(e.target.value)} />
         </div>
-        <div className="modal-body">
+        <div>
+          <label htmlFor="sortingOption">Sort by:</label>
+          <select id="sortingOption" value={sortingOption} onChange={(e) => setSortingOption(e.target.value)}>
+            <option value="recent">Most Recent</option>
+            <option value="oldest">Oldest</option>
+            <option value="alphabetical">Alphabetical</option>
+          </select>
+        </div>
+        <div className="table-responsive" style={{ ...styles.tableHeight }}>
+          <h2>Customers</h2>
+          <div>
+            <button className="btn btn-primary mr-2" onClick={prevPage} disabled={currentPage === 0}>
+              Previous
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={nextPage}
+              disabled={endIndex >= sortedMembers.length}
+            >
+              Next
+            </button>
+          </div>
+          <table className="table table-bordered table-striped">
+            <thead className="thead-dark">
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone #</th>
+                <th>Email</th>
+                <th>Action</th> {/* New column for Action */}
 
-            <h2>Customer Information</h2>
-            <p>First Name: {selectedCustomer.first_name}</p>
-            <p>Last Name: {selectedCustomer.last_name}</p>
-            <p>Phone #: {selectedCustomer.phone}</p>
-            <p>Email: {selectedCustomer.email}</p>
-            {/* Add more customer information as needed */}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                sortedMembers.slice(startIndex, endIndex).map((member, index) => (
+                  <tr key={index}>
+                    <td>{member.first_name}</td>
+                    <td>{member.last_name}</td>
+                    <td>{member.phone}</td>
+                    <td>{member.email}</td>
+                    <td>
+                      <button className="btn btn-primary" onClick={() => handleViewFinancial(member)}>View Financial</button>
+                    </td>
+                  </tr>
+                ))}
+              {!sortedMembers.length && (
+                <tr>
+                  <td colSpan="6">No customers available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {showModal && (
+          <div className="modal-container">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Customer Financial Stub</h5>
+                  <span className="close" onClick={() => setShowModal(false)}>&times;</span>
 
-            {financeInfo.length > 0 && (
+                </div>
+                <div className="modal-body">
+
+                  <h2>Customer Information</h2>
+                  <p>First Name: {selectedCustomer.first_name}</p>
+                  <p>Last Name: {selectedCustomer.last_name}</p>
+                  <p>Phone #: {selectedCustomer.phone}</p>
+                  <p>Email: {selectedCustomer.email}</p>
+                  {/* Add more customer information as needed */}
+
+                  {financeInfo.length > 0 && (
                     <div>
                       <h5>Finance Information</h5>
 
@@ -1930,13 +1930,13 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
                     </div>
                   )}
 
-            </div>
+                </div>
               </div>
             </div>
           </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
   }
 
   const VehicleListingsTable = () => {
@@ -1989,24 +1989,24 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
       }
     };
 
-  const handleDeleteVehicle = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/vehicles/edit`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ VIN_carID: editedVehicle.VIN_carID }), // Pass the VIN of the edited vehicle
-      });
-      if (!response.ok) {
-        throw new Error('Failed to delete vehicle');
+    const handleDeleteVehicle = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/vehicles/edit`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ VIN_carID: editedVehicle.VIN_carID }), // Pass the VIN of the edited vehicle
+        });
+        if (!response.ok) {
+          throw new Error('Failed to delete vehicle');
+        }
+        setIsModalOpen(false);
+        fetchVehicleListings(); // Fetch vehicle listings again after deletion
+      } catch (error) {
+        console.error('Error deleting vehicle:', error.message);
       }
-      setIsModalOpen(false);
-      fetchVehicleListings(); // Fetch vehicle listings again after deletion
-    } catch (error) {
-      console.error('Error deleting vehicle:', error.message);
-    }
-  };
+    };
     const closeModal = () => {
       setSelectedVehicle(null);
       setEditedVehicle(null);
@@ -2161,13 +2161,17 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
       </div>
     );
   };
-
   const SalesReportTable = () => {
     const [salesReport, setSalesReport] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedYear, setSelectedYear] = useState("");
     const [totalSales, setTotalSales] = useState("");
+    const [showReport, setShowReport] = useState(false); // State to control the visibility of the report
 
+    const [total_all_time_sales, setTotalAllTimeSales] = useState(null);
+    const [total_yearly_sales, setTotalYearlySales] = useState(null);
+    const [total_last_year_sales, setTotalLastYearSales] = useState(null);
+    const [total_last_year_month_sales, setTotalLastYearMonthSales] = useState(null);
 
     // Function to handle changes in the month dropdown
     const handleMonthChange = (event) => {
@@ -2198,9 +2202,18 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
         }
 
         const data = await response.json();
-        setSalesReport(data.sales_report);
+        // Set sales report in state, sorted by purchase timestamp (most recent first)
+        setSalesReport(data.sales_report.sort((a, b) => new Date(b.purchase_timestamp) - new Date(a.purchase_timestamp)));
         // Set total sales in the state
         setTotalSales(data.total_sales);
+
+        setTotalAllTimeSales(data.all_time_sales);
+        setTotalYearlySales(data.yearly_sales);
+        setTotalLastYearSales(data.last_year_sales);
+        setTotalLastYearMonthSales(data.last_year_month_sales);
+
+        setShowReport(true);
+
       } catch (error) {
         console.error("Error fetching sales report:", error.message);
       }
@@ -2231,7 +2244,7 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <label htmlFor="year">Year:</label>
+            <label htmlFor="year">    Year:</label>
             <select id="year" value={selectedYear} onChange={handleYearChange}>
               <option value="">Select Year</option>
               <option value="2024">2024</option>
@@ -2242,41 +2255,57 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
               <option value="2020">2020</option>
               <option value="2019">2019</option>
             </select>
-            <button type="submit">Generate Report</button>
+            <button type="submit" className="btn btn-success">Generate Report</button>
           </div>
         </form>
-        {salesReport ? (
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Purchase ID</th>
-                <th>Member ID</th>
-                <th>Confirmation Number</th>
-                <th>Vehicle ID</th>
-                <th>Bid Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {salesReport.map((sale, index) => (
-                <tr key={index}>
-                  <td>{sale.purchase_id}</td>
-                  <td>{sale.member_id}</td>
-                  <td>{sale.confirmation_number}</td>
-                  <td>{sale.vehicle_id}</td>
-                  <td>{sale.bid_value}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="4">Total Sales:</td>
-                <td>{totalSales}</td>
-              </tr>
-            </tfoot>
-          </table>
-        ) : (
-          <p>No sales report available</p>
-        )}
+
+        {showReport && salesReport.length > 0 ? (
+  <table className="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td colSpan="2">Total Sales All Time:</td>
+        <td>{total_all_time_sales}</td>
+      </tr>
+      <tr>
+        <td colSpan="2">Total Yearly Sales {selectedYear}:</td>
+        <td>{total_yearly_sales}</td>
+        <td colSpan="2">Compared to last year {selectedYear - 1}:</td>
+        <td>{total_last_year_sales}</td>
+      </tr>
+      <tr>
+        <td colSpan="2">Total Sales  {selectedMonth}-{selectedYear}:</td>
+        <td>{totalSales}</td>
+        <td colSpan="2">Compared to last year  {selectedMonth}-{selectedYear - 1}:</td>
+        <td>{total_last_year_month_sales}</td>
+      </tr>
+
+      <tr>
+        <th>Date</th>
+        <th>Purchase Type</th>
+        <th>Confirmation #</th>
+        <th>Vehicle VIN</th>
+        <th>Income</th>
+      </tr>
+    </thead>
+    <tbody>
+      {salesReport.map((sale, index) => (
+        <tr key={index}>
+          <td>{sale.purchase_timestamp}</td>
+          <td>{sale.purchase_type}</td>
+          <td>{sale.confirmation_number}</td>
+          <td>{sale.vehicle_id}</td>
+          <td>{sale.bid_value}</td>
+        </tr>
+      ))}
+    </tbody>
+    <tfoot>
+    </tfoot>
+  </table>
+) : (
+  <p>No sales report available</p>
+)}
+
+     
       </div>
     );
   };
@@ -2305,85 +2334,85 @@ const filteredMembers = members && members.filter(member => member.zipcode && me
       </button>
     </div>
   );
-  
+
   return (
 
-  <div>
-  {!showWelcomeScreen && (
-    <div className="sidebarEmployees">
-      <div style={{ marginBottom: '10px' }}>
-        <button
-          className={`btn btn-block btn-dark ${selectedTab === 0 ? 'selected' : ''}`}
-          onClick={() => handleTabSelect(0)}
-        >
-          To-Do's
-        </button>
-      </div>
+    <div>
+      {!showWelcomeScreen && (
+        <div className="sidebarEmployees">
+          <div style={{ marginBottom: '10px' }}>
+            <button
+              className={`btn btn-block btn-dark ${selectedTab === 0 ? 'selected' : ''}`}
+              onClick={() => handleTabSelect(0)}
+            >
+              To-Do's
+            </button>
+          </div>
 
-      <div style={{ marginBottom: '10px' }}>
-        <button
-          className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
-          onClick={() => {
-            handleTabSelect(1); console.log("Clicked on Service Center button");
-          }}
-        >
-          Service Center
-        </button>
-      </div>
+          <div style={{ marginBottom: '10px' }}>
+            <button
+              className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
+              onClick={() => {
+                handleTabSelect(1); console.log("Clicked on Service Center button");
+              }}
+            >
+              Service Center
+            </button>
+          </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button
-          className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
-          onClick={() => {
-            handleTabSelect(4);
-            fetchDataSelection(4);
-          }}
-        >
-          Customers
-        </button>
-      </div>
+          <div style={{ marginBottom: "10px" }}>
+            <button
+              className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
+              onClick={() => {
+                handleTabSelect(4);
+                fetchDataSelection(4);
+              }}
+            >
+              Customers
+            </button>
+          </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button
-          className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
-          onClick={() => {
-            handleTabSelect(5);
-            fetchDataSelection(5);
-          }}
-        >
-          Vehicle Listings
-        </button>
-      </div>
+          <div style={{ marginBottom: "10px" }}>
+            <button
+              className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
+              onClick={() => {
+                handleTabSelect(5);
+                fetchDataSelection(5);
+              }}
+            >
+              Vehicle Listings
+            </button>
+          </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`} onClick={() => { handleTabSelect(6); fetchDataSelection(6); }}>Sales Report</button>
-      </div>
+          <div style={{ marginBottom: "10px" }}>
+            <button className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`} onClick={() => { handleTabSelect(6); fetchDataSelection(6); }}>Sales Report</button>
+          </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <button className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
-      </div>
+          <div style={{ marginBottom: "10px" }}>
+            <button className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
+          </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        {user && (user.employeeType === "superAdmin") && (
-          <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
-        )}
-      </div>
-      <div>
-        <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
-          Add new Vehicle
-        </Link>
-      </div>
+          <div style={{ marginBottom: "10px" }}>
+            {user && (user.employeeType === "superAdmin") && (
+              <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
+            )}
+          </div>
+          <div>
+            <Link to="/add-new-vehicle" className="btn btn-block btn-danger">
+              Add new Vehicle
+            </Link>
+          </div>
 
-      <Button
-        className="btn btn-block btn-danger "
-        style={styles.bookApptButton}
-        onClick={logOutUser}
-        variant="contained"
-      >
-        Log Out
-      </Button>
-    </div>
-  )}
+          <Button
+            className="btn btn-block btn-danger "
+            style={styles.bookApptButton}
+            onClick={logOutUser}
+            variant="contained"
+          >
+            Log Out
+          </Button>
+        </div>
+      )}
 
 
 
