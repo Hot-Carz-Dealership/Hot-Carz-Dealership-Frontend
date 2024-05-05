@@ -9,27 +9,10 @@ import { BASE_URL } from "../utilities/constants";
 import { unstable_usePrompt as Prompt } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import ReactRouterPrompt from "react-router-prompt";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-
-import Modal from "@mui/material/Modal";
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
 window.onbeforeunload = "HELLO STINKY";
 
-const styles = {
-  modal: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    // width: 400,
-
-    // boxShadow: 24,
-    // p: 4,
-  },
-};
 function ItemCard({ item }) {
   const { itemID, itemName, totalCost } = item;
   const [addedToCart, setAddedToCart] = useState(false);
@@ -108,12 +91,31 @@ function Footer() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const alertUser = (e) => {
+      if (!buttonClicked) {
+        // Only prevent default if button hasn't been clicked
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    const handleEndConcert = async () => {
+      // Delete the entire cart
+      await fetch(`${BASE_URL}/api/member/delete_cart`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      console.log("I did a thing plees");
+    };
+
     window.addEventListener("beforeunload", alertUser);
     window.addEventListener("unload", handleEndConcert);
+    window.addEventListener("pagehide", handleEndConcert);
 
     return () => {
       window.removeEventListener("beforeunload", alertUser);
       window.removeEventListener("unload", handleEndConcert);
+      window.removeEventListener("pagehide", handleEndConcert);
     };
   }, [buttonClicked]); // Added buttonClicked to dependency array
 
@@ -124,14 +126,7 @@ function Footer() {
       e.returnValue = "";
     }
   };
-  const handleEndConcert = async () => {
-    console.log("I did a thing plees");
-    // Delete the entire cart
-    await fetch(`${BASE_URL}/api/member/delete_cart`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-  };
+
   const unBlockUser = () => {
     setBlockUser(false);
   };
@@ -155,7 +150,12 @@ function Footer() {
 
   return (
     <>
-      {blockUser && <Prompt when={blockUser} message={"AHHHHHHHHH"} />}
+      {blockUser && (
+        <Prompt
+          when={blockUser}
+          message={"If you leave this page, then your cart will be lost."}
+        />
+      )}
       <div
         style={{
           position: "fixed",
