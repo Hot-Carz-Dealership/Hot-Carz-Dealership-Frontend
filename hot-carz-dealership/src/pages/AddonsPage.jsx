@@ -4,8 +4,10 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { BASE_URL } from "../utilities/constants";
-import ReactRouterPrompt from "react-router-prompt";
-import Box from "@mui/material/Box";
+// import ReactRouterPrompt from "react-router-prompt";
+// import Box from "@mui/material/Box";
+import { unstable_usePrompt as Prompt } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Modal from "@mui/material/Modal";
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
@@ -99,14 +101,30 @@ function ItemCard({ item }) {
 function Footer() {
   const [blockUser, setBlockUser] = useState(true);
   const [buttonPresed, setButtonPressed] = useState(false);
+  const navigate = useNavigate();
+
+  const isPrompt = () => {
+    return true;
+  };
 
   useEffect(() => {
-    // This effect will run whenever `blockUser` changes
-    if (!blockUser) {
-      // If blockUser is false, we want to navigate to checkout
-      window.location.href = "/checkout";
-    }
-  }, [blockUser]);
+    window.addEventListener("beforeunload", alertUser);
+    window.addEventListener("unload", () => {
+      console.log("unload");
+    });
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+      window.removeEventListener("unload", () => {
+        console.log("unload");
+      });
+      console.log("HANDLE LEAVE");
+    };
+  }, []);
+
+  const alertUser = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
 
   const unBlockUser = () => {
     setButtonPressed(true);
@@ -114,8 +132,8 @@ function Footer() {
 
   const handleGoToCheckout = () => {
     // unBlockUser();
-
-    window.location.href = "/checkout";
+    // window.location.href = "/checkout";
+    navigate("/checkout");
   };
 
   function delayPromise(ms = 1000) {
@@ -124,13 +142,10 @@ function Footer() {
     });
   }
 
-  const pr = () => {
-    console.log("blocking user?", blockUser);
-  };
-
   return (
     <>
-      <ReactRouterPrompt
+      <Prompt when={isPrompt()} message={"AHHHHHHHHH"} />
+      {/* <ReactRouterPrompt
         when={blockUser && !buttonPresed}
         beforeConfirm={async () => {
           await delayPromise();
@@ -173,7 +188,7 @@ function Footer() {
             </Modal>
           )
         }
-      </ReactRouterPrompt>
+      </ReactRouterPrompt> */}
       <div
         style={{
           position: "fixed",
