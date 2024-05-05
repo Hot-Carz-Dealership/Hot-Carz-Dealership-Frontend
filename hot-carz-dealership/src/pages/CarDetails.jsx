@@ -56,7 +56,7 @@ function VehicleInfo({ vehicleFeatures, vehicleImage, vehicleInfo }) {
                 <div
                   key={index}
                   className={` justify-center mt-4 ${
-                    feature.label == "VIN" ? "col-12" : "col-6"
+                    feature.label === "VIN" ? "col-12" : "col-6"
                   }`}
                 >
                   <span className="font-bold text-align">{feature.label}</span>{" "}
@@ -530,7 +530,7 @@ function CarDetails() {
   const [vehicleInfo, setVehicleInfo] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
-  const [cars, setCars] = useState([]);
+  // const [cars, setCars] = useState([]);
 
   useEffect(() => {
     fetchCars();
@@ -566,7 +566,7 @@ function CarDetails() {
     fetch(`${BASE_URL}/api/vehicles/search`)
       .then((response) => response.json())
       .then((data) => {
-        setCars(data);
+        // setCars(data);
         // setOriginalCars(data);
         // Extract unique car makes
         // const makes = [...new Set(data.map((car) => car.make))];
@@ -680,7 +680,7 @@ const DetailsFooter = ({ any }) => {
   }, []);
 
   const fetchCars = () => {
-    fetch(`${BASE_URL}/api/vehicles/search`)
+    fetch(`${BASE_URL}/api/vehicles/random?num=12`)
       .then((response) => response.json())
       .then((data) => {
         setCars(data);
