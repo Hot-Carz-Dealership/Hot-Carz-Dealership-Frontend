@@ -29,7 +29,6 @@ const style = {
   },
 };
 
-
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +52,7 @@ const Account = () => {
         setUser(resp.data);
 
         setLoading(false);
-        if((resp.data).hasOwnProperty("memberID")){
+        if (resp.data.hasOwnProperty("memberID")) {
           const requestData = {
             method: "GET",
             headers: {
@@ -120,33 +119,44 @@ const Account = () => {
         aria-describedby="simple-modal-description"
       >
         <Box sx={style.modal}>
-         <div className="rounded-lg bg-white p-8 shadow-2xl">
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Select Date and Time for Test Drive:
-          </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              name="date"
-              id="date"
-              onChange={(newValue) => setNewValue(newValue)}
-              defaultValue={tomorrow}
-              minDate={tomorrow}
-              views={["year", "month", "day", "hours", "minutes"]}
-            />
-          </LocalizationProvider>
+          <div className="rounded-lg bg-white p-8 shadow-2xl">
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Select Date and Time for Test Drive:
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                name="date"
+                id="date"
+                onChange={(newValue) => setNewValue(newValue)}
+                defaultValue={tomorrow}
+                minDate={tomorrow}
+                views={["year", "month", "day", "hours", "minutes"]}
+              />
+            </LocalizationProvider>
 
-          <div>
-            <button className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onClick={() => handleTestdriveSubmit(newValue)}>
-              Submit Test Drive
-            </button>
-          </div>
-          <div>
-            <button className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-red-600" onClick={() => handleCancel(newValue)}>
-              Cancel Test Drive
-            </button>
-          </div>
+            <div>
+              <button
+                className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
+                onClick={() => handleTestdriveSubmit(newValue)}
+              >
+                Submit Test Drive
+              </button>
+            </div>
+            <div>
+              <button
+                className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-red-600"
+                onClick={() => handleCancel(newValue)}
+              >
+                Cancel Test Drive
+              </button>
+            </div>
 
-          <button className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onClick={onClose}>Close</button>
+            <button
+              className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+              onClick={onClose}
+            >
+              Close
+            </button>
           </div>
         </Box>
       </Modal>
@@ -560,7 +570,9 @@ const Account = () => {
         }}
       >
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 1 ? "selected" : ""
+          }`}
           onClick={() => {
             // fetchDataSelection("");
             setSelectedTab(1);
@@ -570,7 +582,9 @@ const Account = () => {
           Account Info
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 2 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 2 ? "selected" : ""
+          }`}
           onClick={() => {
             // fetchDataSelection("");
             setSelectedTab(2);
@@ -580,7 +594,9 @@ const Account = () => {
           Bids
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 7 ? "selected" : ""
+          }`}
           style={selectedTab === 7 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("");
@@ -591,7 +607,9 @@ const Account = () => {
           Active Bids
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 3 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 3 ? "selected" : ""
+          }`}
           style={selectedTab === 3 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("testdrives");
@@ -602,7 +620,9 @@ const Account = () => {
           Test Drives
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 4 ? "selected" : ""
+          }`}
           style={selectedTab === 4 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("vehicles/search");
@@ -613,7 +633,9 @@ const Account = () => {
           Service Appointments
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 5 ? "selected" : ""
+          }`}
           style={selectedTab === 5 ? styles.selected : {}}
           onClick={() => {
             // fetchDataSelection("vehicles/search");
@@ -624,7 +646,9 @@ const Account = () => {
           Owned Vehicles
         </button>
         <button
-          className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`}
+          className={`btn btn-block btn-dark ${
+            selectedTab === 6 ? "selected" : ""
+          }`}
           style={selectedTab === 6 ? styles.selected : {}}
           onClick={() => {
             setSelectedTab(6);
