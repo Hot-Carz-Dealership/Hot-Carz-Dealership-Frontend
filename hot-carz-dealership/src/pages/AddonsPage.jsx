@@ -6,11 +6,11 @@ import Typography from "@mui/material/Typography";
 import { BASE_URL } from "../utilities/constants";
 import ReactRouterPrompt from "react-router-prompt";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 
 import Modal from "@mui/material/Modal";
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
+window.onbeforeunload = "HELLO STINKY";
 
 const styles = {
   modal: {
@@ -59,56 +59,6 @@ function ItemCard({ item }) {
 
   return (
     <>
-      <ReactRouterPrompt
-        when={true}
-        beforeConfirm={async () => {}}
-        beforeCancel={() => {}}
-      >
-        {({ isActive, onConfirm, onCancel }) =>
-          isActive && (
-            // <div className="lightbox">
-            //   <div className="container">
-            //     <p>Do you really want to leave?</p>
-            //     <button type="button" onClick={onCancel}>
-            //       Cancel
-            //     </button>
-            //     <button type="submit" onClick={onConfirm}>
-            //       Ok
-            //     </button>
-            //   </div>
-            // </div>
-            <Modal
-              open={isActive}
-              onClose={onCancel}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <Box sx={styles.modal}>
-                <div className="rounded-lg bg-white p-8 shadow-2xl">
-                  <h2 className="text-lg font-bold">
-                    Do you want to apply for financing?
-                  </h2>
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={onConfirm}
-                      className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
-                    >
-                      Yes
-                    </button>
-                    <button
-                      onClick={onCancel}
-                      className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </Box>
-            </Modal>
-          )
-        }
-      </ReactRouterPrompt>
-
       <Card
         sx={{
           flexBasis: "calc(33.33% - 100px)",
@@ -147,32 +97,104 @@ function ItemCard({ item }) {
 }
 
 function Footer() {
-  const handleCheckout = () => {
-    // Implement redirection to /checkout
+  const [blockUser, setBlockUser] = useState(true);
+  const [buttonPresed, setButtonPressed] = useState(false);
+
+  useEffect(() => {
+    // This effect will run whenever `blockUser` changes
+    if (!blockUser) {
+      // If blockUser is false, we want to navigate to checkout
+      window.location.href = "/checkout";
+    }
+  }, [blockUser]);
+
+  const unBlockUser = () => {
+    setButtonPressed(true);
+  };
+
+  const handleGoToCheckout = () => {
+    // unBlockUser();
+
     window.location.href = "/checkout";
   };
 
+  function delayPromise(ms = 1000) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  const pr = () => {
+    console.log("blocking user?", blockUser);
+  };
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "#f0f0f0",
-        padding: "10px",
-        borderTop: "1px solid #ddd",
-      }}
-    >
-      <Button
-        onClick={handleCheckout}
-        variant="contained"
-        color="primary"
-        style={{ float: "right" }}
-        className="bg-black"
+    <>
+      <ReactRouterPrompt
+        when={blockUser && !buttonPresed}
+        beforeConfirm={async () => {
+          await delayPromise();
+        }}
+        beforeCancel={pr}
       >
-        Take me to checkout
-      </Button>
-    </div>
+        {({ isActive, onConfirm, onCancel }) =>
+          blockUser && (
+            <Modal
+              open={isActive}
+              onClose={onCancel}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              <Box sx={styles.modal}>
+                <div className="rounded-lg bg-white p-8 shadow-2xl">
+                  <h2 className="text-lg font-bold">
+                    If you leave the page the cart will be deleted. Do you want
+                    to leave?{" "}
+                  </h2>
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => {
+                        unBlockUser();
+                        onConfirm();
+                      }}
+                      className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={onCancel}
+                      className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )
+        }
+      </ReactRouterPrompt>
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          borderTop: "1px solid #ddd",
+        }}
+      >
+        <Button
+          onClick={handleGoToCheckout}
+          variant="contained"
+          color="primary"
+          style={{ float: "right" }}
+          className="bg-black"
+        >
+          Take me to checkout
+        </Button>
+      </div>
+    </>
   );
 }
 
