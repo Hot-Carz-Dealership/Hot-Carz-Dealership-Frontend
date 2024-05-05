@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import engineImage from "../imgs/engine.png";
 import oilChangeImage from "../imgs/oilChange.png";
 import tiresImage from "../imgs/tires.png";
@@ -11,17 +12,83 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
+import heroBanner from "../imgs/services-wallpaper.jpg";
+import styles from "../css/services.css";
+import { BASE_URL } from "../utilities/constants";
+import Footer from "../components/common/Footer";
 
-import styles from "../css/loginhome.css";
+const Services = () => {
+  const [services, setServices] = useState([]);
 
-const services = () => {
+  useEffect(() => {
+    // Fetch user data when component mounts
+    const fetchData = async () => {
+      try {
+        // Fetch services
+        await fetchServices();
+      } catch (error) {
+        console.log("Couldn't fetch services.");
+        // Redirect to login page or handle error
+      }
+    };
+  
+    fetchData(); // Call fetchData function when component mounts
+  
+  }, []); 
+  
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/service-menu`);
+      const data = await response.json();
+      // Update state with fetched services
+      setServices(data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+
+
   return (
     <div>
       <div className="homepage p-3">
         <div className="px-5 mx-5">
-          <header className="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 uppercase">
-            Our Services
+          <header class="flex justify-center items-center h-24 text-red-500 text-4xl font-bold leading-6 uppercase">
+          SERVICES AT HOTCARZ
           </header>
+          <div class="p-5" style={styles.homepage}>
+<div className="image-container text-white relative overflow-hidden h-[600px]">
+  <div className="background-image" style={{ backgroundImage: `url(${heroBanner})` }}></div>
+</div>
+
+
+            <div style={{ backgroundColor: 'black' }}>
+  <div className="stars">
+    <span className="star">&#9733;</span>
+    <span className="star">&#9733;</span>
+    <span className="star">&#9733;</span>
+    <span className="star">&#9733;</span>
+    <span className="star">&#9733;</span>
+  </div>
+  <div className="subtitle">
+    <h2>Experience Excellence</h2>
+  </div>
+</div>
+
+
+          </div>
+
+
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 offset-md-2">
+                <h3>ABOUT US</h3>
+                <p class="text-center">At <strong>HotCarz</strong>, we handle every service with utmost care and attention to detail. Our team is dedicated to delivering exceptional quality and ensuring your satisfaction every step of the way. From brakes to engines, we go above and beyond to exceed your expectations and provide you with peace of mind. Trust us to handle your needs with care and expertise, because at <strong>HotCarz</strong>, your satisfaction is our top priority.</p>
+              </div>
+            </div>
+          </div>
+
+<br/>
           {/* <div
           className="d-flex w-100 justify-between gap-3 columns-3"
           style={styles.featuredCarList}
@@ -37,7 +104,6 @@ const services = () => {
                     component="div"
                   >
                     <h1 className="oilChangePrice" style={styles.price}>
-                      $40
                     </h1>
                     <h2>Oil Change Service</h2>
                   </Typography>
@@ -62,7 +128,7 @@ const services = () => {
                     component="div"
                   >
                     <h1 className="enginePrice" style={styles.price}>
-                      $120
+
                     </h1>
                     <h2>Engine Tune Up</h2>
                   </Typography>
@@ -87,7 +153,6 @@ const services = () => {
                     component="div"
                   >
                     <h1 className="tiresPrice" style={styles.price}>
-                      $100
                     </h1>
                     <h2>Tire Services</h2>
                   </Typography>
@@ -101,6 +166,31 @@ const services = () => {
               </Card>
             </Grid>
           </Grid>
+          <h3>Explore more of our services: </h3>
+          <div className="">
+            {services.length > 0 ? (
+              <>
+                  {services.map((service, index) => (
+                    <Button
+                      key={index}
+                      variant="outlined"
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                      style={{
+                        color: 'red',
+                        borderColor: 'red',
+                        marginRight: '10px',
+                      }}
+                    >
+                      {service.service_name} - Price: ${service.price}
+                    </Button>
+                  ))}
+              </>
+            ) : (
+              <h5>services</h5>
+            )}
+          </div>
 
           <div className="d-flex justify-evenly mt-5">
             <div>
@@ -112,7 +202,7 @@ const services = () => {
                 component={Link}
                 to="/bookAppt"
               >
-                scheduele{" "}
+                schedule{" "}
               </Button>
             </div>
 
@@ -131,8 +221,11 @@ const services = () => {
           </div>
         </div>
       </div>
+      <Footer />
+
     </div>
+
   );
 };
 
-export default services;
+export default Services;
