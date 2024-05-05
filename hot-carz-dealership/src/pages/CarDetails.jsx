@@ -6,6 +6,7 @@ import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Footer from "../components/common/Footer";
 
 import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
@@ -29,29 +30,47 @@ const styles = {
   },
 };
 
-function VehicleInfo({ vehicleFeatures, vehicleImage }) {
+function VehicleInfo({ vehicleFeatures, vehicleImage, vehicleInfo }) {
+  console.log(vehicleFeatures);
   return (
-    <section className="mt-12 max-w-full w-[822px] max-md:mt-10">
+    <section className="mt-12 max-w-full w-[60vw] max-md:mt-10">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
-        <div className="flex items-center w-[58%] max-md:ml-0 max-md:w-full">
+        <div className=" flex flex-column gap-3 justify-center items-center w-[58%] max-md:ml-0 max-md:w-full">
           {/* Use VehicleImage component instead of img tag */}
-          <VehicleImage
-            vin={vehicleFeatures[0].value}
-            bodyType={vehicleFeatures[3].value}
-            className="mx-auto"
-          />
+
+          <div className="p-3 rounded-xl bg-white">
+            <VehicleImage
+              vin={vehicleFeatures[0].value}
+              bodyType={vehicleFeatures[3].value}
+              className=""
+            />
+          </div>
         </div>
-        <div className="flex flex-col ml-5 w-[42%] max-md:ml-0 max-md:w-full">
-          <div className="flex flex-col px-5 text-xl font-light tracking-normal leading-8 text-black max-md:mt-10">
+        <div className="flex flex-col ml-5 w-[42%] max-md:ml-0 max-md:w-full rounded-xl bg-gray-400 p-5">
+          <div className="flex flex-col text-xl font-light tracking-normal leading-8 text-black max-md:mt-10">
             <h2 className="text-4xl font-bold leading-7 text-center uppercase">
               Vehicle Features
             </h2>
-            {vehicleFeatures.map((feature, index) => (
-              <div key={index} className="mt-2">
-                <span className="font-bold">{feature.label}</span> <br />
-                <span>{feature.value}</span>
+            <div className="d-flex flex-row flex-wrap ">
+              {vehicleFeatures.map((feature, index) => (
+                <div
+                  key={index}
+                  className={` justify-center mt-4 ${
+                    feature.label == "VIN" ? "col-12" : "col-6"
+                  }`}
+                >
+                  <span className="font-bold text-align">{feature.label}</span>{" "}
+                  <br />
+                  <span>{feature.value}</span>
+                </div>
+              ))}
+              <div className="mt-5">
+                <h2 className="mr-auto">DETAILS</h2>
+                <div>{vehicleInfo.description}</div>
+                {/* <div>{vehicleFeatures.description}</div> */}
+                {/* VFs is a list of objects, none of which, are details OR description */}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -507,16 +526,15 @@ const BidModal = ({ open, onClose, onBidSubmit }) => {
   );
 };
 
-function Footer() {
-  return (
-    <footer className="self-stretch mt-32 w-full bg-black min-h-[287px] max-md:mt-10 max-md:max-w-full" />
-  );
-}
-
 function CarDetails() {
   const [vehicleInfo, setVehicleInfo] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
 
   useEffect(() => {
     const fetchVehicleInfo = async () => {
@@ -543,6 +561,31 @@ function CarDetails() {
 
     fetchVehicleInfo();
   }, [id]);
+
+  const fetchCars = () => {
+    fetch(`${BASE_URL}/api/vehicles/search`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCars(data);
+        // setOriginalCars(data);
+        // Extract unique car makes
+        // const makes = [...new Set(data.map((car) => car.make))];
+        // setCarMakes(["None", ...makes]);
+        // Extract car models for each make
+        // const models = {};
+        // makes.forEach((make) => {
+        //   const makeModels = data
+        //     .filter((car) => car.make === make)
+        //     .map((car) => car.model);
+        //   models[make] = ["None", ...new Set(makeModels)];
+        // });
+        // setCarModels(models);
+        // Extract unique colors
+        // const colors = [...new Set(data.map((car) => car.color))];
+        // setCarColors(["Any", ...colors]);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
 
   const handleScheduleTestDrive = () => {
     // Implement test drive scheduling logic here
@@ -584,6 +627,7 @@ function CarDetails() {
           // { label: "Details", value: vehicleInfo.details },
         ]}
         vehichleImage={vehicleInfo.pictureLibraryLink}
+        vehicleInfo={vehicleInfo}
       />
       <VehicleDetails
         vehicleName={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
@@ -598,9 +642,69 @@ function CarDetails() {
         price={vehicleInfo.price}
         vehicleName={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
       />
-      <Footer />
+      <DetailsFooter />
+      <link
+        href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css"
+        rel="stylesheet"
+      />
     </div>
   );
 }
+
+const CarCard = ({ car }) => {
+  return (
+    <div className="px-3 flex-none py-5 text-align-center d-flex flex-column">
+      <div className="mt-4 ">
+        <p className="text-2xl font-bold text-rose-600 sm:text-3xl">
+          {car.year} {car.make} {car.model}
+        </p>
+        <VehicleImage
+          vin={car.VIN_carID}
+          bodyType={car.body}
+          className="w-auto h-64 rounded-xl mx-auto"
+        />
+      </div>
+
+      <footer className="mt-4 text-lg font-medium text-white sm:mt-6">
+        ${car.price}
+      </footer>
+    </div>
+  );
+};
+
+const DetailsFooter = ({ any }) => {
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
+  const fetchCars = () => {
+    fetch(`${BASE_URL}/api/vehicles/search`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCars(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  return (
+    <Footer>
+      <div className="w-[100%] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-24">
+        <div className="max-w-7xl items-end  sm:flex sm:pe-6 lg:pe-8">
+          <h2 className="max-w-xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            Recomended Cars{" "}
+          </h2>
+        </div>
+
+        <div className="-mx-6 mt-8 lg:mx-0 d-flex flex-row flex-nowrap overflow-x-auto">
+          {cars.map((car, index) => (
+            <CarCard key={index} car={car} />
+          ))}
+        </div>
+      </div>
+    </Footer>
+  );
+};
 
 export default CarDetails;

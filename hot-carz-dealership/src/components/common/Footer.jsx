@@ -2,14 +2,18 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
-  function Copyright(props) {
-    return (
+const Footer = ({ children }) => {
+  console.log(children);
+
+  return (
+    <footer className="text-white footer" sx={{ mt: 5 }}>
+      {children}
+
       <Typography
         variant="body2"
         color="text.secondary"
         align="center"
-        {...props}
+        // {...props}
       >
         {"Copyright © "}
         <Link className="text-white" href="/">
@@ -18,13 +22,6 @@ const Footer = () => {
         {new Date().getFullYear()}
         {"."}
       </Typography>
-    );
-  }
-
-  return (
-    <footer className="footer">
-      {" "}
-      <Copyright className="text-white" sx={{ mt: 5 }} />{" "}
     </footer>
   );
 };
