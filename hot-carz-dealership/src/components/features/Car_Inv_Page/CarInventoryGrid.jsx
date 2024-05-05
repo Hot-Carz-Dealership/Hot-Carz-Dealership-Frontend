@@ -40,7 +40,7 @@ const CarInventoryGrid = ({ searchResults }) => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
   const [carColors, setCarColors] = useState([]);
   useEffect(() => {
     fetchCars();

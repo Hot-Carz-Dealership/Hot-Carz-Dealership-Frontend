@@ -4,9 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { BASE_URL } from "../utilities/constants";
+// import ReactRouterPrompt from "react-router-prompt";
+// import Box from "@mui/material/Box";
+import { unstable_usePrompt as Prompt } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
+window.onbeforeunload = "HELLO STINKY";
 
 function ItemCard({ item }) {
   const { itemID, itemName, totalCost } = item;
@@ -42,65 +47,137 @@ function ItemCard({ item }) {
   };
 
   return (
-    <Card
-      sx={{ flexBasis: "calc(33.33% - 100px)", margin: "20px", minHeight: 150 }}
-    >
-      <CardContent
-        style={{ display: "flex", flexDirection: "column", height: "100%" }}
+    <>
+      <Card
+        sx={{
+          flexBasis: "calc(33.33% - 100px)",
+          margin: "20px",
+          minHeight: 150,
+        }}
       >
-        <div style={{ flexGrow: 1 }}>
-          <Typography variant="h5" component="div">
-            {itemName}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            style={{ marginBottom: "auto" }}
-          >
-            Total Cost: ${totalCost}
-          </Typography>
-        </div>
-        <Button
-          onClick={handleAddToCart}
-          variant="contained"
-          color="error"
-          disabled={addedToCart}
+        <CardContent
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
-          {addedToCart ? "Added" : "Add to Cart"}
-        </Button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </CardContent>
-    </Card>
+          <div style={{ flexGrow: 1 }}>
+            <Typography variant="h5" component="div">
+              {itemName}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ marginBottom: "auto" }}
+            >
+              Total Cost: ${totalCost}
+            </Typography>
+          </div>
+          <Button
+            onClick={handleAddToCart}
+            variant="contained"
+            color="error"
+            disabled={addedToCart}
+          >
+            {addedToCart ? "Added" : "Add to Cart"}
+          </Button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </CardContent>
+      </Card>
+    </>
   );
 }
 
 function Footer() {
-  const handleCheckout = () => {
-    // Implement redirection to /checkout
-    window.location.href = "/checkout";
+  const [blockUser, setBlockUser] = useState(true);
+  const [buttonClicked, setButtonClicked] = useState(false); // New state to track button click
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const alertUser = (e) => {
+      if (!buttonClicked) {
+        // Only prevent default if button hasn't been clicked
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    const handleEndConcert = async () => {
+      // Delete the entire cart
+      await fetch(`${BASE_URL}/api/member/delete_cart`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      console.log("I did a thing plees");
+    };
+
+    window.addEventListener("beforeunload", alertUser);
+    window.addEventListener("unload", handleEndConcert);
+    window.addEventListener("pagehide", handleEndConcert);
+
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+      window.removeEventListener("unload", handleEndConcert);
+      window.removeEventListener("pagehide", handleEndConcert);
+    };
+  }, [buttonClicked]); // Added buttonClicked to dependency array
+
+  const alertUser = (e) => {
+    if (!buttonClicked) {
+      // Only prevent default if button hasn't been clicked
+      e.preventDefault();
+      e.returnValue = "";
+    }
   };
 
+  const unBlockUser = () => {
+    setBlockUser(false);
+  };
+
+  const handleGoToCheckout = () => {
+    unBlockUser();
+    setButtonClicked(true); // Set buttonClicked to true on button click
+    window.removeEventListener("beforeunload", alertUser); // Remove the event listener
+    navigate("/checkout");
+  };
+
+  var myElement = document.getElementById("checkout");
+
+  myElement?.addEventListener("click", function (event) {
+    unBlockUser();
+
+    // handleGoToCheckout();
+  });
+
+  console.log(blockUser);
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "#f0f0f0",
-        padding: "10px",
-        borderTop: "1px solid #ddd",
-      }}
-    >
-      <Button
-        onClick={handleCheckout}
-        variant="contained"
-        color="primary"
-        style={{ float: "right" }}
-        className="bg-black"
+    <>
+      {blockUser && (
+        <Prompt
+          when={blockUser}
+          message={"If you leave this page, then your cart will be lost."}
+        />
+      )}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          borderTop: "1px solid #ddd",
+        }}
       >
-        Take me to checkout
-      </Button>
-    </div>
+        <Button
+          id="checkout"
+          onClick={handleGoToCheckout}
+          variant="contained"
+          color="primary"
+          style={{ float: "right" }}
+          className="bg-black"
+        >
+          Take me to checkout
+        </Button>
+      </div>
+    </>
   );
 }
 
