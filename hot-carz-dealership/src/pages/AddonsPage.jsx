@@ -8,6 +8,7 @@ import { BASE_URL } from "../utilities/constants";
 // import Box from "@mui/material/Box";
 import { unstable_usePrompt as Prompt } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+// import Footer from "../components/common/Footer";
 
 const apiUrl = `${BASE_URL}/api/vehicles/add-ons`;
 const addToCartUrl = `${BASE_URL}/api/member/add_to_cart`;
@@ -85,7 +86,7 @@ function ItemCard({ item }) {
   );
 }
 
-function Footer() {
+function BottomBar() {
   const [blockUser, setBlockUser] = useState(true);
   const [buttonClicked, setButtonClicked] = useState(false); // New state to track button click
   const navigate = useNavigate();
@@ -209,7 +210,7 @@ export default function ItemList() {
           ))}
         </div>
       </div>
-      <Footer />
+      <BottomBar />
     </>
   );
 }

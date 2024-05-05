@@ -17,6 +17,7 @@ import { BASE_URL } from "../utilities/constants";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { states } from "../utilities/StateCodes";
+import Footer from "../components/common/Footer";
 
 function Copyright(props) {
   return (
@@ -379,372 +380,375 @@ export default function ApplyFinancing() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "red" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Apply for Financing
-          </Typography>
-
+    <>
+      <ThemeProvider theme={defaultTheme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
           <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            <Grid container spacing={2}>
-              {/* Autofill fields with user data */}
-              {userData && (
-                <>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="given-name"
-                      name="first_name"
-                      required
-                      fullWidth
-                      id="first_name"
-                      label="First Name"
-                      autoFocus
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.first_name}
-                      helperText={
-                        formSubmitted && !fields.first_name && "Required"
-                      }
-                      defaultValue={userData.first_name}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="last_name"
-                      label="Last Name"
-                      name="last_name"
-                      autoComplete="family-name"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.last_name}
-                      helperText={
-                        formSubmitted && !fields.last_name && "Required"
-                      }
-                      defaultValue={userData.last_name}
-                    />
-                  </Grid>
+            <Avatar sx={{ m: 1, bgcolor: "red" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Apply for Financing
+            </Typography>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.email}
-                      helperText={
-                        formSubmitted &&
-                        !fields.email &&
-                        "Enter a valid email address"
-                      }
-                      defaultValue={userData.email}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="phone"
-                      label="Phone Number"
-                      name="phone"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.phone}
-                      helperText={
-                        formSubmitted &&
-                        !fields.phone &&
-                        "Enter a valid 10-digit phone number"
-                      }
-                      defaultValue={userData.phone}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="address"
-                      label="Address"
-                      name="address"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.address}
-                      helperText={
-                        formSubmitted && !fields.address && "Required"
-                      }
-                      defaultValue={userData.address}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="city"
-                      label="City"
-                      name="city"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.city}
-                      helperText={formSubmitted && !fields.city && "Required"}
-                      defaultValue={userData.city}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      select
-                      id="state_code"
-                      label="State Code"
-                      name="state_code"
-                      onChange={handleChange}
-                      defaultValue={userData.state}
-                      SelectProps={{
-                        native: true,
-                      }}
-                      error={formSubmitted && !fields.state_code}
-                      helperText={
-                        formSubmitted && !fields.state_code && "Required"
-                      }
-                    >
-                      {states.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="zip_code"
-                      label="Zip Code"
-                      name="zip_code"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.zip_code}
-                      helperText={
-                        formSubmitted &&
-                        !fields.zip_code &&
-                        "Enter valid 5-digit Zip Code"
-                      }
-                      defaultValue={userData.zipcode}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="monthly_income"
-                      label="Monthly Income"
-                      name="monthly_income"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.monthly_income}
-                      helperText={
-                        formSubmitted &&
-                        !fields.monthly_income &&
-                        "Enter valid Monthly Income"
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="vin"
-                      label="Vehicle Identification Number (VIN)"
-                      name="vin"
-                      defaultValue={queryParams.get("VIN_carID")}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="ssn"
-                      label="Social Security Number (SSN)"
-                      name="ssn"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.ssn}
-                      helperText={
-                        formSubmitted && !fields.ssn && "Enter valid SSN"
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="down_payment"
-                      label="Down Payment"
-                      name="down_payment"
-                      onChange={handleChange}
-                      error={formSubmitted && !fields.down_payment}
-                      helperText={
-                        formSubmitted &&
-                        !fields.down_payment &&
-                        "Enter valid Down Payment"
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="vehicle_price"
-                      label="Vehicle Price"
-                      name="vehicle_price"
-                      defaultValue={queryParams.get("price")}
-                      disabled
-                    />
-                  </Grid>
-                </>
-              )}
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: "red" }}
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
             >
-              Submit Application
-            </Button>
-            <Grid container justifyContent="center">
-              <Grid item>
-                {/* <Link href="/login" variant="body2" color="inherit">
+              <Grid container spacing={2}>
+                {/* Autofill fields with user data */}
+                {userData && (
+                  <>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        autoComplete="given-name"
+                        name="first_name"
+                        required
+                        fullWidth
+                        id="first_name"
+                        label="First Name"
+                        autoFocus
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.first_name}
+                        helperText={
+                          formSubmitted && !fields.first_name && "Required"
+                        }
+                        defaultValue={userData.first_name}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="last_name"
+                        label="Last Name"
+                        name="last_name"
+                        autoComplete="family-name"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.last_name}
+                        helperText={
+                          formSubmitted && !fields.last_name && "Required"
+                        }
+                        defaultValue={userData.last_name}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.email}
+                        helperText={
+                          formSubmitted &&
+                          !fields.email &&
+                          "Enter a valid email address"
+                        }
+                        defaultValue={userData.email}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="phone"
+                        label="Phone Number"
+                        name="phone"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.phone}
+                        helperText={
+                          formSubmitted &&
+                          !fields.phone &&
+                          "Enter a valid 10-digit phone number"
+                        }
+                        defaultValue={userData.phone}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="address"
+                        label="Address"
+                        name="address"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.address}
+                        helperText={
+                          formSubmitted && !fields.address && "Required"
+                        }
+                        defaultValue={userData.address}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="city"
+                        label="City"
+                        name="city"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.city}
+                        helperText={formSubmitted && !fields.city && "Required"}
+                        defaultValue={userData.city}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        select
+                        id="state_code"
+                        label="State Code"
+                        name="state_code"
+                        onChange={handleChange}
+                        defaultValue={userData.state}
+                        SelectProps={{
+                          native: true,
+                        }}
+                        error={formSubmitted && !fields.state_code}
+                        helperText={
+                          formSubmitted && !fields.state_code && "Required"
+                        }
+                      >
+                        {states.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="zip_code"
+                        label="Zip Code"
+                        name="zip_code"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.zip_code}
+                        helperText={
+                          formSubmitted &&
+                          !fields.zip_code &&
+                          "Enter valid 5-digit Zip Code"
+                        }
+                        defaultValue={userData.zipcode}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="monthly_income"
+                        label="Monthly Income"
+                        name="monthly_income"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.monthly_income}
+                        helperText={
+                          formSubmitted &&
+                          !fields.monthly_income &&
+                          "Enter valid Monthly Income"
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="vin"
+                        label="Vehicle Identification Number (VIN)"
+                        name="vin"
+                        defaultValue={queryParams.get("VIN_carID")}
+                        disabled
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="ssn"
+                        label="Social Security Number (SSN)"
+                        name="ssn"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.ssn}
+                        helperText={
+                          formSubmitted && !fields.ssn && "Enter valid SSN"
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="down_payment"
+                        label="Down Payment"
+                        name="down_payment"
+                        onChange={handleChange}
+                        error={formSubmitted && !fields.down_payment}
+                        helperText={
+                          formSubmitted &&
+                          !fields.down_payment &&
+                          "Enter valid Down Payment"
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="vehicle_price"
+                        label="Vehicle Price"
+                        name="vehicle_price"
+                        defaultValue={queryParams.get("price")}
+                        disabled
+                      />
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, bgcolor: "red" }}
+              >
+                Submit Application
+              </Button>
+              <Grid container justifyContent="center">
+                <Grid item>
+                  {/* <Link href="/login" variant="body2" color="inherit">
                   Already have an account? Sign in
                 </Link> */}
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+          <Copyright sx={{ mt: 5 }} />
+        </Container>
+        {/* Financing modal */}
+        <Modal
+          open={financingModalOpen}
+          onClose={() => setFinancingModalOpen(false)}
+          aria-labelledby="financing-modal-title"
+          aria-describedby="financing-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography variant="h5" id="financing-modal-title" gutterBottom>
+              Financing Terms
+            </Typography>
+            {financingTerms && (
+              <div>
+                <Typography variant="body1">
+                  Credit Score: {financingTerms.credit_score}
+                </Typography>
+                <Typography variant="body1">
+                  Member Yearly Income: ${financingTerms.income.toFixed(2)}
+                </Typography>
+
+                <Typography variant="body1">
+                  Down Payment: ${financingTerms.down_payment.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Financed Amount: ${financingTerms.financed_amount.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  VIN: {financingTerms.Vin_carID}
+                </Typography>
+                <Typography variant="body1">
+                  Interest Total: ${financingTerms.interest_total.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Loan Total: ${financingTerms.loan_total.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Percentage: {financingTerms.percentage}%
+                </Typography>
+                <Typography variant="body1">
+                  Remaining Months: {financingTerms.remaining_months}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Monthly Payment: $
+                  {financingTerms.monthly_payment_sum.toFixed(2)}
+                </Typography>
+              </div>
+            )}
+            <div>
+              <Typography variant="caption">
+                By Typing you name below this will act as a signature for which
+                you agree to the listed terms
+              </Typography>
+            </div>
+
+            <Grid container spacing={2} sx={{ mt: 2 }}>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="first_name"
+                  label="First Name"
+                  name="firstName"
+                  onChange={handleNameChange}
+                  value={customerName.firstName}
+                  error={modalSubmited && !customerName.firstName}
+                  helperText={
+                    modalSubmited && customerName.firstName && "Required"
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="last_name"
+                  label="Last Name"
+                  name="lastName"
+                  onChange={handleNameChange}
+                  value={customerName.lastName}
+                  error={modalSubmited && !customerName.lastName}
+                  helperText={
+                    modalSubmited && customerName.lastName && "Required"
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button fullWidth onClick={handleAccept} variant="contained">
+                  Accept
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button fullWidth onClick={handleDeny} variant="contained">
+                  Deny
+                </Button>
               </Grid>
             </Grid>
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-      {/* Financing modal */}
-      <Modal
-        open={financingModalOpen}
-        onClose={() => setFinancingModalOpen(false)}
-        aria-labelledby="financing-modal-title"
-        aria-describedby="financing-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography variant="h5" id="financing-modal-title" gutterBottom>
-            Financing Terms
-          </Typography>
-          {financingTerms && (
-            <div>
-              <Typography variant="body1">
-                Credit Score: {financingTerms.credit_score}
-              </Typography>
-              <Typography variant="body1">
-                Member Yearly Income: ${financingTerms.income.toFixed(2)}
-              </Typography>
-
-              <Typography variant="body1">
-                Down Payment: ${financingTerms.down_payment.toFixed(2)}
-              </Typography>
-              <Typography variant="body1">
-                Financed Amount: ${financingTerms.financed_amount.toFixed(2)}
-              </Typography>
-              <Typography variant="body1">
-                VIN: {financingTerms.Vin_carID}
-              </Typography>
-              <Typography variant="body1">
-                Interest Total: ${financingTerms.interest_total.toFixed(2)}
-              </Typography>
-              <Typography variant="body1">
-                Loan Total: ${financingTerms.loan_total.toFixed(2)}
-              </Typography>
-              <Typography variant="body1">
-                Percentage: {financingTerms.percentage}%
-              </Typography>
-              <Typography variant="body1">
-                Remaining Months: {financingTerms.remaining_months}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Monthly Payment: $
-                {financingTerms.monthly_payment_sum.toFixed(2)}
-              </Typography>
-            </div>
-          )}
-          <div>
-            <Typography variant="caption">
-              By Typing you name below this will act as a signature for which
-              you agree to the listed terms
-            </Typography>
-          </div>
-
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                id="first_name"
-                label="First Name"
-                name="firstName"
-                onChange={handleNameChange}
-                value={customerName.firstName}
-                error={modalSubmited && !customerName.firstName}
-                helperText={
-                  modalSubmited && customerName.firstName && "Required"
-                }
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                id="last_name"
-                label="Last Name"
-                name="lastName"
-                onChange={handleNameChange}
-                value={customerName.lastName}
-                error={modalSubmited && !customerName.lastName}
-                helperText={
-                  modalSubmited && customerName.lastName && "Required"
-                }
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Button fullWidth onClick={handleAccept} variant="contained">
-                Accept
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button fullWidth onClick={handleDeny} variant="contained">
-                Deny
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </Modal>
-    </ThemeProvider>
+        </Modal>
+      </ThemeProvider>
+      <Footer />
+    </>
   );
 }
