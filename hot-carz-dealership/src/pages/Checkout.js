@@ -24,7 +24,7 @@ import Info from "../components/features/checkout/Info";
 import InfoMobile from "../components/features/checkout/InfoMobile";
 import PaymentForm from "../components/features/checkout/PaymentForm";
 import Review from "../components/features/checkout/Review";
-import { BASE_URL } from "../utilities/constants";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import { unstable_usePrompt as Prompt } from "react-router-dom";
 
 const steps = ["Payment details", "Review your order"];
@@ -204,7 +204,7 @@ export default function Checkout() {
 
       // Make the POST request to the backend endpoint
       const response = await fetch(
-        `${BASE_URL}/api/vehicle-purchase/make-purchase`,
+        `${FORWARD_URL}/api/vehicle-purchase/make-purchase`,
         {
           method: "POST",
           headers: {
