@@ -18,8 +18,6 @@ import styles from "../css/employees.css";
 //technician edit
 
 const ManagerPage = () => {
-  // const FINAN_URL = `${FINANCE_URL}`;
-
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
   const [, /*serviceAppointments*/ setServiceAppointments] = useState([]);
