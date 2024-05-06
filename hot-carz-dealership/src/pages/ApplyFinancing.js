@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { BASE_URL } from "../utilities/constants";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { states } from "../utilities/StateCodes";
@@ -107,7 +107,7 @@ export default function ApplyFinancing() {
       try {
         // Make a POST request to insert financing information
         const response = await fetch(
-          `${BASE_URL}/api/vehicle-purchase/insert-financing`,
+          `${FORWARD_URL}/api/vehicle-purchase/insert-financing`,
           {
             method: "POST",
             headers: {
@@ -316,7 +316,7 @@ export default function ApplyFinancing() {
           // If member account updated successfully, call financing endpoint
           try {
             const financingResponse = await fetch(
-              `${BASE_URL}/api/vehicle-purchase/apply-for-financing`,
+              `${FORWARD_URL}/api/vehicle-purchase/apply-for-financing`,
               {
                 method: "POST",
                 body: JSON.stringify({

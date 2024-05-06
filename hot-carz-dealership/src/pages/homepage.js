@@ -119,7 +119,7 @@ const HomePage = () => {
           <img
             alt="heroPic"
             src={heroBanner}
-            class="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
           ></img>
           <div className="text-overlay">
             {renderWelcomeMessage()}
@@ -173,11 +173,9 @@ const HomePage = () => {
                     <h2>Oil Change Service</h2>
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <p>
-                      Oil is the lifeblood of your car's engine. A high mileage
-                      synthetic blend service and fully synthetic oil change
-                      service with 120 PT. inspection included free.
-                    </p>
+                    Oil is the lifeblood of your car's engine. A high mileage
+                    synthetic blend service and fully synthetic oil change
+                    service with 120 PT. inspection included free.
                   </Typography>
                 </CardContent>
               </Card>
@@ -198,11 +196,9 @@ const HomePage = () => {
                     <h2>Engine Tune Up</h2>
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <p>
-                      Get complete and comprehensive engine diagnostics and
-                      system evaluations for you vehicle. While Keeping your car
-                      running like new.
-                    </p>
+                    Get complete and comprehensive engine diagnostics and system
+                    evaluations for you vehicle. While Keeping your car running
+                    like new.
                   </Typography>
                 </CardContent>
               </Card>
@@ -223,10 +219,8 @@ const HomePage = () => {
                     <h2>Tire Services</h2>
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <p>
-                      We offer tire repair, alignments, tire balancing and tire
-                      rotation to help keep your tires healthy.
-                    </p>
+                    We offer tire repair, alignments, tire balancing and tire
+                    rotation to help keep your tires healthy.
                   </Typography>
                 </CardContent>
               </Card>

@@ -99,7 +99,7 @@ const Account = () => {
 
           // Fetch User's Order History
           const orderHistoryResponse = await fetch(
-            `${BASE_URL}/api/member/order_history`,
+            `${FORWARD_URL}/api/member/order_history`,
             requestData
           );
           const orderHistoryData = await orderHistoryResponse.json();
