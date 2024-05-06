@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+import { BASE_URL } from "../../../utilities/constants";
 import PropTypes from "prop-types";
 
 import Divider from "@mui/material/Divider";
@@ -7,8 +8,60 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+// import FormLabel from "@mui/material/FormLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { styled } from "@mui/system";
 
-function Review({ cartData }) {
+const FormGrid = styled("div")(() => ({
+  display: "flex",
+  flexDirection: "column",
+}));
+function Review({ cartData, handleCustomerSignature }) {
+  const [customerFullName, setCustomerFullName] = useState("");
+  const [hasCustomerName, setHasCustomerName] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/@me`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          // setUserData(userData);
+          const fullName = `${userData.first_name} ${userData.last_name}`;
+          setCustomerFullName(fullName);
+          // Check if the input already has the customer's name exactly
+          setHasCustomerName(fullName === inputRef.current.value);
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const inputRef = React.useRef(null);
+
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+    // Update hasCustomerName based on whether the input value matches customerFullName
+    setHasCustomerName(inputValue === customerFullName);
+    handleCustomerSignature(inputValue === customerFullName);
+  };
+
+  // const handleNameChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setCustomerName((prevNames) => ({
+  //     ...prevNames,
+  //     [name]: value,
+  //   }));
+  // };
+
   if (!cartData || !cartData.cart || cartData.cart.length === 0) {
     return <Typography variant="body1">No items in cart</Typography>;
   }
@@ -64,16 +117,19 @@ function Review({ cartData }) {
       </List>
       <Divider />
       <Stack direction="column" spacing={2} sx={{ my: 2 }}>
-        <Typography variant="subtitle2" gutterBottom>
-          Signatures
-        </Typography>
-
-        <Typography variant="body1">
-          Manager Approval Signature: $Replace With Manger
-        </Typography>
-        <Typography variant="body1">
-          Customer Signature: Replace with textbox
-        </Typography>
+        <Typography variant="subtitle2">Customer Signature:</Typography>
+        <FormGrid sx={{ flexGrow: 1 }}>
+          <OutlinedInput
+            id="customer-signature"
+            autoComplete="customer-signature"
+            placeholder={`Sign Here: ${customerFullName}`}
+            error={!hasCustomerName}
+            // value={customerFullName}
+            ref={inputRef}
+            onChange={handleInputChange}
+            // Add necessary props and event handlers
+          />
+        </FormGrid>
       </Stack>
     </Stack>
   );

@@ -535,6 +535,27 @@ function CarDetails() {
   useEffect(() => {
     fetchCars();
   }, []);
+  useEffect(() => {
+    async function deleteCart() {
+      try {
+        const response = await fetch(`${BASE_URL}/api/member/delete_cart`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          console.log("Cart successfully deleted.");
+        } else {
+          console.error("Failed to delete cart:", response.status);
+        }
+      } catch (error) {
+        console.error("An error occurred while deleting the cart:", error);
+      }
+    }
+
+    // Call the function to delete the cart
+    deleteCart();
+  }, []); // Empty dependency array ensures this effect runs only once after initial
 
   useEffect(() => {
     const fetchVehicleInfo = async () => {
