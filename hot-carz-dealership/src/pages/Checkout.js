@@ -33,7 +33,8 @@ function getStepContent(
   step,
   cartData,
   handleRoutingNumberChange,
-  handleAccountNumberChange
+  handleAccountNumberChange,
+  handleCustomerSignature
 ) {
   switch (step) {
     case 0:
@@ -44,7 +45,12 @@ function getStepContent(
         />
       );
     case 1:
-      return cartData ? <Review cartData={cartData} /> : null; // Render Review only when cartData is available
+      return cartData ? (
+        <Review
+          cartData={cartData}
+          handleCustomerSignature={handleCustomerSignature}
+        />
+      ) : null; // Render Review only when cartData is available
     default:
       throw new Error("Unknown step");
   }
@@ -280,6 +286,12 @@ export default function Checkout() {
     // Implement redirection to /checkout
     window.location.href = "/account";
   };
+  const [customerSignature, setCustomerSignature] = useState(false);
+  const handleCustomerSignature = (hasCustomerSignature) => {
+    if (hasCustomerSignature) {
+      setCustomerSignature(true);
+    } else setCustomerSignature(false);
+  };
 
   return (
     <>
@@ -383,7 +395,7 @@ export default function Checkout() {
                   {steps.map((label) => (
                     <Step
                       sx={{
-                        ":first-child": { pl: 0 },
+                        ":first-of-type": { pl: 0 },
                         ":last-child": { pr: 0 },
                       }}
                       key={label}
@@ -442,7 +454,7 @@ export default function Checkout() {
                 {steps.map((label) => (
                   <Step
                     sx={{
-                      ":first-child": { pl: 0 },
+                      ":first-of-type": { pl: 0 },
                       ":last-child": { pr: 0 },
                       "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                     }}
@@ -486,7 +498,8 @@ export default function Checkout() {
                     activeStep,
                     cartData,
                     handleRoutingNumberChange,
-                    handleAccountNumberChange
+                    handleAccountNumberChange,
+                    handleCustomerSignature
                   )}
                   <Box
                     sx={{
@@ -554,6 +567,7 @@ export default function Checkout() {
                         variant="contained"
                         endIcon={<ChevronRightRoundedIcon />}
                         onClick={handlePlaceOrder}
+                        disabled={!customerSignature}
                         sx={{
                           width: {
                             xs: "100%",
