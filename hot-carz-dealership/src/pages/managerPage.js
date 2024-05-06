@@ -1574,7 +1574,7 @@ const ManagerPage = () => {
     const handleCounterBidOffer = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/api/manager/counter_bid_offer`,
+          `${FORWARD_URL}/api/manager/counter_bid_offer`,
           {
             method: "POST",
             headers: {
