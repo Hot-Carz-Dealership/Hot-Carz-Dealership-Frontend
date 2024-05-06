@@ -184,6 +184,7 @@ const Account = () => {
 
   const BidModal = ({ open, onClose }) => {
     const [newValue, setNewValue] = useState(null);
+    const [counterOfferAmount, setCounterOfferAmount] = useState("");
 
     const handleSignatureChange = (e) => {
       const signatureValue = e.target.value;
@@ -194,14 +195,54 @@ const Account = () => {
     };
 
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
-      
+      try {
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/current-bids`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bidID: bidId,
+              confirmationStatus: confirmationStatus,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to update bid status");
+        }
+      } catch (error) {
+        console.error("Error updating bid status:", error.message);
+      }
+      console.log("Updated Status of Bid. " + confirmationStatus);
     };
 
     const handleCounterBidOffer = async () => {
-
-      //todo
-
-    };
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/member/current-bids`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              bid_id: selectedBid.bidID,
+              new_bid_value: counterOfferAmount,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to update bid offer price");
+        }
+      }catch(error){
+          console.error("Error updating bid offer price:", error.message);
+        }
+        handleBidClose();
+        window.location.reload();
+      };
 
     const getBidColor = (bid) => {
       const percentage = (bid.bidValue / bid.MSRP) * 100;
@@ -243,6 +284,7 @@ const Account = () => {
                   <div className="form-group">
                     <input
                       type="text"
+                      name="counterOfferAmount"
                       placeholder="Offer Amount"
                       value={counterOfferAmount}
                       onChange={(e) => setCounterOfferAmount(e.target.value)}
@@ -553,6 +595,7 @@ const Account = () => {
   const ActiveBidsTable = () => (
     <div className="table-responsive">
       <h2>Active Bids</h2>
+      {bids && bids.length > 0 ? (
       <table className="table table-bordered">
         <thead>
           <tr>
@@ -567,7 +610,7 @@ const Account = () => {
         <tbody>
           {bids.map(
             (bid) =>
-              bid.bidStatus === "Processing" && (
+              bid.bidStatus === "Member Processing" && (
                 <tr key={bid.bidID}>
                   <td>{bid.bidID}</td>
                   <td>{bid.VIN_carID}</td>
@@ -581,8 +624,9 @@ const Account = () => {
               )
           )}
         </tbody>
-      </table>
+      </table>) : (<div>No bids</div>)}
       <BidModal open={bidOpen} onClose={handleBidClose} />
+      
     </div>
   );
 
