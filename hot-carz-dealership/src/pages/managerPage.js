@@ -453,15 +453,18 @@ const ManagerPage = () => {
 
     const fetchFinanceInfo = async (memberId) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            member_id: memberId,
-          }),
-        });
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/get-financing`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              member_id: memberId,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch finance information");
         }
@@ -1486,15 +1489,18 @@ const ManagerPage = () => {
 
     const fetchFinanceInfo = async (memberId) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            member_id: memberId,
-          }),
-        });
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/get-financing`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              member_id: memberId,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch finance information");
         }
@@ -2104,15 +2110,18 @@ const ManagerPage = () => {
 
     const fetchFinanceInfo = async (memberId) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            member_id: memberId,
-          }),
-        });
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/get-financing`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              member_id: memberId,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch finance information");
         }

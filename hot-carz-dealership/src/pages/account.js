@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL, FOWARD_URL } from "../utilities/constants";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import dayjs from "dayjs";
 import dateFormat from "dateformat";
