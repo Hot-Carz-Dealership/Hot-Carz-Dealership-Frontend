@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utilities/constants";
+import { BASE_URL, FOWARD_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
 import dayjs from "dayjs";
 import dateFormat from "dateformat";
@@ -16,8 +16,6 @@ import Modal from "@mui/material/Modal";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
-// const FOWARD_URL = `${BASE_URL}/foward?route=${FINANCE_URL}`;
 
 const style = {
   modal: {
