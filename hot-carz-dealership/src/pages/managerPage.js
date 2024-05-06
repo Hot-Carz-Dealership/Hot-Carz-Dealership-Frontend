@@ -2208,7 +2208,7 @@ const ManagerPage = () => {
         setTotalSales(data.total_sales);
 
         setTotalAllTimeSales(data.all_time_sales);
-        setTotalYearlySales(data.yearly_sales);
+        setTotalYearlySales(data.total_this_year);
         setTotalLastYearSales(data.last_year_sales);
         setTotalLastYearMonthSales(data.last_year_month_sales);
 
