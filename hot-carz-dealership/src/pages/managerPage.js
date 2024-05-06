@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL, FINANCE_URL, FORWARD_URL } from "../utilities/constants";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
 import Button from "@mui/material/Button";
 
@@ -18,7 +18,7 @@ import styles from "../css/employees.css";
 //technician edit
 
 const ManagerPage = () => {
-  const FINAN_URL = `${FINANCE_URL}`;
+  // const FINAN_URL = `${FINANCE_URL}`;
 
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
