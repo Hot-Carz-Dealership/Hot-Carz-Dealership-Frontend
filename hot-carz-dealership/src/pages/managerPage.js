@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL, FINANCE_URL } from "../utilities/constants";
+import { BASE_URL, FINANCE_URL, FORWARD_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
 import Button from "@mui/material/Button";
 
@@ -22,17 +22,16 @@ const ManagerPage = () => {
 
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
-  const [ /*serviceAppointments*/, setServiceAppointments] = useState([]);
+  const [, /*serviceAppointments*/ setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [ /*purchases*/, setPurchases] = useState([]);
+  const [, /*purchases*/ setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-  const [ /*testDrives*/, setTestDrives] = useState([]);
+  const [, /*testDrives*/ setTestDrives] = useState([]);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
-
 
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -75,8 +74,6 @@ const ManagerPage = () => {
     })();
   }, [navigate]);
 
-
-
   const handleGetStarted = () => {
     setShowWelcomeScreen(false);
     setShowTable(true);
@@ -93,9 +90,11 @@ const ManagerPage = () => {
       switch (selectedTab) {
         case 0:
           // Fetch Technicians
-          const technicianResponse = await fetch(`${BASE_URL}/api/employees/technicians`);
+          const technicianResponse = await fetch(
+            `${BASE_URL}/api/employees/technicians`
+          );
           if (!technicianResponse.ok) {
-            throw new Error('Failed to fetch technicians');
+            throw new Error("Failed to fetch technicians");
           }
           const techniciansData = await technicianResponse.json();
           console.log("Technicians fetched successfully:", techniciansData);
@@ -104,39 +103,42 @@ const ManagerPage = () => {
 
           const testDrivesResponse = await fetch(`${BASE_URL}/api/testdrives`);
           if (!testDrivesResponse.ok) {
-            throw new Error('Failed to fetch test drives');
+            throw new Error("Failed to fetch test drives");
           }
           const testDrivesData = await testDrivesResponse.json();
           console.log("Test Drives fetched successfully:", testDrivesData);
           // Update state variable with fetched data
           setTestDrives(testDrivesData);
 
-
-          const appointmentsResponse = await fetch(`${BASE_URL}/api/service-appointments`);
+          const appointmentsResponse = await fetch(
+            `${BASE_URL}/api/service-appointments`
+          );
           if (!appointmentsResponse.ok) {
-            throw new Error('Failed to fetch service appointments');
+            throw new Error("Failed to fetch service appointments");
           }
           const appointmentsData = await appointmentsResponse.json();
-          console.log("Service Appointments fetched successfully:", appointmentsData);
+          console.log(
+            "Service Appointments fetched successfully:",
+            appointmentsData
+          );
           // Update state variable with fetched data
           setServiceAppointments(appointmentsData);
 
-
-          const bidsResponse = await fetch(`${FINAN_URL}/api/manager/current-bids`);
+          const bidsResponse = await fetch(
+            `${FORWARD_URL}/api/manager/current-bids`
+          );
           if (!bidsResponse.ok) {
-            throw new Error('Failed to fetch bids');
+            throw new Error("Failed to fetch bids");
           }
           const bidsData = await bidsResponse.json();
           console.log("Bids fetched successfully:", bidsData);
           // Update state variable with fetched data
           setBids(bidsData);
 
-
           //Appointments that need to be assigned
           //Contract that need to be signed by manager
           //Bids that need to be accepted/ denied/ counter-bid
           //TEST DAMN DRIVES
-
 
           break;
         case 1:
@@ -157,7 +159,9 @@ const ManagerPage = () => {
           break;
         case 2:
           // Fetch Bids
-          const bidsResponse2 = await fetch(`${FINAN_URL}/api/manager/current-bids`);
+          const bidsResponse2 = await fetch(
+            `${FORWARD_URL}/api/manager/current-bids`
+          );
           if (!bidsResponse2.ok) {
             throw new Error("Failed to fetch bids");
           }
@@ -224,7 +228,9 @@ const ManagerPage = () => {
           break;
         case 8:
           // Fetch Purchases
-          const purchasesResponse8 = await fetch(`${FINAN_URL}/api/purchases`);
+          const purchasesResponse8 = await fetch(
+            `${FORWARD_URL}/api/purchases`
+          );
           if (!purchasesResponse8.ok) {
             throw new Error("Failed to fetch purchases");
           }
@@ -239,7 +245,6 @@ const ManagerPage = () => {
     }
   };
 
-
   const assignTechnician = (appointmentId, technicianId, sessionId) => {
     // Create a JSON object with appointment_id, employee_id, and session_id
     const data = {
@@ -248,44 +253,40 @@ const ManagerPage = () => {
     };
 
     fetch(`${BASE_URL}/api/manager/assign-service-appointments`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      credentials: 'include', // Include cookies in the request
-      body: JSON.stringify(data)
+      credentials: "include", // Include cookies in the request
+      body: JSON.stringify(data),
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to assign technician to appointment');
+          throw new Error("Failed to assign technician to appointment");
         }
         // Handle success response here if needed
 
-        console.log('Technician assigned successfully');
-        return 'Technician assigned successfully';
-
+        console.log("Technician assigned successfully");
+        return "Technician assigned successfully";
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle error here
-        console.error('Error assigning technician:', error.message);
-        return 'Error assigning technician: ' + error.message;
-
+        console.error("Error assigning technician:", error.message);
+        return "Error assigning technician: " + error.message;
       });
-
   };
 
-
   const [selectedTab, setSelectedTab] = useState(null);
-
 
   const RenderTable = () => {
     console.log(selectedTab);
     switch (selectedTab) {
       case null:
-        return <WelcomeScreen user={user} handleGetStarted={handleGetStarted} />
+        return (
+          <WelcomeScreen user={user} handleGetStarted={handleGetStarted} />
+        );
       case 0: // If "ALL" is selected, render all tables with borders
         return (
-
           <div style={styles.tableWrapper}>
             <TODO />
           </div>
@@ -340,17 +341,17 @@ const ManagerPage = () => {
 
   const TODO = () => {
     // Get today's date
-    const [selectedTab, setSelectedTab] = useState('');
+    const [selectedTab, setSelectedTab] = useState("");
 
     const renderSelectedTable = () => {
       switch (selectedTab) {
-        case 'serviceCenter':
+        case "serviceCenter":
           return <ServiceCenterForTODO />;
-        case 'testDrives':
+        case "testDrives":
           return <TestDrivesTable applyFilter={true} />;
-        case 'bids':
+        case "bids":
           return <BidsTable applyFilter={true} />;
-        case 'awaitingSignature':
+        case "awaitingSignature":
           return <AwaitingSignature />;
         default:
           return null;
@@ -360,10 +361,46 @@ const ManagerPage = () => {
     return (
       <div>
         <div>
-          <button className={selectedTab === 'serviceCenter' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('serviceCenter')}>Service Appointments</button>
-          <button className={selectedTab === 'testDrives' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('testDrives')}>Test Drives</button>
-          <button className={selectedTab === 'bids' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('bids')}>Bids</button>
-          <button className={selectedTab === 'awaitingSignature' ? 'btn btn-primary' : 'btn btn-outline-primary'} onClick={() => setSelectedTab('awaitingSignature')}>Awaiting Signature</button>
+          <button
+            className={
+              selectedTab === "serviceCenter"
+                ? "btn btn-primary"
+                : "btn btn-outline-primary"
+            }
+            onClick={() => setSelectedTab("serviceCenter")}
+          >
+            Service Appointments
+          </button>
+          <button
+            className={
+              selectedTab === "testDrives"
+                ? "btn btn-primary"
+                : "btn btn-outline-primary"
+            }
+            onClick={() => setSelectedTab("testDrives")}
+          >
+            Test Drives
+          </button>
+          <button
+            className={
+              selectedTab === "bids"
+                ? "btn btn-primary"
+                : "btn btn-outline-primary"
+            }
+            onClick={() => setSelectedTab("bids")}
+          >
+            Bids
+          </button>
+          <button
+            className={
+              selectedTab === "awaitingSignature"
+                ? "btn btn-primary"
+                : "btn btn-outline-primary"
+            }
+            onClick={() => setSelectedTab("awaitingSignature")}
+          >
+            Awaiting Signature
+          </button>
         </div>
         {renderSelectedTable()}
       </div>
@@ -373,7 +410,7 @@ const ManagerPage = () => {
   const AwaitingSignature = () => {
     const [contracts, setContracts] = useState([]);
     const [selectedContract, setSelectedContract] = useState(null);
-    const [managerSignature, setManagerSignature] = useState('');
+    const [managerSignature, setManagerSignature] = useState("");
     const [showSignatureModal, setShowSignatureModal] = useState(false);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
     const [isSignatureEntered, setIsSignatureEntered] = useState(false);
@@ -382,26 +419,24 @@ const ManagerPage = () => {
     const [memberInfo, setMemberInfo] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
-
-
-
     useEffect(() => {
       fetchContracts();
     }, []);
 
     const fetchContracts = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/signature-waiting`);
+        const response = await fetch(
+          `${BASE_URL}/api/manager/signature-waiting`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch contracts awaiting signature');
+          throw new Error("Failed to fetch contracts awaiting signature");
         }
         const data = await response.json();
         setContracts(data.purchases_waiting_signature);
       } catch (error) {
-        console.error('Error fetching contracts:', error.message);
+        console.error("Error fetching contracts:", error.message);
       }
       setIsLoading(false);
-
     };
 
     const handleViewContract = async (contract) => {
@@ -419,84 +454,95 @@ const ManagerPage = () => {
     const fetchFinanceInfo = async (memberId) => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            member_id: memberId
-          })
+            member_id: memberId,
+          }),
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch finance information');
+          throw new Error("Failed to fetch finance information");
         }
 
         const financeData = await response.json();
         setFinanceInfo(financeData);
       } catch (error) {
-        console.error('Error fetching finance information:', error.message);
+        console.error("Error fetching finance information:", error.message);
       }
     };
 
     const fetchVehicleAndMemberInfo = async (appointment) => {
       try {
-        const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const vehicleResponse = await fetch(
+          `${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!vehicleResponse.ok) {
-          throw new Error('Failed to fetch vehicle information');
+          throw new Error("Failed to fetch vehicle information");
         }
         const vehicleData = await vehicleResponse.json();
         setVehicleInfo(vehicleData);
 
-        const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ memberID: appointment.memberID }),
-        });
+        const memberResponse = await fetch(
+          `${BASE_URL}/api/manager/get_member`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ memberID: appointment.memberID }),
+          }
+        );
         if (!memberResponse.ok) {
-          throw new Error('Failed to fetch member information');
+          throw new Error("Failed to fetch member information");
         }
         const memberData = await memberResponse.json();
         setMemberInfo(memberData);
       } catch (error) {
-        console.error('Error fetching vehicle and member information:', error.message);
+        console.error(
+          "Error fetching vehicle and member information:",
+          error.message
+        );
       }
     };
 
     const handleSubmitSignature = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/signature`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ purchaseID: selectedContract.purchaseID, signature: 'Yes' })
+          body: JSON.stringify({
+            purchaseID: selectedContract.purchaseID,
+            signature: "Yes",
+          }),
         });
         if (!response.ok) {
-          throw new Error('Failed to update signature');
+          throw new Error("Failed to update signature");
         }
         setShowSignatureModal(false);
         setShowReplacementModal(true);
         // Refetch awaiting signature contracts after successful update
         fetchContracts();
       } catch (error) {
-        console.error('Error updating signature:', error.message);
+        console.error("Error updating signature:", error.message);
       }
     };
 
     const closeModal = () => {
       setShowSignatureModal(false);
       setShowReplacementModal(false);
-      setManagerSignature('');
+      setManagerSignature("");
     };
-
 
     return (
       <div>
@@ -517,13 +563,18 @@ const ManagerPage = () => {
               </tr>
             ) : (
               <>
-                {contracts.map(contract => (
+                {contracts.map((contract) => (
                   <tr key={contract.purchaseID}>
                     <td>{contract.VIN_carID}</td>
                     <td>{contract.purchaseType}</td>
                     <td>{contract.purchaseDate}</td>
                     <td>
-                      <button onClick={() => handleViewContract(contract)} className="btn btn-primary ">View</button>
+                      <button
+                        onClick={() => handleViewContract(contract)}
+                        className="btn btn-primary "
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -561,7 +612,10 @@ const ManagerPage = () => {
                       <p>Income: ${financeInfo[0].income}</p>
                       <p>Down Payment: ${financeInfo[0].down_payment}</p>
                       <p>Loan Total: ${financeInfo[0].loan_total}</p>
-                      <p>Monthly Payment Sum: ${financeInfo[0].monthly_payment_sum}</p>
+                      <p>
+                        Monthly Payment Sum: $
+                        {financeInfo[0].monthly_payment_sum}
+                      </p>
                       <p>Percentage: {financeInfo[0].percentage}%</p>
                       <p>Remaining Months: {financeInfo[0].remaining_months}</p>
                     </div>
@@ -585,9 +639,14 @@ const ManagerPage = () => {
                   {memberInfo && (
                     <div>
                       <h5>Member Information</h5>
-                      <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
+                      <p>
+                        Name: {memberInfo.first_name} {memberInfo.last_name}
+                      </p>
                       <p>Email: {memberInfo.email}</p>
-                      <p>Address: {memberInfo.address}, {memberInfo.city}, {memberInfo.state}, {memberInfo.zipcode}</p>
+                      <p>
+                        Address: {memberInfo.address}, {memberInfo.city},{" "}
+                        {memberInfo.state}, {memberInfo.zipcode}
+                      </p>
                       <p>Phone: {memberInfo.phone}</p>
                     </div>
                   )}
@@ -605,18 +664,34 @@ const ManagerPage = () => {
                     <small className="form-text text-muted">
                       By signing this, you are accepting the contract.
                     </small>
-                    {managerSignature && !isSignatureEntered && <p style={{ color: 'red' }}>Please enter your first and last name.</p>}
+                    {managerSignature && !isSignatureEntered && (
+                      <p style={{ color: "red" }}>
+                        Please enter your first and last name.
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                  <button type="button" className="btn btn-primary" onClick={handleSubmitSignature} disabled={!isSignatureEntered}>Confirm Signature</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleSubmitSignature}
+                    disabled={!isSignatureEntered}
+                  >
+                    Confirm Signature
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
-
 
         {showReplacementModal && (
           <div className="modal-container">
@@ -634,7 +709,13 @@ const ManagerPage = () => {
                   <p>Your signature has been confirmed.</p>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
@@ -645,25 +726,24 @@ const ManagerPage = () => {
   };
   const ServiceCenter = () => {
     const [services, setServices] = useState([]);
-    const [newServiceName, setNewServiceName] = useState('');
-    const [newServicePrice, setNewServicePrice] = useState('');
+    const [newServiceName, setNewServiceName] = useState("");
+    const [newServicePrice, setNewServicePrice] = useState("");
     const [serviceAppointments, setServiceAppointments] = useState([]);
     // const [ /*selectedAppointment*/ , setSelectedAppointment] = useState(null);
     // const [ /*vehicleInfo */, setVehicleInfo] = useState(null);
     // const [ /* memberInfo*/ , setMemberInfo] = useState(null);
-    const [ /*technicians*/, setTechnicians] = useState([]);
+    const [, /*technicians*/ setTechnicians] = useState([]);
     // const [/*selectedTechnician*/, setSelectedTechnician] = useState(null);
     //  const [/*showReplacementModal*/ , setShowReplacementModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [editedName, setEditedName] = useState('');
-    const [editedPrice, setEditedPrice] = useState('');
+    const [editedName, setEditedName] = useState("");
+    const [editedPrice, setEditedPrice] = useState("");
     const [editedService, setEditedService] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [deleteError, setDeleteError] = useState(false);
 
     const [page, setPage] = useState(0); // Current page number
     const pageSize = 10; // Number of service appointments per page
-
 
     useEffect(() => {
       fetchServiceAppointments();
@@ -713,7 +793,6 @@ const ManagerPage = () => {
       }
     };
 
-
     /*
         const fetchVehicleAndMemberInfo = async (appointment) => {
           try {
@@ -750,20 +829,27 @@ const ManagerPage = () => {
 
     const handleAddService = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({ edit_or_add: 1, service_name: newServiceName, price: newServicePrice })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              edit_or_add: 1,
+              service_name: newServiceName,
+              price: newServicePrice,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to add service");
         }
         await fetchServices();
-        setNewServiceName('');
-        setNewServicePrice('');
+        setNewServiceName("");
+        setNewServicePrice("");
       } catch (error) {
         console.error("Error adding service:", error.message);
       }
@@ -771,14 +857,17 @@ const ManagerPage = () => {
 
     const handleDeleteService = async (serviceID) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({ service_id: serviceID })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ service_id: serviceID }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to delete service");
         }
@@ -792,19 +881,22 @@ const ManagerPage = () => {
 
     const updateService = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/edit-service-menu`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            edit_or_add: 2,
-            serviceID: editedService.serviceID,
-            service_name: editedName,
-            price: editedPrice
-          })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/edit-service-menu`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              edit_or_add: 2,
+              serviceID: editedService.serviceID,
+              service_name: editedName,
+              price: editedPrice,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to update service");
         }
@@ -821,7 +913,6 @@ const ManagerPage = () => {
       setEditedPrice(service.price);
       setShowEditModal(true);
     };
-
 
     /*
     const openModal = (appointment) => {
@@ -858,10 +949,25 @@ const ManagerPage = () => {
         <div className="table-responsive" style={styles.tableHeight}>
           <h2>Service Appointments</h2>
           <div>
-            <button className="btn btn-primary mr-2" onClick={prevPage} disabled={page === 0}>Previous</button>
-            <button className="btn btn-primary" onClick={nextPage} disabled={serviceAppointments.length <= endIndex}>Next</button>
+            <button
+              className="btn btn-primary mr-2"
+              onClick={prevPage}
+              disabled={page === 0}
+            >
+              Previous
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={nextPage}
+              disabled={serviceAppointments.length <= endIndex}
+            >
+              Next
+            </button>
           </div>
-          <table className="table table-bordered table-striped" style={styles.tableHeight}>
+          <table
+            className="table table-bordered table-striped"
+            style={styles.tableHeight}
+          >
             <thead className="thead-dark">
               <tr>
                 <th>Appointment Date</th>
@@ -873,14 +979,19 @@ const ManagerPage = () => {
             <tbody>
               {!isLoading ? (
                 serviceAppointments
-                  .sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)) // Sort appointments by date (from most recent to oldest)
+                  .sort(
+                    (a, b) =>
+                      new Date(b.appointment_date) -
+                      new Date(a.appointment_date)
+                  ) // Sort appointments by date (from most recent to oldest)
                   .slice(startIndex, endIndex)
-                  .map(appointment => (
+                  .map((appointment) => (
                     <tr key={appointment.appointment_id}>
                       <td>{appointment.appointment_date}</td>
                       <td>{appointment.service_name}</td>
                       <td>{appointment.status}</td>
-                      <td>{appointment.comments}</td> {/* New column for comments */}
+                      <td>{appointment.comments}</td>{" "}
+                      {/* New column for comments */}
                     </tr>
                   ))
               ) : (
@@ -915,7 +1026,10 @@ const ManagerPage = () => {
         </div>
         {/* Current Available Services */}
         <h2>Current Available Services</h2>
-        <table className="table table-bordered table-striped" style={styles.tableHeight}>
+        <table
+          className="table table-bordered table-striped"
+          style={styles.tableHeight}
+        >
           <thead className="thead-dark">
             <tr>
               <th>Service Name</th>
@@ -929,7 +1043,12 @@ const ManagerPage = () => {
                 <td>{service.service_name}</td>
                 <td>{service.price}</td>
                 <td>
-                  <button className="btn btn-primary mr-2" onClick={() => handleEditService(service)}>Edit</button>
+                  <button
+                    className="btn btn-primary mr-2"
+                    onClick={() => handleEditService(service)}
+                  >
+                    Edit
+                  </button>
                 </td>
               </tr>
             ))}
@@ -942,7 +1061,11 @@ const ManagerPage = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Edit Service</h5>
-                  <button type="button" className="close" onClick={() => setShowEditModal(false)}>
+                  <button
+                    type="button"
+                    className="close"
+                    onClick={() => setShowEditModal(false)}
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -968,11 +1091,33 @@ const ManagerPage = () => {
                 </div>
                 <div className="modal-footer">
                   {deleteError && (
-                    <p className="text-danger">Cannot delete this service. (Hint: You may still have outstanding warranties on this service and must honor them.)</p>
+                    <p className="text-danger">
+                      Cannot delete this service. (Hint: You may still have
+                      outstanding warranties on this service and must honor
+                      them.)
+                    </p>
                   )}
-                  <button type="button" className="btn btn-primary" onClick={updateService}>Save Changes</button>
-                  <button type="button" className="btn btn-danger" onClick={() => handleDeleteService(editedService.serviceID)}>Delete</button>
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cancel</button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={updateService}
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteService(editedService.serviceID)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -983,13 +1128,14 @@ const ManagerPage = () => {
   };
 
   const ServiceCenterForTODO = () => {
-    const [scheduledServiceAppointments, setScheduledServiceAppointments] = useState([]);
+    const [scheduledServiceAppointments, setScheduledServiceAppointments] =
+      useState([]);
     const [technicians, setTechnicians] = useState([]);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [selectedTechnician, setSelectedTechnician] = useState(null);
     const [showTechnicianWarning, setShowTechnicianWarning] = useState(false);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
-    const [assignmentMessage, setAssignmentMessage] = useState('');
+    const [assignmentMessage, setAssignmentMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [vehicleInfo, setVehicleInfo] = useState(null);
     const [memberInfo, setMemberInfo] = useState(null);
@@ -1002,14 +1148,19 @@ const ManagerPage = () => {
     const fetchScheduledServiceAppointments = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${BASE_URL}/api/pending-service-appointments`);
+        const response = await fetch(
+          `${BASE_URL}/api/pending-service-appointments`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch pending service appointments");
         }
         const data = await response.json();
         setScheduledServiceAppointments(data);
       } catch (error) {
-        console.error("Error fetching pending service appointments:", error.message);
+        console.error(
+          "Error fetching pending service appointments:",
+          error.message
+        );
       } finally {
         setIsLoading(false);
       }
@@ -1029,32 +1180,41 @@ const ManagerPage = () => {
     };
     const fetchVehicleAndMemberInfo = async (appointment) => {
       try {
-        const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const vehicleResponse = await fetch(
+          `${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (!vehicleResponse.ok) {
-          throw new Error('Failed to fetch vehicle information');
+          throw new Error("Failed to fetch vehicle information");
         }
         const vehicleData = await vehicleResponse.json();
         setVehicleInfo(vehicleData);
 
-        const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ memberID: appointment.memberID }),
-        });
+        const memberResponse = await fetch(
+          `${BASE_URL}/api/manager/get_member`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ memberID: appointment.memberID }),
+          }
+        );
         if (!memberResponse.ok) {
-          throw new Error('Failed to fetch member information');
+          throw new Error("Failed to fetch member information");
         }
         const memberData = await memberResponse.json();
         setMemberInfo(memberData);
       } catch (error) {
-        console.error('Error fetching vehicle and member information:', error.message);
+        console.error(
+          "Error fetching vehicle and member information:",
+          error.message
+        );
       }
     };
 
@@ -1065,12 +1225,16 @@ const ManagerPage = () => {
     const confirmTechnician = async () => {
       if (selectedTechnician) {
         try {
-          const message = await assignTechnician(selectedAppointment.appointment_id, selectedTechnician, sessionId);
+          const message = await assignTechnician(
+            selectedAppointment.appointment_id,
+            selectedTechnician,
+            sessionId
+          );
           setAssignmentMessage(message);
           setShowReplacementModal(true);
           await fetchScheduledServiceAppointments();
         } catch (error) {
-          setAssignmentMessage('Error assigning technician: ' + error.message);
+          setAssignmentMessage("Error assigning technician: " + error.message);
           setShowReplacementModal(true); // Still show modal to display error message
         }
       } else {
@@ -1095,7 +1259,10 @@ const ManagerPage = () => {
       <div>
         <div className="table-responsive" style={styles.tableHeight}>
           <h2>Scheduled Service Appointments</h2>
-          <table className="table table-bordered table-striped" style={styles.tableHeight}>
+          <table
+            className="table table-bordered table-striped"
+            style={styles.tableHeight}
+          >
             <thead className="thead-dark">
               <tr>
                 <th>Appointment Date</th>
@@ -1111,16 +1278,23 @@ const ManagerPage = () => {
                 </tr>
               ) : scheduledServiceAppointments.length === 0 ? (
                 <tr>
-                  <td colSpan="4">No scheduled service appointments available</td>
+                  <td colSpan="4">
+                    No scheduled service appointments available
+                  </td>
                 </tr>
               ) : (
-                scheduledServiceAppointments.map(appointment => (
+                scheduledServiceAppointments.map((appointment) => (
                   <tr key={appointment.appointment_id}>
                     <td>{appointment.appointment_date}</td>
                     <td>{appointment.service_name}</td>
                     <td>{appointment.status}</td>
                     <td>
-                      <button onClick={() => openModal(appointment)} className="btn btn-primary">View</button>
+                      <button
+                        onClick={() => openModal(appointment)}
+                        className="btn btn-primary"
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -1140,7 +1314,9 @@ const ManagerPage = () => {
                   </button>
                 </div>
                 <div className="modal-body">
-                  <p>Appointment Date: {selectedAppointment.appointment_date}</p>
+                  <p>
+                    Appointment Date: {selectedAppointment.appointment_date}
+                  </p>
                   <p>Service Type: {selectedAppointment.service_name}</p>
                   <p>Status: {selectedAppointment.status}</p>
                   {vehicleInfo && (
@@ -1157,7 +1333,9 @@ const ManagerPage = () => {
                   {memberInfo && (
                     <div>
                       <h5>Member Information</h5>
-                      <p>Name: {memberInfo.first_name} {memberInfo.last_name}</p>
+                      <p>
+                        Name: {memberInfo.first_name} {memberInfo.last_name}
+                      </p>
                       <p>Email: {memberInfo.email}</p>
                       <p>Phone: {memberInfo.phone}</p>
                       <p>Address: {memberInfo.address}</p>
@@ -1167,17 +1345,40 @@ const ManagerPage = () => {
                 </div>
                 <div className="modal-footer">
                   <label htmlFor="technician">Select Technician:</label>
-                  <select id="technician" value={selectedTechnician} onChange={handleTechnicianChange}>
+                  <select
+                    id="technician"
+                    value={selectedTechnician}
+                    onChange={handleTechnicianChange}
+                  >
                     <option value="-">-</option>
-                    {technicians.map(technician => (
-                      <option key={technician.employeeID} value={technician.employeeID}>
+                    {technicians.map((technician) => (
+                      <option
+                        key={technician.employeeID}
+                        value={technician.employeeID}
+                      >
                         {technician.first_name} {technician.last_name}
                       </option>
                     ))}
                   </select>
-                  {showTechnicianWarning && <span style={{ color: 'red' }}>Please select a technician</span>}
-                  <button type="button" className="btn btn-primary" onClick={confirmTechnician}>Confirm</button>
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                  {showTechnicianWarning && (
+                    <span style={{ color: "red" }}>
+                      Please select a technician
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={confirmTechnician}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
@@ -1199,7 +1400,13 @@ const ManagerPage = () => {
                   {assignmentMessage && <p>{assignmentMessage}</p>}
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
@@ -1208,7 +1415,6 @@ const ManagerPage = () => {
       </div>
     );
   };
-
 
   const TechnicianTable = () => {
     return (
@@ -1254,12 +1460,11 @@ const ManagerPage = () => {
     const [financeInfo, setFinanceInfo] = useState([]);
     const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
-    const [signature, setSignature] = useState('');
+    const [signature, setSignature] = useState("");
     const [isSignatureEntered, setIsSignatureEntered] = useState(false);
 
-    const [counterOfferAmount, setCounterOfferAmount] = useState('');
+    const [counterOfferAmount, setCounterOfferAmount] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-
 
     useEffect(() => {
       fetchCurrentBids();
@@ -1267,7 +1472,7 @@ const ManagerPage = () => {
 
     const fetchCurrentBids = async () => {
       try {
-        const response = await fetch(`${FINAN_URL}/api/manager/current-bids`);
+        const response = await fetch(`${FORWARD_URL}/api/manager/current-bids`);
         if (!response.ok) {
           throw new Error("Failed to fetch current bids");
         }
@@ -1277,22 +1482,21 @@ const ManagerPage = () => {
         console.error("Error fetching current bids:", error.message);
       }
       setIsLoading(false);
-
     };
 
     const fetchFinanceInfo = async (memberId) => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            member_id: memberId
-          })
+            member_id: memberId,
+          }),
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch finance information');
+          throw new Error("Failed to fetch finance information");
         }
 
         const financeData = await response.json();
@@ -1300,23 +1504,25 @@ const ManagerPage = () => {
 
         setFinanceInfo(financeData);
       } catch (error) {
-        console.error('Error fetching finance information:', error.message);
+        console.error("Error fetching finance information:", error.message);
       }
     };
 
-
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
-        const response = await fetch(`${FINAN_URL}/api/manager/current-bids`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            bidID: bidId,
-            confirmationStatus: confirmationStatus,
-          }),
-        });
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/current-bids`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bidID: bidId,
+              confirmationStatus: confirmationStatus,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to update bid status");
         }
@@ -1326,17 +1532,17 @@ const ManagerPage = () => {
       } catch (error) {
         console.error("Error updating bid status:", error.message);
       }
-      console.log('Updated Status of Bid. ' + confirmationStatus);
+      console.log("Updated Status of Bid. " + confirmationStatus);
     };
 
     const getBidColor = (bid) => {
       const percentage = (bid.bidValue / bid.MSRP) * 100;
       if (percentage < 10) {
-        return 'green';
+        return "green";
       } else if (percentage >= 10 && percentage <= 20) {
-        return 'orange';
+        return "orange";
       } else {
-        return 'red';
+        return "red";
       }
     };
 
@@ -1350,28 +1556,32 @@ const ManagerPage = () => {
       setFinanceInfo([]);
       setShowReplacementModal(false);
       setConfirmationStatus(null);
-      setCounterOfferAmount('');
+      setCounterOfferAmount("");
     };
-
 
     const handleSignatureChange = (e) => {
       const signatureValue = e.target.value;
       setSignature(signatureValue);
-      setIsSignatureEntered(!!signatureValue && signatureValue.trim().split(' ').length >= 2); // Check if first and last name are provided
+      setIsSignatureEntered(
+        !!signatureValue && signatureValue.trim().split(" ").length >= 2
+      ); // Check if first and last name are provided
     };
 
     const handleCounterBidOffer = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/manager/counter_bid_offer`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            bidID: selectedBid.bidID,
-            newOfferPrice: counterOfferAmount,
-          }),
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/manager/counter_bid_offer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bidID: selectedBid.bidID,
+              newOfferPrice: counterOfferAmount,
+            }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to update bid offer price");
         }
@@ -1381,7 +1591,6 @@ const ManagerPage = () => {
         console.error("Error updating bid offer price:", error.message);
       }
     };
-
 
     return (
       <div>
@@ -1406,23 +1615,33 @@ const ManagerPage = () => {
                 </tr>
               ) : (
                 <>
-                  {bids && bids
-                    .filter(bid => applyFilter ? bid.bidStatus === 'Processing' : true)
-                    .map((bid, index) => (
-                      <tr key={index}>
-                        <td>{bid.make}</td>
-                        <td>{bid.model}</td>
-                        <td>{bid.VIN}</td>
-                        <td>{bid.MSRP}</td>
-                        <td style={{ color: getBidColor(bid) }}>{bid.bidValue}</td>
-                        <td>{bid.bidStatus}</td>
-                        <td>
-                          {bid.bidStatus === 'Processing' && (
-                            <button onClick={() => handleViewBid(bid)} className="btn btn-primary">View</button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                  {bids &&
+                    bids
+                      .filter((bid) =>
+                        applyFilter ? bid.bidStatus === "Processing" : true
+                      )
+                      .map((bid, index) => (
+                        <tr key={index}>
+                          <td>{bid.make}</td>
+                          <td>{bid.model}</td>
+                          <td>{bid.VIN}</td>
+                          <td>{bid.MSRP}</td>
+                          <td style={{ color: getBidColor(bid) }}>
+                            {bid.bidValue}
+                          </td>
+                          <td>{bid.bidStatus}</td>
+                          <td>
+                            {bid.bidStatus === "Processing" && (
+                              <button
+                                onClick={() => handleViewBid(bid)}
+                                className="btn btn-primary"
+                              >
+                                View
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                   {!bids && (
                     <tr>
                       <td colSpan="7">No bids available</td>
@@ -1450,20 +1669,35 @@ const ManagerPage = () => {
                   <p>Model: {selectedBid.model}</p>
                   <p>VIN: {selectedBid.VIN}</p>
                   <p>MSRP: {selectedBid.MSRP}</p>
-                  <p style={{ color: getBidColor(selectedBid.bidValue) }}> Bid Amount:  {selectedBid.bidValue} {((selectedBid.bidValue - selectedBid.MSRP) / selectedBid.MSRP * 100).toFixed(2)}%</p>
+                  <p style={{ color: getBidColor(selectedBid.bidValue) }}>
+                    {" "}
+                    Bid Amount: {selectedBid.bidValue}{" "}
+                    {(
+                      ((selectedBid.bidValue - selectedBid.MSRP) /
+                        selectedBid.MSRP) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </p>
                   <p>Status: {selectedBid.bidStatus}</p>
                   {/* Display finance information */}
                   {financeInfo.length > 0 && (
                     <div>
                       <h5>Finance Information</h5>
-                      <p>Offer from: {financeInfo[0].first_name} {financeInfo[0].last_name}, {financeInfo[0].phone} </p>
+                      <p>
+                        Offer from: {financeInfo[0].first_name}{" "}
+                        {financeInfo[0].last_name}, {financeInfo[0].phone}{" "}
+                      </p>
 
                       <p>Income: {financeInfo[0].income}</p>
                       <p>Credit Score: {financeInfo[0].credit_score}</p>
                       <p>Loan Total: {financeInfo[0].loan_total}</p>
                       <p>Down Payment: {financeInfo[0].down_payment}</p>
                       <p>Percentage: {financeInfo[0].percentage}</p>
-                      <p>Monthly Payment Sum: {financeInfo[0].monthly_payment_sum}</p>
+                      <p>
+                        Monthly Payment Sum:{" "}
+                        {financeInfo[0].monthly_payment_sum}
+                      </p>
                       <p>Remaining Months: {financeInfo[0].remaining_months}</p>
                     </div>
                   )}
@@ -1483,10 +1717,8 @@ const ManagerPage = () => {
                       Send Counter Offer
                     </button>
                   </div>
-
                 </div>
                 <div className="modal-footer">
-
                   <div className="form-group">
                     <label htmlFor="signature">Signature:</label>
                     <input
@@ -1498,22 +1730,42 @@ const ManagerPage = () => {
                       onChange={handleSignatureChange}
                     />
                     <small className="form-text text-muted">
-                      By signing this, you are accepting the proposed bid and are entering into a contract with this entity.
+                      By signing this, you are accepting the proposed bid and
+                      are entering into a contract with this entity.
                     </small>
-                    {signature && !isSignatureEntered && <p style={{ color: 'red' }}>Please enter your first and last name.</p>}
+                    {signature && !isSignatureEntered && (
+                      <p style={{ color: "red" }}>
+                        Please enter your first and last name.
+                      </p>
+                    )}
                   </div>
-
 
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => handleBidConfirmation(selectedBid.bidID, 'Confirmed')}
+                    onClick={() =>
+                      handleBidConfirmation(selectedBid.bidID, "Confirmed")
+                    }
                     disabled={!isSignatureEntered} // Disable button if signature is not provided
                   >
                     Accept Bid
                   </button>
-                  <button type="button" className="btn btn-danger" onClick={() => handleBidConfirmation(selectedBid.bidID, 'Denied')}>Deny Bid</button>
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() =>
+                      handleBidConfirmation(selectedBid.bidID, "Denied")
+                    }
+                  >
+                    Deny Bid
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
@@ -1531,7 +1783,6 @@ const ManagerPage = () => {
                   </button>
                 </div>
                 <div className="modal-body">
-
                   {counterOfferAmount && (
                     <div>
                       <p>Action: Counter Bid</p>
@@ -1539,7 +1790,9 @@ const ManagerPage = () => {
                     </div>
                   )}
                   {/* Display bid status information here */}
-                  <p>Bid Status: {confirmationStatus || selectedBid.bidStatus}</p>
+                  <p>
+                    Bid Status: {confirmationStatus || selectedBid.bidStatus}
+                  </p>
                   {selectedBid && (
                     <div>
                       <p>Make: {selectedBid.make}</p>
@@ -1549,19 +1802,20 @@ const ManagerPage = () => {
                   )}
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
-
       </div>
-
-
-
     );
-
   };
 
   /*
@@ -1600,18 +1854,16 @@ const ManagerPage = () => {
   */
 
   const TestDrivesTable = ({ applyFilter }) => {
-
-
     // Function to fetch pending test drives
     const fetchPendingTestDrives = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/pending_testdrives`);
         if (!response.ok) {
-          throw new Error('Failed to fetch pending test drives');
+          throw new Error("Failed to fetch pending test drives");
         }
         return await response.json();
       } catch (error) {
-        console.error('Error fetching pending test drives:', error.message);
+        console.error("Error fetching pending test drives:", error.message);
         // Handle error
       }
     };
@@ -1629,10 +1881,12 @@ const ManagerPage = () => {
       const fetchData = async () => {
         try {
           setIsLoading(true); // Set loading to true while fetching
-          const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
+          const data = applyFilter
+            ? await fetchPendingTestDrives()
+            : await fetchDataSelection(3);
           setTestDrives(data);
         } catch (error) {
-          console.error('Error fetching test drives:', error.message);
+          console.error("Error fetching test drives:", error.message);
         } finally {
           setIsLoading(false); // Set loading to false after fetching
         }
@@ -1643,21 +1897,27 @@ const ManagerPage = () => {
     // Function to handle confirmation update
     const handleConfirmationUpdate = async (testDriveId, confirmationValue) => {
       try {
-        const response = await fetch(`${BASE_URL}/api/testdrives/update_confirmation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ testdrive_id: testDriveId, confirmation: confirmationValue })
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/testdrives/update_confirmation`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              testdrive_id: testDriveId,
+              confirmation: confirmationValue,
+            }),
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to update confirmation');
+          throw new Error("Failed to update confirmation");
         }
         // Refresh data after successful update
         fetchDataSelection(3);
         // Implement a function to fetch data again from the server and update state
       } catch (error) {
-        console.error('Error updating confirmation:', error.message);
+        console.error("Error updating confirmation:", error.message);
         // Handle error
       }
     };
@@ -1679,12 +1939,14 @@ const ManagerPage = () => {
         await handleConfirmationUpdate(selectedTestDrive.id, confirmation);
         setShowModal(false); // Close modal after confirmation
         // Call the API again to fetch the latest test drive data
-        const data = applyFilter ? await fetchPendingTestDrives() : await fetchDataSelection(3);
+        const data = applyFilter
+          ? await fetchPendingTestDrives()
+          : await fetchDataSelection(3);
         setTestDrives(data);
         // Show replacement modal describing the choice made
         // Implement replacement modal logic here
       } catch (error) {
-        console.error('Error handling confirmation:', error.message);
+        console.error("Error handling confirmation:", error.message);
         // Handle error
       }
     };
@@ -1713,18 +1975,24 @@ const ManagerPage = () => {
                 <td colSpan="5">Loading test drives...</td>
               </tr>
             )}
-            {!isLoading && testDrives.map((testDrive, index) => (
-              <tr key={index}>
-                <td>{testDrive.phone}</td>
-                <td>{testDrive.fullname}</td>
-                <td>{testDrive.car_make_model}</td>
-                <td>{testDrive.appointment_date}</td>
-                <td>
-                  {/* Button to view details and confirm/cancel */}
-                  <button onClick={() => handleModalOpen(testDrive)} className="btn btn-primary">View</button>
-                </td>
-              </tr>
-            ))}
+            {!isLoading &&
+              testDrives.map((testDrive, index) => (
+                <tr key={index}>
+                  <td>{testDrive.phone}</td>
+                  <td>{testDrive.fullname}</td>
+                  <td>{testDrive.car_make_model}</td>
+                  <td>{testDrive.appointment_date}</td>
+                  <td>
+                    {/* Button to view details and confirm/cancel */}
+                    <button
+                      onClick={() => handleModalOpen(testDrive)}
+                      className="btn btn-primary"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
@@ -1735,7 +2003,11 @@ const ManagerPage = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Test Drive Details</h5>
-                  <button type="button" className="close" onClick={handleModalClose}>
+                  <button
+                    type="button"
+                    className="close"
+                    onClick={handleModalClose}
+                  >
                     <span>&times;</span>
                   </button>
                 </div>
@@ -1747,45 +2019,51 @@ const ManagerPage = () => {
                   {/* Add more details as needed */}
                 </div>
                 <div className="modal-footer">
-                  <button className="btn btn-success" onClick={() => handleConfirmation(1)}>Confirm</button>
-                  <button className="btn btn-danger" onClick={() => handleConfirmation(3)}>Cancel Test Drive</button>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => handleConfirmation(1)}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleConfirmation(3)}
+                  >
+                    Cancel Test Drive
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
-
       </div>
     );
   };
 
-
-
   const CustomersTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, /*setPageSize*/] = useState(10);
-    const [zipcodeFilter, setZipcodeFilter] = useState('');
-    const [sortingOption, setSortingOption] = useState('recent');
+    const [pageSize /*setPageSize*/] = useState(10);
+    const [zipcodeFilter, setZipcodeFilter] = useState("");
+    const [sortingOption, setSortingOption] = useState("recent");
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [financeInfo, setFinanceInfo] = useState([]);
 
     const fetchMembers = async () => {
       try {
-        const response = await fetch('/api/members'); // Assuming your frontend and backend are served from the same origin
+        const response = await fetch("/api/members"); // Assuming your frontend and backend are served from the same origin
         if (!response.ok) {
-          throw new Error('Failed to fetch members');
+          throw new Error("Failed to fetch members");
         }
         const data = await response.json();
         setMembers(data);
       } catch (error) {
-        console.error('Error fetching members:', error.message);
+        console.error("Error fetching members:", error.message);
       }
     };
     useEffect(() => {
       fetchMembers();
     }, [currentPage, pageSize]);
-
 
     // Function to handle moving to the next page
     const nextPage = () => {
@@ -1806,37 +2084,43 @@ const ManagerPage = () => {
 
     // Check if members is null before applying any operations
     // Check if members is null before applying any operations
-    const filteredMembers = members && members.filter(member => member.zipcode && member.zipcode.includes(zipcodeFilter));
+    const filteredMembers =
+      members &&
+      members.filter(
+        (member) => member.zipcode && member.zipcode.includes(zipcodeFilter)
+      );
 
-    const sortedMembers = filteredMembers && filteredMembers.sort((a, b) => {
-      if (sortingOption === 'recent') {
-        return new Date(b.join_date) - new Date(a.join_date);
-      } else if (sortingOption === 'oldest') {
-        return new Date(a.join_date) - new Date(b.join_date);
-      } else {
-        return a.first_name.localeCompare(b.first_name);
-      }
-    });
+    const sortedMembers =
+      filteredMembers &&
+      filteredMembers.sort((a, b) => {
+        if (sortingOption === "recent") {
+          return new Date(b.join_date) - new Date(a.join_date);
+        } else if (sortingOption === "oldest") {
+          return new Date(a.join_date) - new Date(b.join_date);
+        } else {
+          return a.first_name.localeCompare(b.first_name);
+        }
+      });
 
     const fetchFinanceInfo = async (memberId) => {
       try {
         const response = await fetch(`${BASE_URL}/api/manager/get-financing`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            member_id: memberId
-          })
+            member_id: memberId,
+          }),
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch finance information');
+          throw new Error("Failed to fetch finance information");
         }
 
         const financeData = await response.json();
         setFinanceInfo(financeData);
       } catch (error) {
-        console.error('Error fetching finance information:', error.message);
+        console.error("Error fetching finance information:", error.message);
       }
     };
 
@@ -1847,11 +2131,20 @@ const ManagerPage = () => {
       <div>
         <div>
           <label htmlFor="zipcodeFilter">Zipcode:</label>
-          <input type="text" id="zipcodeFilter" value={zipcodeFilter} onChange={(e) => setZipcodeFilter(e.target.value)} />
+          <input
+            type="text"
+            id="zipcodeFilter"
+            value={zipcodeFilter}
+            onChange={(e) => setZipcodeFilter(e.target.value)}
+          />
         </div>
         <div>
           <label htmlFor="sortingOption">Sort by:</label>
-          <select id="sortingOption" value={sortingOption} onChange={(e) => setSortingOption(e.target.value)}>
+          <select
+            id="sortingOption"
+            value={sortingOption}
+            onChange={(e) => setSortingOption(e.target.value)}
+          >
             <option value="recent">Most Recent</option>
             <option value="oldest">Oldest</option>
             <option value="alphabetical">Alphabetical</option>
@@ -1860,7 +2153,11 @@ const ManagerPage = () => {
         <div className="table-responsive" style={{ ...styles.tableHeight }}>
           <h2>Customers</h2>
           <div>
-            <button className="btn btn-primary mr-2" onClick={prevPage} disabled={currentPage === 0}>
+            <button
+              className="btn btn-primary mr-2"
+              onClick={prevPage}
+              disabled={currentPage === 0}
+            >
               Previous
             </button>
             <button
@@ -1879,19 +2176,24 @@ const ManagerPage = () => {
                 <th>Phone #</th>
                 <th>Email</th>
                 <th>Action</th> {/* New column for Action */}
-
               </tr>
             </thead>
             <tbody>
-              {
-                sortedMembers.slice(startIndex, endIndex).map((member, index) => (
+              {sortedMembers
+                .slice(startIndex, endIndex)
+                .map((member, index) => (
                   <tr key={index}>
                     <td>{member.first_name}</td>
                     <td>{member.last_name}</td>
                     <td>{member.phone}</td>
                     <td>{member.email}</td>
                     <td>
-                      <button className="btn btn-primary" onClick={() => handleViewFinancial(member)}>View Financial</button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleViewFinancial(member)}
+                      >
+                        View Financial
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -1909,11 +2211,11 @@ const ManagerPage = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Customer Financial Stub</h5>
-                  <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-
+                  <span className="close" onClick={() => setShowModal(false)}>
+                    &times;
+                  </span>
                 </div>
                 <div className="modal-body">
-
                   <h2>Customer Information</h2>
                   <p>First Name: {selectedCustomer.first_name}</p>
                   <p>Last Name: {selectedCustomer.last_name}</p>
@@ -1929,7 +2231,6 @@ const ManagerPage = () => {
                       <p>Credit Score: {financeInfo[0].credit_score}</p>
                     </div>
                   )}
-
                 </div>
               </div>
             </div>
@@ -1937,7 +2238,7 @@ const ManagerPage = () => {
         )}
       </div>
     );
-  }
+  };
 
   const VehicleListingsTable = () => {
     const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -1950,12 +2251,12 @@ const ManagerPage = () => {
       try {
         const response = await fetch(`${BASE_URL}/api/vehicles/search`);
         if (!response.ok) {
-          throw new Error('Failed to fetch vehicle listings');
+          throw new Error("Failed to fetch vehicle listings");
         }
         const data = await response.json();
         setVehicleListings(data);
       } catch (error) {
-        console.error('Error fetching vehicle listings:', error.message);
+        console.error("Error fetching vehicle listings:", error.message);
       }
     };
 
@@ -1973,38 +2274,38 @@ const ManagerPage = () => {
     const handleSubmit = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/vehicles/edit`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(editedVehicle),
         });
         if (!response.ok) {
-          throw new Error('Failed to update vehicle');
+          throw new Error("Failed to update vehicle");
         }
         fetchVehicleListings();
         setIsModalOpen(false);
       } catch (error) {
-        console.error('Error updating vehicle:', error.message);
+        console.error("Error updating vehicle:", error.message);
       }
     };
 
     const handleDeleteVehicle = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/vehicles/edit`, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ VIN_carID: editedVehicle.VIN_carID }), // Pass the VIN of the edited vehicle
         });
         if (!response.ok) {
-          throw new Error('Failed to delete vehicle');
+          throw new Error("Failed to delete vehicle");
         }
         setIsModalOpen(false);
         fetchVehicleListings(); // Fetch vehicle listings again after deletion
       } catch (error) {
-        console.error('Error deleting vehicle:', error.message);
+        console.error("Error deleting vehicle:", error.message);
       }
     };
     const closeModal = () => {
@@ -2031,8 +2332,20 @@ const ManagerPage = () => {
           <h2>Vehicle Listings</h2>
           {/* Pagination arrows */}
           <div>
-            <button className="btn btn-primary mr-2" onClick={prevPage} disabled={page === 0}>Previous</button>
-            <button className="btn btn-primary" onClick={nextPage} disabled={vehicleListings.length <= endIndex}>Next</button>
+            <button
+              className="btn btn-primary mr-2"
+              onClick={prevPage}
+              disabled={page === 0}
+            >
+              Previous
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={nextPage}
+              disabled={vehicleListings.length <= endIndex}
+            >
+              Next
+            </button>
           </div>
           <table className="table table-bordered table-striped">
             <thead className="thead-dark">
@@ -2049,26 +2362,33 @@ const ManagerPage = () => {
             </thead>
             <tbody>
               {vehicleListings &&
-                vehicleListings.slice(startIndex, endIndex).map((vehicle, index) => (
-                  <tr key={index}>
-                    <td>{vehicle.make}</td>
-                    <td>{vehicle.model}</td>
-                    <td>{vehicle.year}</td>
-                    <td>{vehicle.viewsOnPage}</td>
-                    <td>{vehicle.price}</td>
-                    <td>{vehicle.status}</td>
-                    <td>
-                      <VehicleImage
-                        className="w-[150px] "
-                        vin={vehicle.VIN_carID}
-                        bodyType={vehicle.body}
-                      />
-                    </td>
-                    <td>
-                      <button className="btn btn-primary mr-2" onClick={() => handleEditVehicle(vehicle)}>Edit</button>
-                    </td>
-                  </tr>
-                ))}
+                vehicleListings
+                  .slice(startIndex, endIndex)
+                  .map((vehicle, index) => (
+                    <tr key={index}>
+                      <td>{vehicle.make}</td>
+                      <td>{vehicle.model}</td>
+                      <td>{vehicle.year}</td>
+                      <td>{vehicle.viewsOnPage}</td>
+                      <td>{vehicle.price}</td>
+                      <td>{vehicle.status}</td>
+                      <td>
+                        <VehicleImage
+                          className="w-[150px] "
+                          vin={vehicle.VIN_carID}
+                          bodyType={vehicle.body}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-primary mr-2"
+                          onClick={() => handleEditVehicle(vehicle)}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               {!vehicleListings && (
                 <tr>
                   <td colSpan="8">No vehicle listings available</td>
@@ -2084,52 +2404,97 @@ const ManagerPage = () => {
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
-
                   <h5 className="modal-title">Edit Vehicle Details</h5>
 
                   <button type="button" className="close" onClick={closeModal}>
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <button type="button" className="btn btn-danger mr-2" onClick={handleDeleteVehicle}>Delete</button>
+                <button
+                  type="button"
+                  className="btn btn-danger mr-2"
+                  onClick={handleDeleteVehicle}
+                >
+                  Delete
+                </button>
 
                 <div className="modal-body">
                   <div className="form-group">
                     <label htmlFor="make">Make:</label>
-                    <input type="text" className="form-control" name="make" value={editedVehicle.make} onChange={handleInputChange} />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="make"
+                      value={editedVehicle.make}
+                      onChange={handleInputChange}
+                    />
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="model">Model:</label>
-                    <input type="text" className="form-control" name="model" value={editedVehicle.model} onChange={handleInputChange} />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="model"
+                      value={editedVehicle.model}
+                      onChange={handleInputChange}
+                    />
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="year">Year:</label>
-                    <input type="text" className="form-control" name="year" value={editedVehicle.year} onChange={handleInputChange} pattern="\d{4}" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="year"
+                      value={editedVehicle.year}
+                      onChange={handleInputChange}
+                      pattern="\d{4}"
+                    />
                     {/* Regex pattern ensures year is in YYYY format */}
                     <small className="form-text text-danger">
-                      {!/^\d{4}$/.test(editedVehicle.year) && "Year must be in YYYY format"}
+                      {!/^\d{4}$/.test(editedVehicle.year) &&
+                        "Year must be in YYYY format"}
                     </small>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="price">Price:</label>
-                    <input type="text" className="form-control" name="price" value={editedVehicle.price} onChange={handleInputChange} pattern="\d+(\.\d{2})?" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="price"
+                      value={editedVehicle.price}
+                      onChange={handleInputChange}
+                      pattern="\d+(\.\d{2})?"
+                    />
                     {/* Regex pattern ensures price is in format x.xx */}
                     <small className="form-text text-danger">
-                      {!/^\d+(\.\d{2})?$/.test(editedVehicle.price) && "Price must be in format x.xx"}
+                      {!/^\d+(\.\d{2})?$/.test(editedVehicle.price) &&
+                        "Price must be in format x.xx"}
                     </small>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="mileage">Mileage:</label>
-                    <input type="text" className="form-control" name="mileage" value={editedVehicle.mileage} onChange={handleInputChange} pattern="\d+" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="mileage"
+                      value={editedVehicle.mileage}
+                      onChange={handleInputChange}
+                      pattern="\d+"
+                    />
                     {/* Regex pattern ensures mileage is a positive integer */}
                   </div>
                   <div className="form-group">
                     <label htmlFor="status">Status:</label>
-                    <select className="form-control" name="status" value={editedVehicle.status} onChange={handleInputChange}>
+                    <select
+                      className="form-control"
+                      name="status"
+                      value={editedVehicle.status}
+                      onChange={handleInputChange}
+                    >
                       <option value="new">New</option>
                       <option value="being-watched">Being Watched</option>
                       <option value="low-milage">Low Milage</option>
@@ -2138,26 +2503,39 @@ const ManagerPage = () => {
 
                   {/* Add input fields for other attributes */}
 
-
-
                   <div className="form-group">
                     <label htmlFor="description">Description:</label>
-                    <textarea className="form-control" name="description" value={editedVehicle.description} onChange={handleInputChange} rows="4" />
+                    <textarea
+                      className="form-control"
+                      name="description"
+                      value={editedVehicle.description}
+                      onChange={handleInputChange}
+                      rows="4"
+                    />
                   </div>
 
                   {/* Add input fields for other attributes */}
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
-
-
-
       </div>
     );
   };
@@ -2171,7 +2549,8 @@ const ManagerPage = () => {
     const [total_all_time_sales, setTotalAllTimeSales] = useState(null);
     const [total_yearly_sales, setTotalYearlySales] = useState(null);
     const [total_last_year_sales, setTotalLastYearSales] = useState(null);
-    const [total_last_year_month_sales, setTotalLastYearMonthSales] = useState(null);
+    const [total_last_year_month_sales, setTotalLastYearMonthSales] =
+      useState(null);
 
     // Function to handle changes in the month dropdown
     const handleMonthChange = (event) => {
@@ -2195,7 +2574,7 @@ const ManagerPage = () => {
       try {
         // Send a GET request to your backend API with selected month and year
         const response = await fetch(
-          `${FINAN_URL}/api/manager/monthly-sales-report?month=${selectedMonth}&year=${selectedYear}`
+          `${FORWARD_URL}/api/manager/monthly-sales-report?month=${selectedMonth}&year=${selectedYear}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch sales report");
@@ -2203,7 +2582,12 @@ const ManagerPage = () => {
 
         const data = await response.json();
         // Set sales report in state, sorted by purchase timestamp (most recent first)
-        setSalesReport(data.sales_report.sort((a, b) => new Date(b.purchase_timestamp) - new Date(a.purchase_timestamp)));
+        setSalesReport(
+          data.sales_report.sort(
+            (a, b) =>
+              new Date(b.purchase_timestamp) - new Date(a.purchase_timestamp)
+          )
+        );
         // Set total sales in the state
         setTotalSales(data.total_sales);
 
@@ -2213,7 +2597,6 @@ const ManagerPage = () => {
         setTotalLastYearMonthSales(data.last_year_month_sales);
 
         setShowReport(true);
-
       } catch (error) {
         console.error("Error fetching sales report:", error.message);
       }
@@ -2244,7 +2627,7 @@ const ManagerPage = () => {
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <label htmlFor="year">    Year:</label>
+            <label htmlFor="year"> Year:</label>
             <select id="year" value={selectedYear} onChange={handleYearChange}>
               <option value="">Select Year</option>
               <option value="2024">2024</option>
@@ -2255,57 +2638,60 @@ const ManagerPage = () => {
               <option value="2020">2020</option>
               <option value="2019">2019</option>
             </select>
-            <button type="submit" className="btn btn-success">Generate Report</button>
+            <button type="submit" className="btn btn-success">
+              Generate Report
+            </button>
           </div>
         </form>
 
         {showReport && salesReport.length > 0 ? (
-  <table className="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <td colSpan="2">Total Sales All Time:</td>
-        <td>{total_all_time_sales}</td>
-      </tr>
-      <tr>
-        <td colSpan="2">Total Yearly Sales {selectedYear}:</td>
-        <td>{total_yearly_sales}</td>
-        <td colSpan="2">Compared to last year {selectedYear - 1}:</td>
-        <td>{total_last_year_sales}</td>
-      </tr>
-      <tr>
-        <td colSpan="2">Total Sales  {selectedMonth}-{selectedYear}:</td>
-        <td>{totalSales}</td>
-        <td colSpan="2">Compared to last year  {selectedMonth}-{selectedYear - 1}:</td>
-        <td>{total_last_year_month_sales}</td>
-      </tr>
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <td colSpan="2">Total Sales All Time:</td>
+                <td>{total_all_time_sales}</td>
+              </tr>
+              <tr>
+                <td colSpan="2">Total Yearly Sales {selectedYear}:</td>
+                <td>{total_yearly_sales}</td>
+                <td colSpan="2">Compared to last year {selectedYear - 1}:</td>
+                <td>{total_last_year_sales}</td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  Total Sales {selectedMonth}-{selectedYear}:
+                </td>
+                <td>{totalSales}</td>
+                <td colSpan="2">
+                  Compared to last year {selectedMonth}-{selectedYear - 1}:
+                </td>
+                <td>{total_last_year_month_sales}</td>
+              </tr>
 
-      <tr>
-        <th>Date</th>
-        <th>Purchase Type</th>
-        <th>Confirmation #</th>
-        <th>Vehicle VIN</th>
-        <th>Income</th>
-      </tr>
-    </thead>
-    <tbody>
-      {salesReport.map((sale, index) => (
-        <tr key={index}>
-          <td>{sale.purchase_timestamp}</td>
-          <td>{sale.purchase_type}</td>
-          <td>{sale.confirmation_number}</td>
-          <td>{sale.vehicle_id}</td>
-          <td>{sale.bid_value}</td>
-        </tr>
-      ))}
-    </tbody>
-    <tfoot>
-    </tfoot>
-  </table>
-) : (
-  <p>No sales report available</p>
-)}
-
-     
+              <tr>
+                <th>Date</th>
+                <th>Purchase Type</th>
+                <th>Confirmation #</th>
+                <th>Vehicle VIN</th>
+                <th>Income</th>
+              </tr>
+            </thead>
+            <tbody>
+              {salesReport.map((sale, index) => (
+                <tr key={index}>
+                  <td>{sale.purchase_timestamp}</td>
+                  <td>{sale.purchase_type}</td>
+                  <td>{sale.confirmation_number}</td>
+                  <td>{sale.vehicle_id}</td>
+                  <td>{sale.bid_value}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot></tfoot>
+          </table>
+        ) : (
+          <p>No sales report available</p>
+        )}
       </div>
     );
   };
@@ -2313,18 +2699,11 @@ const ManagerPage = () => {
   // Define the WelcomeScreen component
   const WelcomeScreen = ({ user, handleGetStarted }) => (
     <div className="welcomeScreen">
-      <h1 className="welcomeScreenHeading">
-        Hi {user && user.first_name}.
-      </h1>
-      <img
-        src="carzoom.gif"
-        alt="Logo"
-        className="welcomeScreenLogo"
-      />
+      <h1 className="welcomeScreenHeading">Hi {user && user.first_name}.</h1>
+      <img src="carzoom.gif" alt="Logo" className="welcomeScreenLogo" />
       <br />
       <p className="welcomeScreenText">
-        Click the button below to get started as{" "}
-        {user && user.employeeType}.
+        Click the button below to get started as {user && user.employeeType}.
       </p>
       <button
         onClick={handleGetStarted}
@@ -2336,24 +2715,28 @@ const ManagerPage = () => {
   );
 
   return (
-
     <div>
       {!showWelcomeScreen && (
         <div className="sidebarEmployees">
-          <div style={{ marginBottom: '10px' }}>
+          <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 0 ? 'selected' : ''}`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 0 ? "selected" : ""
+              }`}
               onClick={() => handleTabSelect(0)}
             >
               To-Do's
             </button>
           </div>
 
-          <div style={{ marginBottom: '10px' }}>
+          <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 1 ? 'selected' : ''}`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 1 ? "selected" : ""
+              }`}
               onClick={() => {
-                handleTabSelect(1); console.log("Clicked on Service Center button");
+                handleTabSelect(1);
+                console.log("Clicked on Service Center button");
               }}
             >
               Service Center
@@ -2362,7 +2745,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 4 ? 'selected' : ''}`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 4 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(4);
                 fetchDataSelection(4);
@@ -2374,7 +2759,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 5 ? 'selected' : ''}`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 5 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(5);
                 fetchDataSelection(5);
@@ -2385,16 +2772,41 @@ const ManagerPage = () => {
           </div>
 
           <div style={{ marginBottom: "10px" }}>
-            <button className={`btn btn-block btn-dark ${selectedTab === 6 ? 'selected' : ''}`} onClick={() => { handleTabSelect(6); fetchDataSelection(6); }}>Sales Report</button>
+            <button
+              className={`btn btn-block btn-dark ${
+                selectedTab === 6 ? "selected" : ""
+              }`}
+              onClick={() => {
+                handleTabSelect(6);
+                fetchDataSelection(6);
+              }}
+            >
+              Sales Report
+            </button>
           </div>
 
           <div style={{ marginBottom: "10px" }}>
-            <button className={`btn btn-block btn-dark ${selectedTab === 7 ? 'selected' : ''}`} onClick={() => { handleTabSelect(7); fetchDataSelection(7); }}>Technicians</button>
+            <button
+              className={`btn btn-block btn-dark ${
+                selectedTab === 7 ? "selected" : ""
+              }`}
+              onClick={() => {
+                handleTabSelect(7);
+                fetchDataSelection(7);
+              }}
+            >
+              Technicians
+            </button>
           </div>
 
           <div style={{ marginBottom: "10px" }}>
-            {user && (user.employeeType === "superAdmin") && (
-              <Link to="/create-employee-account" className="btn btn-block btn-danger">Create Employee Acct.</Link>
+            {user && user.employeeType === "superAdmin" && (
+              <Link
+                to="/create-employee-account"
+                className="btn btn-block btn-danger"
+              >
+                Create Employee Acct.
+              </Link>
             )}
           </div>
           <div>
@@ -2414,8 +2826,6 @@ const ManagerPage = () => {
         </div>
       )}
 
-
-
       <div className="main-content">
         {showWelcomeScreen && (
           <WelcomeScreen user={user} handleGetStarted={handleGetStarted} />
@@ -2424,8 +2834,6 @@ const ManagerPage = () => {
 
         {showTable && renderTableCall()}
       </div>
-
-
     </div>
   );
 };
