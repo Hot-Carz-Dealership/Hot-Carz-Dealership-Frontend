@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { BASE_URL, FINANCE_URL } from "../utilities/constants";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import VehicleImage from "../utilities/VehicleImage";
 import httpClient from "../httpClient";
 import { useNavigate } from "react-router-dom";
@@ -308,7 +308,7 @@ function PurchaseOptions({ VIN, price, vehicleName }) {
 
       // Make a POST request to submit the bid with headers and credentials
       const response = await fetch(
-        `${BASE_URL}/forward?route=${FINANCE_URL}/api/vehicle-purchase/new-bid-insert`,
+        `${FORWARD_URL}/api/vehicle-purchase/new-bid-insert`,
         options
       );
 
