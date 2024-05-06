@@ -10,3 +10,5 @@ export const FINANCE_URL = "http://localhost:5001";
 
 // export const FINANCE_URL =
 //   "https://hot-carz-financial-service-stub-production.up.railway.app/";
+
+export const FORWARD_URL = `${BASE_URL}/forward?route=${FINANCE_URL}`;

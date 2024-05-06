@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BASE_URL } from "../utilities/constants";
-import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL, FORWARD_URL } from "../utilities/constants";
 import httpClient from "../httpClient";
+import dayjs from "dayjs";
+import dateFormat from "dateformat";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../Account.css"; // Import the CSS file for styling
+import styles from "../css/employees.css"; // Additional CSS file
+
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dateFormat from "dateformat";
-
-import styles from "../css/employees.css";
 
 const style = {
   modal: {
@@ -37,7 +38,7 @@ const Account = () => {
   const [vehicleListings, setVehicleListings] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
 
-  const [invoices /*, setInvoices */] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
   const [testDrivesID, setTestDrivesID] = useState([]);
@@ -48,11 +49,12 @@ const Account = () => {
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get(`${BASE_URL}/@me`);
-        setUser(resp.data);
+        // Fetch user data
+        const userResp = await httpClient.get(`${BASE_URL}/@me`);
+        setUser(userResp.data);
 
         setLoading(false);
-        if (resp.data.hasOwnProperty("memberID")) {
+        if (userResp.data.hasOwnProperty("memberID")) {
           const requestData = {
             method: "GET",
             headers: {
@@ -73,6 +75,7 @@ const Account = () => {
           );
           setVehicleListings(vehicleListingsData);
 
+          // Fetch Service Appointments
           const serviceResponse = await fetch(
             `${BASE_URL}/api/members/service-appointments`,
             requestData
@@ -80,6 +83,7 @@ const Account = () => {
           const serviceData = await serviceResponse.json();
           setServiceAppointments(serviceData);
 
+          // Fetch Current Bids
           const bidResponse = await fetch(
             `${BASE_URL}/api/member/current-bids`,
             requestData
@@ -87,6 +91,15 @@ const Account = () => {
           const bidData = await bidResponse.json();
           setBids(bidData);
 
+          // Fetch User's Order History
+          const orderHistoryResponse = await fetch(
+            `${BASE_URL}/api/member/order_history`,
+            requestData
+          );
+          const orderHistoryData = await orderHistoryResponse.json();
+          setInvoices(orderHistoryData);
+
+          // Fetch Test Drive Data
           const driveResponse = await fetch(
             `${BASE_URL}/api/member/test_drive_data`,
             requestData
@@ -533,26 +546,44 @@ const Account = () => {
   );
   const SalesReportTable = () => {
     return (
-      <div>
-        {invoices.map((sale, index) => (
-          <div key={index}>
-            <h2>Confirmation Number: {sale["Confirmation Number"]}</h2>
-            <p>Amount Paid: {sale["Amount Paid"]}</p>
-            <p>Subtotal: {sale["Subtotal"]}</p>
-            <p>Taxes: {sale["Taxes"]}</p>
-            <p>Total Financed: {sale["Total Financed"]}</p>
-            <h3>Items:</h3>
-            <ul>
-              {sale.items.map((item, idx) => (
-                <li key={idx}>
-                  <p>Item Name: {item["Item Name"]}</p>
-                  <p>Item Price: {item["Item Price"]}</p>
-                  <p>Financed Amount: {item["Financed Amount"]}</p>
-                </li>
+      <div className="table-responsive">
+        <h2>Order History</h2>
+        {invoices && invoices.length > 0 ? (
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Confirmation Number</th>
+                <th>Amount Paid</th>
+                <th>Subtotal</th>
+                <th>Taxes</th>
+                <th>Total Financed</th>
+                <th>Items</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.map((order, index) => (
+                <tr key={index}>
+                  <td>{order["Confirmation Number"]}</td>
+                  <td>${order["Amount Paid"]}</td>
+                  <td>${order["Subtotal"]}</td>
+                  <td>${order["Taxes"]}</td>
+                  <td>${order["Total Financed"]}</td>
+                  <td>
+                    <ul>
+                      {order.items.map((item, i) => (
+                        <li key={i}>
+                          {item["Item Name"]} - ${item["Item Price"]}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
               ))}
-            </ul>
-          </div>
-        ))}
+            </tbody>
+          </table>
+        ) : (
+          <div>No invoices found.</div>
+        )}
       </div>
     );
   };
