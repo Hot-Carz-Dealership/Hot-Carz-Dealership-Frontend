@@ -1,9 +1,6 @@
 name: CI/CD - Frontend Repo
 
 on:
-  push:
-    branches:
-      - dev
   pull_request:
     branches:
       - dev
@@ -24,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Build
+        run: npm run build
 
-        # run testing, idk what type of testing we're doing tho
+        # all testing done on manual UI testing
