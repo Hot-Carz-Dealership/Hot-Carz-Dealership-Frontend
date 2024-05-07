@@ -20,8 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: hot-carz-dealership  # fix for github to find package.json file
 
       - name: Build
         run: npm run build
+        working-directory: hot-carz-dealership
 
         # all testing done on manual UI testing
