@@ -37,13 +37,18 @@ const Account = () => {
   const [selectedTab, setSelectedTab] = useState(1);
   const [vehicleListings, setVehicleListings] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
+  const [signature, setSignature] = useState("");
+  const [isSignatureEntered, setIsSignatureEntered] = useState(false);
 
   const [invoices, setInvoices] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
   const [testDrivesID, setTestDrivesID] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [bidOpen, setBidOpen] = React.useState(false);
+  const [selectedBid, setSelectedBid] = useState([]);
   const handleClose = () => setOpen(false);
+  const handleBidClose = () => setBidOpen(false);
   const tomorrow = dayjs().add(1, "day").set("hour", 9).startOf("hour");
 
   useEffect(() => {
@@ -176,6 +181,179 @@ const Account = () => {
     );
   };
 
+  const BidModal = ({ open, onClose }) => {
+    const [counterOfferAmount, setCounterOfferAmount] = useState("");
+
+    const handleSignatureChange = (e) => {
+      const signatureValue = e.target.value;
+      setSignature(signatureValue);
+      setIsSignatureEntered(
+        !!signatureValue && signatureValue.trim().split(" ").length >= 2
+      ); // Check if first and last name are provided
+    };
+
+    const handleBidConfirmation = async (bidId, confirmationStatus) => {
+      try {
+        const response = await fetch(
+          `${FORWARD_URL}/api/manager/current-bids`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bidID: bidId,
+              confirmationStatus: confirmationStatus,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to update bid status");
+        }
+      } catch (error) {
+        console.error("Error updating bid status:", error.message);
+      }
+      console.log("Updated Status of Bid. " + confirmationStatus);
+    };
+
+    const handleCounterBidOffer = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/member/current-bids`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              bid_id: selectedBid.bidID,
+              new_bid_value: counterOfferAmount,
+            }),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to update bid offer price");
+        }
+      }catch(error){
+          console.error("Error updating bid offer price:", error.message);
+        }
+        handleBidClose();
+        window.location.reload();
+      };
+
+    const getBidColor = (bid) => {
+      const percentage = (bid.bidValue / bid.MSRP) * 100;
+      if (percentage < 10) {
+        return "green";
+      } else if (percentage >= 10 && percentage <= 20) {
+        return "orange";
+      } else {
+        return "red";
+      }
+    };
+
+    return (
+      <Modal
+        open={bidOpen}
+        onClose={onClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Box sx={style.modal}>
+        <div className="modal-container">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Bid Details</h5>
+                  <button type="button" className="close" onClick={handleBidClose}>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  {/* Display bid details here */}
+                  <p>VIN: {selectedBid.VIN_carID}</p>
+                  <p style={{ color: getBidColor(selectedBid) }}>
+                    {" "}
+                    Bid Amount: {selectedBid.bidValue}{" "}
+                  </p>
+                  <p>Status: {selectedBid.bidStatus}</p>
+                  {/* Display finance information */}
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="counterOfferAmount"
+                      placeholder="Offer Amount"
+                      value={counterOfferAmount}
+                      onChange={(e) => setCounterOfferAmount(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={handleCounterBidOffer}
+                      disabled={!counterOfferAmount.trim()}
+                    >
+                      Send Counter Offer
+                    </button>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <div className="form-group">
+                    <label htmlFor="signature">Signature:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="signature"
+                      placeholder="Enter Signature"
+                      value={signature}
+                      onChange={handleSignatureChange}
+                    />
+                    <small className="form-text text-muted">
+                      By signing this, you are accepting the proposed bid and
+                      are entering into a contract with this entity.
+                    </small>
+                    {signature && !isSignatureEntered && (
+                      <p style={{ color: "red" }}>
+                        Please enter your first and last name.
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() =>
+                      handleBidConfirmation(selectedBid.bidID, "Confirmed")
+                    }
+                    disabled={!isSignatureEntered} // Disable button if signature is not provided
+                  >
+                    Accept Bid
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() =>
+                      handleBidConfirmation(selectedBid.bidID, "Denied")
+                    }
+                  >
+                    Deny Bid
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleBidClose}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+    );
+  };
+
   const handleOpen = (vehicleVIN, testdrive_id) => {
     setOpen(true);
     setTestDrivesID(testdrive_id);
@@ -186,6 +364,14 @@ const Account = () => {
       console.log("User not available");
     }
   };
+
+  const handleBidOpen = async (bid) => {
+    setBidOpen(true);
+    setSelectedBid(bid);
+  };
+
+
+
 
   const handleCancel = async (value) => {
     // var x = document.getElementById("date");
@@ -407,6 +593,7 @@ const Account = () => {
   const ActiveBidsTable = () => (
     <div className="table-responsive">
       <h2>Active Bids</h2>
+      {bids && bids.length > 0 ? (
       <table className="table table-bordered">
         <thead>
           <tr>
@@ -421,7 +608,7 @@ const Account = () => {
         <tbody>
           {bids.map(
             (bid) =>
-              bid.bidStatus === "Processing" && (
+              bid.bidStatus === "Member Processing" && (
                 <tr key={bid.bidID}>
                   <td>{bid.bidID}</td>
                   <td>{bid.VIN_carID}</td>
@@ -429,14 +616,15 @@ const Account = () => {
                   <td>{bid.bidStatus}</td>
                   <td>{bid.bidTimestamp}</td>
                   <td>
-                    <button>Counter Offer</button>
-                    <button>Decline</button>
+                    <button onClick={() =>handleBidOpen(bid)}>Counter Offer</button>
                   </td>
                 </tr>
               )
           )}
         </tbody>
-      </table>
+      </table>) : (<div>No bids</div>)}
+      <BidModal open={bidOpen} onClose={handleBidClose} />
+      
     </div>
   );
 
