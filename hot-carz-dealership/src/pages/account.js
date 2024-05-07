@@ -40,7 +40,6 @@ const Account = () => {
   const [signature, setSignature] = useState("");
   const [isSignatureEntered, setIsSignatureEntered] = useState(false);
 
-  const [counterOfferAmount, setCounterOfferAmount] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [bids, setBids] = useState([]);
   const [testDrives, setTestDrives] = useState([]);
@@ -183,7 +182,6 @@ const Account = () => {
   };
 
   const BidModal = ({ open, onClose }) => {
-    const [newValue, setNewValue] = useState(null);
     const [counterOfferAmount, setCounterOfferAmount] = useState("");
 
     const handleSignatureChange = (e) => {
