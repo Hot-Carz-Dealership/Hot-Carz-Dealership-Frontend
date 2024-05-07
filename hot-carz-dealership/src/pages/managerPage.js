@@ -1523,7 +1523,7 @@ const ManagerPage = () => {
             },
             body: JSON.stringify({
               bidID: bidId,
-              confirmationStatus: confirmationStatus,
+              confirmationStatus: 'Member Processing',
             }),
           }
         );

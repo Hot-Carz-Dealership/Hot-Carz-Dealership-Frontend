@@ -192,6 +192,66 @@ const Account = () => {
       ); // Check if first and last name are provided
     };
 
+    const userNoFinancing = async () => {
+      console.log("User got money");
+      console.log(selectedBid.VIN_carID)
+      try {
+        const nameResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await nameResponse.json();
+        const vehicleName=`${data.year} ${data.make} ${data.model}`;
+        
+        const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Include cookies in the request
+          body: JSON.stringify({
+            item_name: vehicleName,
+            item_price: selectedBid.bidValue,
+            VIN_carID: selectedBid.VIN_carID,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to add item to cart");
+        }
+        handleBidConfirmation(selectedBid.bidID, 'Confirmed');
+        // Item added to cart successfully, navigate to addons page
+        navigate("/addons");
+      } catch (error) {
+        console.error("Error adding item to cart:", error.message);
+        // Handle error here, show error message to the user, etc.
+      }
+    };
+
+    const userWantsFinancing = async () => {
+      console.log("User wants financing");
+      console.log(selectedBid.VIN_carID)
+        const nameResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await nameResponse.json();
+        const vehicleName=`${data.year} ${data.make} ${data.model}`;
+
+
+        handleBidConfirmation(selectedBid.bidID, 'Confirmed');
+        navigate(
+          `/apply-financing?VIN_carID=${selectedBid.VIN_carID}&price=${selectedBid.bidValue}&vehicleName=${encodeURIComponent(
+            vehicleName
+          )}`
+        );
+    };
+
+
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
         const response = await fetch(
@@ -323,11 +383,21 @@ const Account = () => {
                     type="button"
                     className="btn btn-primary"
                     onClick={() =>
-                      handleBidConfirmation(selectedBid.bidID, "Confirmed")
+                      userWantsFinancing(selectedBid.bidID, "Confirmed")
                     }
                     disabled={!isSignatureEntered} // Disable button if signature is not provided
                   >
-                    Accept Bid
+                    Accept and Finance
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() =>
+                      userNoFinancing(selectedBid.bidID, "Confirmed")
+                    }
+                    disabled={!isSignatureEntered} // Disable button if signature is not provided
+                  >
+                    Accept and Pay In Full
                   </button>
                   <button
                     type="button"
