@@ -613,7 +613,7 @@ const ManagerPage = () => {
                   {financeInfo.length > 0 && (
                     <div>
                       <h5>Finance Information</h5>
-                      <ul class="flex flex-wrap">
+                      <ul className="flex flex-wrap">
                         <li className="w-1/2 mt-1">
                           Credit Score: {financeInfo[0].credit_score}
                         </li>
@@ -631,6 +631,11 @@ const ManagerPage = () => {
                         </li>
                         <li className="w-1/2 mt-1">
                           Remaining Months: {financeInfo[0].remaining_months}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Negotiated Price: $
+                          {parseFloat(financeInfo[0].down_payment) +
+                            parseFloat(financeInfo[0].loan_total)}
                         </li>
                       </ul>
                     </div>
