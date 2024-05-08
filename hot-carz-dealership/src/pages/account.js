@@ -17,7 +17,6 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-
 const style = {
   modal: {
     position: "absolute",
@@ -195,17 +194,20 @@ const Account = () => {
 
     const userNoFinancing = async () => {
       console.log("User got money");
-      console.log(selectedBid.VIN_carID)
+      console.log(selectedBid.VIN_carID);
       try {
-        const nameResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const nameResponse = await fetch(
+          `${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await nameResponse.json();
-        const vehicleName=`${data.year} ${data.make} ${data.model}`;
-        
+        const vehicleName = `${data.year} ${data.make} ${data.model}`;
+
         const response = await fetch(`${BASE_URL}/api/member/add_to_cart`, {
           method: "POST",
           headers: {
@@ -218,11 +220,11 @@ const Account = () => {
             VIN_carID: selectedBid.VIN_carID,
           }),
         });
-  
+
         if (!response.ok) {
           throw new Error("Failed to add item to cart");
         }
-        handleBidConfirmation(selectedBid.bidID, 'Confirmed');
+        handleBidConfirmation(selectedBid.bidID, "Confirmed");
         // Item added to cart successfully, navigate to addons page
         navigate("/addons");
       } catch (error) {
@@ -233,25 +235,26 @@ const Account = () => {
 
     const userWantsFinancing = async () => {
       console.log("User wants financing");
-      console.log(selectedBid.VIN_carID)
-        const nameResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`, {
+      console.log(selectedBid.VIN_carID);
+      const nameResponse = await fetch(
+        `${BASE_URL}/api/vehicles?vin=${selectedBid.VIN_carID}`,
+        {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-        });
-        const data = await nameResponse.json();
-        const vehicleName=`${data.year} ${data.make} ${data.model}`;
+        }
+      );
+      const data = await nameResponse.json();
+      const vehicleName = `${data.year} ${data.make} ${data.model}`;
 
-
-        handleBidConfirmation(selectedBid.bidID, 'Confirmed');
-        navigate(
-          `/apply-financing?VIN_carID=${selectedBid.VIN_carID}&price=${selectedBid.bidValue}&vehicleName=${encodeURIComponent(
-            vehicleName
-          )}`
-        );
+      handleBidConfirmation(selectedBid.bidID, "Confirmed");
+      navigate(
+        `/apply-financing?VIN_carID=${selectedBid.VIN_carID}&price=${
+          selectedBid.bidValue
+        }&vehicleName=${encodeURIComponent(vehicleName)}`
+      );
     };
-
 
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
@@ -279,29 +282,26 @@ const Account = () => {
 
     const handleCounterBidOffer = async () => {
       try {
-        const response = await fetch(
-          `${BASE_URL}/api/member/current-bids`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              bid_id: selectedBid.bidID,
-              new_bid_value: counterOfferAmount,
-            }),
-          }
-        );
+        const response = await fetch(`${BASE_URL}/api/member/current-bids`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            bid_id: selectedBid.bidID,
+            new_bid_value: counterOfferAmount,
+          }),
+        });
         if (!response.ok) {
           throw new Error("Failed to update bid offer price");
         }
-      }catch(error){
-          console.error("Error updating bid offer price:", error.message);
-        }
-        handleBidClose();
-        window.location.reload();
-      };
+      } catch (error) {
+        console.error("Error updating bid offer price:", error.message);
+      }
+      handleBidClose();
+      window.location.reload();
+    };
 
     const getBidColor = (bid) => {
       const percentage = (bid.bidValue / bid.MSRP) * 100;
@@ -322,12 +322,16 @@ const Account = () => {
         aria-describedby="simple-modal-description"
       >
         <Box sx={style.modal}>
-        <div className="modal-container">
+          <div className="modal-container">
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Bid Details</h5>
-                  <button type="button" className="close" onClick={handleBidClose}>
+                  <button
+                    type="button"
+                    className="close"
+                    onClick={handleBidClose}
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -440,9 +444,6 @@ const Account = () => {
     setBidOpen(true);
     setSelectedBid(bid);
   };
-
-
-
 
   const handleCancel = async (value) => {
     // var x = document.getElementById("date");
@@ -568,52 +569,50 @@ const Account = () => {
             <AccountInfo />
           </div>
         );
-    
+
       case 2:
         return (
           <div style={styles.tableWrapper}>
             <BidsTable />
           </div>
         );
-    
+
       case 3:
         return (
           <div style={styles.tableWrapper}>
             <TestDrivesTable />
           </div>
         );
-    
+
       case 4:
         return (
           <div style={styles.tableWrapper}>
             <ServiceAppointmentsTable />
           </div>
         );
-    
+
       case 5:
         return (
           <div style={styles.tableWrapper}>
             <VehicleListingsTable />
           </div>
         );
-    
+
       case 6:
         return (
           <div style={styles.tableWrapper}>
             <SalesReportTable />
           </div>
         );
-    
+
       case 7:
         return (
           <div style={styles.tableWrapper}>
             <ActiveBidsTable />
           </div>
         );
-    
 
       default:
-      
         return <AccountInfo />;
     }
   };
@@ -671,7 +670,7 @@ const Account = () => {
     <div className="table-responsive">
       <h2>Bids</h2>
       <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
+        <thead className="thead-dark">
           <tr>
             <th>Bid ID</th>
             <th>VIN</th>
@@ -680,20 +679,24 @@ const Account = () => {
             <th>Bid Date</th>
           </tr>
         </thead>
-        <tbody>
-          {bids.map(
-            (bid) =>
-              bid.bidStatus === "Confirmed" && (
-                <tr key={bid.bidID}>
-                  <td>{bid.bidID}</td>
-                  <td>{bid.VIN_carID}</td>
-                  <td>{bid.bidValue}</td>
-                  <td>{bid.bidStatus}</td>
-                  <td>{bid.bidTimestamp}</td>
-                </tr>
-              )
-          )}
-        </tbody>
+        {bids && bids.length > 0 ? (
+          <tbody>
+            {bids.map(
+              (bid) =>
+                bid.bidStatus === "Confirmed" && (
+                  <tr key={bid.bidID}>
+                    <td>{bid.bidID}</td>
+                    <td>{bid.VIN_carID}</td>
+                    <td>{bid.bidValue}</td>
+                    <td>{bid.bidStatus}</td>
+                    <td>{bid.bidTimestamp}</td>
+                  </tr>
+                )
+            )}
+          </tbody>
+        ) : (
+          <div></div>
+        )}
       </table>
     </div>
   );
@@ -701,8 +704,8 @@ const Account = () => {
   const ActiveBidsTable = () => (
     <div className="table-responsive">
       <h2>Active Bids</h2>
-      {bids && bids.length > 0 ? (
-        <table className="table table-bordered table-striped">
+
+      <table className="table table-bordered table-striped">
         <thead className="thead-dark">
           <tr>
             <th>Bid ID</th>
@@ -713,26 +716,32 @@ const Account = () => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-          {bids.map(
-            (bid) =>
-              bid.bidStatus === "Member Processing" && (
-                <tr key={bid.bidID}>
-                  <td>{bid.bidID}</td>
-                  <td>{bid.VIN_carID}</td>
-                  <td>{bid.bidValue}</td>
-                  <td>{bid.bidStatus}</td>
-                  <td>{bid.bidTimestamp}</td>
-                  <td>
-                    <button onClick={() =>handleBidOpen(bid)}>Counter Offer</button>
-                  </td>
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>) : (<div>No bids</div>)}
+        {bids && bids.length > 0 ? (
+          <tbody>
+            {bids.map(
+              (bid) =>
+                bid.bidStatus === "Member Processing" && (
+                  <tr key={bid.bidID}>
+                    <td>{bid.bidID}</td>
+                    <td>{bid.VIN_carID}</td>
+                    <td>{bid.bidValue}</td>
+                    <td>{bid.bidStatus}</td>
+                    <td>{bid.bidTimestamp}</td>
+                    <td>
+                      <button onClick={() => handleBidOpen(bid)}>
+                        Counter Offer
+                      </button>
+                    </td>
+                  </tr>
+                )
+            )}
+          </tbody>
+        ) : (
+          <div>No bids</div>
+        )}
+      </table>
+
       <BidModal open={bidOpen} onClose={handleBidClose} />
-      
     </div>
   );
 
@@ -740,7 +749,7 @@ const Account = () => {
     <div className="table-responsive">
       <h2>Test Drives</h2>
       <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
+        <thead className="thead-dark">
           <tr>
             <th>Test Drive ID</th>
             <th>Car VIN</th>
@@ -785,7 +794,7 @@ const Account = () => {
     <div className="table-responsive">
       <h2>Service Appointments</h2>
       <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
+        <thead className="thead-dark">
           <tr>
             <th>Appointment ID</th>
             <th>Car Vin</th>
@@ -815,7 +824,7 @@ const Account = () => {
     <div className="table-responsive">
       <h2>Owned Vehicles</h2>
       <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
+        <thead className="thead-dark">
           <tr>
             <th>Make</th>
             <th>Model</th>
@@ -844,18 +853,19 @@ const Account = () => {
     return (
       <div className="table-responsive">
         <h2>Order History</h2>
-        {invoices && invoices.length > 0 ? (
+
         <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-              <tr>
-                <th>Confirmation Number</th>
-                <th>Amount Paid</th>
-                <th>Subtotal</th>
-                <th>Taxes</th>
-                <th>Total Financed</th>
-                <th>Items</th>
-              </tr>
-            </thead>
+          <thead className="thead-dark">
+            <tr>
+              <th>Confirmation Number</th>
+              <th>Amount Paid</th>
+              <th>Subtotal</th>
+              <th>Taxes</th>
+              <th>Total Financed</th>
+              <th>Items</th>
+            </tr>
+          </thead>
+          {invoices && invoices.length > 0 ? (
             <tbody>
               {invoices.map((order, index) => (
                 <tr key={index}>
@@ -876,10 +886,10 @@ const Account = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
-        ) : (
-          <div>No invoices found.</div>
-        )}
+          ) : (
+            <div>No invoices found.</div>
+          )}
+        </table>
       </div>
     );
   };
