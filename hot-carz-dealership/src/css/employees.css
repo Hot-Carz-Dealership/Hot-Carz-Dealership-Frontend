@@ -154,7 +154,7 @@ margin-bottom:30%;
     align-items: center;
   }
   .modal-dialog {
-    width: 400px; /* Adjust as needed */
+    width: 800px; /* Adjust as needed */
   }
   
   .modal-content {
@@ -191,7 +191,7 @@ margin-bottom:30%;
     position: fixed;
     top: var(--header-height);
     left: 0;
-    background-color: #1a1a1a;
+    background-color: #343a40;
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -209,7 +209,7 @@ margin-bottom:30%;
     width: 100%;
     padding: 10px;
     border: none;
-    background-color: transparent;
+    background-color: black;
     color: #ffffff;
     text-align: left;
   }

@@ -17,6 +17,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
+
 const style = {
   modal: {
     position: "absolute",
@@ -562,20 +563,57 @@ const Account = () => {
   const renderSection = () => {
     switch (selectedTab) {
       case 1:
-        return <AccountInfo />;
+        return (
+          <div style={styles.tableWrapper}>
+            <AccountInfo />
+          </div>
+        );
+    
       case 2:
-        return <BidsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <BidsTable />
+          </div>
+        );
+    
       case 3:
-        return <TestDrivesTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <TestDrivesTable />
+          </div>
+        );
+    
       case 4:
-        return <ServiceAppointmentsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <ServiceAppointmentsTable />
+          </div>
+        );
+    
       case 5:
-        return <VehicleListingsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <VehicleListingsTable />
+          </div>
+        );
+    
       case 6:
-        return <SalesReportTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <SalesReportTable />
+          </div>
+        );
+    
       case 7:
-        return <ActiveBidsTable />;
+        return (
+          <div style={styles.tableWrapper}>
+            <ActiveBidsTable />
+          </div>
+        );
+    
+
       default:
+      
         return <AccountInfo />;
     }
   };
@@ -632,8 +670,8 @@ const Account = () => {
   const BidsTable = () => (
     <div className="table-responsive">
       <h2>Bids</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
           <tr>
             <th>Bid ID</th>
             <th>VIN</th>
@@ -664,8 +702,8 @@ const Account = () => {
     <div className="table-responsive">
       <h2>Active Bids</h2>
       {bids && bids.length > 0 ? (
-      <table className="table table-bordered">
-        <thead>
+        <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
           <tr>
             <th>Bid ID</th>
             <th>VIN</th>
@@ -701,8 +739,8 @@ const Account = () => {
   const TestDrivesTable = () => (
     <div className="table-responsive">
       <h2>Test Drives</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
           <tr>
             <th>Test Drive ID</th>
             <th>Car VIN</th>
@@ -746,8 +784,8 @@ const Account = () => {
   const ServiceAppointmentsTable = () => (
     <div className="table-responsive">
       <h2>Service Appointments</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
           <tr>
             <th>Appointment ID</th>
             <th>Car Vin</th>
@@ -776,8 +814,8 @@ const Account = () => {
   const VehicleListingsTable = () => (
     <div className="table-responsive">
       <h2>Owned Vehicles</h2>
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
           <tr>
             <th>Make</th>
             <th>Model</th>
@@ -807,8 +845,8 @@ const Account = () => {
       <div className="table-responsive">
         <h2>Order History</h2>
         {invoices && invoices.length > 0 ? (
-          <table className="table table-bordered">
-            <thead>
+        <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
               <tr>
                 <th>Confirmation Number</th>
                 <th>Amount Paid</th>

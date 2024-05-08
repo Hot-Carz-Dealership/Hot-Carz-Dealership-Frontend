@@ -19,6 +19,7 @@ import {
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../../../utilities/constants";
 import VehicleImage from "../../../utilities/VehicleImage";
+import Footer from "../../common/Footer";
 
 const drawerWidth = 240;
 
@@ -155,6 +156,7 @@ const CarInventoryGrid = ({ searchResults }) => {
   };
 
   return (
+    <div>
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
@@ -415,7 +417,13 @@ const CarInventoryGrid = ({ searchResults }) => {
           ))}
         </Box>
       </Box>
+
+
     </Box>
+
+    {cars.length > 0 && <Footer />}
+
+</div>
   );
 };
 
@@ -467,6 +475,8 @@ const CarCard = ({ car }) => {
         </Button>
       </CardActions>
     </Card>
+
+
   );
 };
 
