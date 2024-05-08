@@ -673,9 +673,18 @@ function CarDetails() {
 }
 
 const CarCard = ({ car }) => {
+  const handleClick = () => {
+    navigate(`/cars/${car.VIN_carID}`);
+  };
+  const navigate = useNavigate();
+
   return (
-    <div className="px-3 flex-none py-5 text-align-center d-flex flex-column">
-      <div className="mt-4 ">
+    <div
+      className="px-3 flex-none py-5 text-align-center d-flex flex-column"
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
+      <div className="mt-4">
         <p className="text-2xl font-bold text-rose-600 sm:text-3xl">
           {car.year} {car.make} {car.model}
         </p>
@@ -720,7 +729,12 @@ const DetailsFooter = ({ any }) => {
 
         <div className="-mx-6 mt-8 lg:mx-0 d-flex flex-row flex-nowrap overflow-x-auto">
           {cars.map((car, index) => (
-            <CarCard key={index} car={car} />
+            <CarCard
+              key={index}
+              car={car}
+              // onClick={() => navigate(`/cars/${car.VIN_carID}`)}
+              // style={{ cursor: "pointer" }}
+            />
           ))}
         </div>
       </div>

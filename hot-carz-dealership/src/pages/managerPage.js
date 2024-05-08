@@ -20,15 +20,15 @@ import styles from "../css/employees.css";
 const ManagerPage = () => {
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
-  const [ /*serviceAppointments*/ setServiceAppointments] = useState([]);
+  const [/*serviceAppointments*/ setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [ /*purchases*/ setPurchases] = useState([]);
+  const [/*purchases*/ setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-  const [ /*testDrives*/ setTestDrives] = useState([]);
+  const [/*testDrives*/ setTestDrives] = useState([]);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
 
   const navigate = useNavigate(); // Initialize useNavigate
@@ -559,21 +559,24 @@ const ManagerPage = () => {
               </tr>
             ) : (
               <>
-                {contracts.map((contract) => (
-                  <tr key={contract.purchaseID}>
-                    <td>{contract.VIN_carID}</td>
-                    <td>{contract.purchaseType}</td>
-                    <td>{contract.purchaseDate}</td>
-                    <td>
-                      <button
-                        onClick={() => handleViewContract(contract)}
-                        className="btn btn-primary "
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {contracts.map((contract) =>
+                  // Add condition to skip rendering if VIN_carID is empty or null
+                  contract.VIN_carID ? (
+                    <tr key={contract.purchaseID}>
+                      <td>{contract.VIN_carID}</td>
+                      <td>{contract.purchaseType}</td>
+                      <td>{contract.purchaseDate}</td>
+                      <td>
+                        <button
+                          onClick={() => handleViewContract(contract)}
+                          className="btn btn-primary"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ) : null
+                )}
                 {contracts.length === 0 && (
                   <tr>
                     <td colSpan="4">No contracts awaiting manager signature</td>
@@ -597,52 +600,90 @@ const ManagerPage = () => {
                 </div>
                 <div className="modal-body">
                   {/* Display contract details */}
-                  <p>VIN Car ID: {selectedContract.VIN_carID}</p>
-                  <p>Purchase Type: {selectedContract.purchaseType}</p>
-                  <p>Purchase Date: {selectedContract.purchaseDate}</p>
+                  <ul class="flex flex-wrap">
+                    <li className="w-full">
+                      VIN Car ID: {selectedContract.VIN_carID}
+                    </li>
+                    <li className="w-full">
+                      Purchase Type: {selectedContract.purchaseType}
+                    </li>
+                    <li className="w-full">
+                      Purchase Date: {selectedContract.purchaseDate}
+                    </li>
+                  </ul>
+
                   {/* Display finance information */}
                   {financeInfo.length > 0 && (
                     <div>
                       <h5>Finance Information</h5>
-                      <p>Credit Score: {financeInfo[0].credit_score}</p>
-                      <p>Income: ${financeInfo[0].income}</p>
-                      <p>Down Payment: ${financeInfo[0].down_payment}</p>
-                      <p>Loan Total: ${financeInfo[0].loan_total}</p>
-                      <p>Percentage: {financeInfo[0].percentage}%</p>
-                      <p>Remaining Months: {financeInfo[0].remaining_months}</p>
+                      <ul className="flex flex-wrap">
+                        <li className="w-1/2 mt-1">
+                          Credit Score: {financeInfo[0].credit_score}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Income: ${financeInfo[0].income}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Down Payment: ${financeInfo[0].down_payment}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Loan Total: ${financeInfo[0].loan_total}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Percentage: {financeInfo[0].percentage}%
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Remaining Months: {financeInfo[0].remaining_months}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          Negotiated Price: $
+                          {parseFloat(financeInfo[0].down_payment) +
+                            parseFloat(financeInfo[0].loan_total)}
+                        </li>
+                      </ul>
                     </div>
                   )}
                   {/* Display vehicle information */}
                   {vehicleInfo && (
                     <div>
                       <h5>Vehicle Information</h5>
-                      <p>Vin: {vehicleInfo.VIN_carID}</p>
-
-                      <p>Make: {vehicleInfo.make}</p>
-                      <p>Model: {vehicleInfo.model}</p>
-                      <p>Body: {vehicleInfo.body}</p>
-                      <p>Color: {vehicleInfo.color}</p>
-                      <p>Price: ${vehicleInfo.price}</p>
-                      <p>Year: {vehicleInfo.year}</p>
-                      <p>Mileage: {vehicleInfo.mileage}</p>
+                      {/* <p>Vin: {vehicleInfo.VIN_carID}</p> */}
+                      <ul class="flex flex-wrap">
+                        <li className="w-1/2 mt-1">Make: {vehicleInfo.make}</li>
+                        <li className="w-1/2 mt-1">
+                          Model: {vehicleInfo.model}
+                        </li>
+                        <li className="w-1/2 mt-1">Body: {vehicleInfo.body}</li>
+                        <li className="w-1/2 mt-1">
+                          Color: {vehicleInfo.color}
+                        </li>
+                        <li className="w-1/2 mt-1">
+                          MSRP: ${vehicleInfo.price}
+                        </li>
+                        <li className="w-1/2 mt-1">Year: {vehicleInfo.year}</li>
+                        <li className="w-1/2 mt-1">
+                          Mileage: {vehicleInfo.mileage}
+                        </li>
+                      </ul>
                     </div>
                   )}
                   {/* Display member information */}
                   {memberInfo && (
                     <div>
                       <h5>Member Information</h5>
-                      <p>
-                        Name: {memberInfo.first_name} {memberInfo.last_name}
-                      </p>
-                      <p>Email: {memberInfo.email}</p>
-                      <p>
-                        Address: {memberInfo.address}, {memberInfo.city},{" "}
-                        {memberInfo.state}, {memberInfo.zipcode}
-                      </p>
-                      <p>Phone: {memberInfo.phone}</p>
+                      <ul class="flex flex-wrap">
+                        <li className="w-full">
+                          Name: {memberInfo.first_name} {memberInfo.last_name}
+                        </li>
+                        <li className="w-full">Email: {memberInfo.email}</li>
+                        <li className="w-full">
+                          Address: {memberInfo.address}, {memberInfo.city},{" "}
+                          {memberInfo.state}, {memberInfo.zipcode}
+                        </li>
+                        <li className="w-full">Phone: {memberInfo.phone}</li>
+                      </ul>
                     </div>
                   )}
-
 
                   {/* Signature input field */}
                   <div className="form-group">
@@ -656,7 +697,9 @@ const ManagerPage = () => {
                       onChange={(event) => {
                         const inputValue = event.target.value;
                         const expectedSignature = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
-                        setIsSignatureEntered(inputValue.trim().toLowerCase() === expectedSignature);
+                        setIsSignatureEntered(
+                          inputValue.trim().toLowerCase() === expectedSignature
+                        );
                         setManagerSignature(inputValue);
                       }}
                     />
@@ -669,12 +712,6 @@ const ManagerPage = () => {
                       </p>
                     )}
                   </div>
-
-
-
-
-
-
                 </div>
                 <div className="modal-footer">
                   <button
@@ -734,7 +771,7 @@ const ManagerPage = () => {
     const [newServiceName, setNewServiceName] = useState("");
     const [newServicePrice, setNewServicePrice] = useState("");
     const [serviceAppointments, setServiceAppointments] = useState([]);
-    const [,/*technicians*/ setTechnicians] = useState([]);
+    const [, /*technicians*/ setTechnicians] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState("");
     const [editedPrice, setEditedPrice] = useState("");
@@ -750,8 +787,9 @@ const ManagerPage = () => {
       fetchServices();
       fetchTechnicians(); // Moved inside useEffect
     }, []);
-  
-    const fetchTechnicians = async () => { // Defined inside useEffect
+
+    const fetchTechnicians = async () => {
+      // Defined inside useEffect
       try {
         const response = await fetch(`${BASE_URL}/api/employees/technicians`);
         if (!response.ok) {
@@ -1432,7 +1470,6 @@ const ManagerPage = () => {
       setIsLoading(false);
     };
 
-
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
         const response = await fetch(
@@ -1444,7 +1481,7 @@ const ManagerPage = () => {
             },
             body: JSON.stringify({
               bidID: bidId,
-              confirmationStatus: 'Member Processing',
+              confirmationStatus: "Member Processing",
             }),
           }
         );
@@ -1530,7 +1567,6 @@ const ManagerPage = () => {
         console.error("Error fetching member information:", error.message);
       }
     };
-    
 
     return (
       <div>
@@ -1620,7 +1656,9 @@ const ManagerPage = () => {
                     %
                   </p>
                   <p>Status: {selectedBid.bidStatus}</p>
-                  <p>Member: {member.first_name} {member.last_name}</p>
+                  <p>
+                    Member: {member.first_name} {member.last_name}
+                  </p>
 
                   <div className="form-group">
                     <input
@@ -1640,31 +1678,33 @@ const ManagerPage = () => {
                   </div>
                 </div>
                 <div className="modal-footer">
-                <div className="form-group">
-    <label htmlFor="signature">Employee's Signature:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="signature"
-      placeholder="Enter Signature"
-      value={managerSignature}
-      onChange={(event) => {
-        const inputValue = event.target.value;
-        const expectedSignature = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
-        setIsSignatureEntered(inputValue.trim().toLowerCase() === expectedSignature);
-        setManagerSignature(inputValue);
-      }}
-    />
-    <small className="form-text text-muted">
-      By signing this, you are accepting the proposed bid and
-      are entering into a contract with this member.
-    </small>
-    {managerSignature && !isSignatureEntered && (
-      <p style={{ color: "red" }}>
-        Please enter your first and last name.
-      </p>
-    )}
-  </div>
+                  <div className="form-group">
+                    <label htmlFor="signature">Employee's Signature:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="signature"
+                      placeholder="Enter Signature"
+                      value={managerSignature}
+                      onChange={(event) => {
+                        const inputValue = event.target.value;
+                        const expectedSignature = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
+                        setIsSignatureEntered(
+                          inputValue.trim().toLowerCase() === expectedSignature
+                        );
+                        setManagerSignature(inputValue);
+                      }}
+                    />
+                    <small className="form-text text-muted">
+                      By signing this, you are accepting the proposed bid and
+                      are entering into a contract with this member.
+                    </small>
+                    {managerSignature && !isSignatureEntered && (
+                      <p style={{ color: "red" }}>
+                        Please enter your first and last name.
+                      </p>
+                    )}
+                  </div>
 
                   <button
                     type="button"
@@ -1743,7 +1783,6 @@ const ManagerPage = () => {
       </div>
     );
   };
-
 
   const TestDrivesTable = ({ applyFilter }) => {
     // Function to fetch pending test drives
@@ -2612,18 +2651,21 @@ const ManagerPage = () => {
   return (
     <div>
       {!showWelcomeScreen && (
-        <div className="bg-dark text-white p-3 flex w-auto"
+        <div
+          className="bg-dark text-white p-3 flex w-auto"
           style={{
             height: "100vh",
             overflowY: "auto",
             position: "fixed",
             left: 0,
             flexDirection: "column",
-          }}>
+          }}
+        >
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 0 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 0 ? "selected" : ""
+              }`}
               onClick={() => handleTabSelect(0)}
             >
               To-Do's
@@ -2632,8 +2674,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 1 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 1 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(1);
                 console.log("Clicked on Service Center button");
@@ -2645,8 +2688,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 4 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 4 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(4);
                 fetchDataSelection(4);
@@ -2658,8 +2702,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 5 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 5 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(5);
                 fetchDataSelection(5);
@@ -2671,8 +2716,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 6 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 6 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(6);
                 fetchDataSelection(6);
@@ -2684,8 +2730,9 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${selectedTab === 7 ? "selected" : ""
-                }`}
+              className={`btn btn-block btn-dark ${
+                selectedTab === 7 ? "selected" : ""
+              }`}
               onClick={() => {
                 handleTabSelect(7);
                 fetchDataSelection(7);

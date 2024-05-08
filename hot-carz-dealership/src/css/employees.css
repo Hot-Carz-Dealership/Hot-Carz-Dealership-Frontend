@@ -1,233 +1,232 @@
 .tablespacing {
-    marginTop: 20px;
-  }
-  
-  .table {
-    border-collapse: collapse;
-    width: 100%;
-    /*border: 2px solid black;*/
-    border-top: #000;
-    border-bottom: #000;
-  }
-  
-  .th {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .bookApptButton {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-  }
-  
-  .creationButton {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: red;
-    color: white;
-    border-radius: 20px;
-    border: none;
-    text-decoration: none;
-    cursor: pointer;
-    margin: 10px 0;
-  }
-  
-  .selected {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .edit {
-    background: none;
-    border: none;
-    padding: 0;
-    margin-right: 5px;
-    cursor: pointer;
-  }
-  
-  .delete {
-    background: none;
-    border: none;
-    padding: 0;
-    margin-right: 5px;
-    cursor: pointer;
-  }
-  
-  .editIcon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .deleteIcon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .tableWrapper {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: rgba(128, 128, 128, 0.1);
-  }
-  
-  .welcomeScreen {
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    padding: 30px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  
-  .welcomeScreenHeading {
-    font-size: 2em; /* Decrease the font size */
-    margin-bottom: 10px; /* Reduce the bottom margin */
-    color: #333;
-  }
-  
-  .welcomeScreenLogo {
-    width: 100%; /* Set the width of the logo */
-    margin-bottom: 20px; /* Increase the bottom margin */
-  }
-  
-  .welcomeScreenText {
-    font-size: 1em; /* Decrease the font size */
-    margin-bottom: 20px; /* Reduce the bottom margin */
-    color: #666;
-  }
-  
-  .welcomeScreenButton {
-    font-size: 1em; /* Decrease the font size */
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .welcomeScreenButton:hover {
-    background-color: #0056b3;
-  }
-  
-  
-  .largeTextStyle {
-    font-size: 2em;
-  }
-  
-  .modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .modal {
-    position: fixed;
-    
-margin-right: auto;
-margin-left: 50%;
-margin-top:35%;
-margin-bottom:30%;
+  margintop: 20px;
+}
 
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .modal-dialog {
-    width: 800px; /* Adjust as needed */
-  }
-  
-  .modal-content {
-    position: relative;
-    background-color: #fff;
-    border: 1px solid #000;
-    border-radius: 4px;
-    padding: 20px;
-  }
-  
-  .modal-header,
-  .modal-footer {
-    padding: 10px 0;
-  }
-  
-  .modal-header .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
-  }
-  
-  .modal-body {
-    padding: 10px 0;
-  }
-  
-  .modal-footer {
-    border-top: 1px solid #ddd;
-  }
-  .sidebarEmployees {
-    width: 200px;
-    min-height: 100vh;
-    overflow-y: auto;
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    background-color: #343a40;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center items horizontally */
-  }
-  
-  .sidebar-content {
-    margin-bottom: 0%;
-    padding-bottom: 1000px; /* Adjust as needed */
-    flex-grow: 1;
-  }
-  
-  .sidebar button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: black;
-    color: #ffffff;
-    text-align: left;
-  }
-  
-  .sidebar button:hover {
-    background-color: #333333;
-    transition: background-color 0.3s ease;
-  }
-  
-  .sidebar button.selected {
-    background-color: red;
-  }
-  
-  .main-content {
-    margin-left: 200px;
-    padding: 20px;
-  }
-  .generate-report-button {
-    background-color: green;
-    color: white;
-  }
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  /*border: 2px solid black;*/
+  border-top: #000;
+  border-bottom: #000;
+}
+
+.th {
+  padding: 8px;
+  text-align: left;
+}
+
+.td {
+  padding: 8px;
+  text-align: left;
+}
+
+.bookApptButton {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.creationButton {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border-radius: 20px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.edit {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.delete {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.editIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.deleteIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.tableWrapper {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.welcomeScreen {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 30px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.welcomeScreenHeading {
+  font-size: 2em; /* Decrease the font size */
+  margin-bottom: 10px; /* Reduce the bottom margin */
+  color: #333;
+}
+
+.welcomeScreenLogo {
+  width: 100%; /* Set the width of the logo */
+  margin-bottom: 20px; /* Increase the bottom margin */
+}
+
+.welcomeScreenText {
+  font-size: 1em; /* Decrease the font size */
+  margin-bottom: 20px; /* Reduce the bottom margin */
+  color: #666;
+}
+
+.welcomeScreenButton {
+  font-size: 1em; /* Decrease the font size */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.welcomeScreenButton:hover {
+  background-color: #0056b3;
+}
+
+.largeTextStyle {
+  font-size: 2em;
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal {
+  position: fixed;
+
+  margin-right: auto;
+  margin-left: 50%;
+  margin-top: 35%;
+  margin-bottom: 30%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-dialog {
+  width: 800px; /* Adjust as needed */
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 10px 0;
+}
+
+.modal-header .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.modal-body {
+  padding: 10px 0;
+  min-width: 400px;
+}
+
+.modal-footer {
+  border-top: 1px solid #ddd;
+}
+.sidebarEmployees {
+  width: 200px;
+  min-height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  background-color: #343a40;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+}
+
+.sidebar-content {
+  margin-bottom: 0%;
+  padding-bottom: 1000px; /* Adjust as needed */
+  flex-grow: 1;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: black;
+  color: #ffffff;
+  text-align: left;
+}
+
+.sidebar button:hover {
+  background-color: #333333;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar button.selected {
+  background-color: red;
+}
+
+.main-content {
+  margin-left: 200px;
+  padding: 20px;
+}
+.generate-report-button {
+  background-color: green;
+  color: white;
+}
