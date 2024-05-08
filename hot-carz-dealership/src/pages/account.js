@@ -994,9 +994,20 @@ const Account = () => {
         >
           Past Invoices
         </button>
-        <Link to="/add-member-vehicle" className="btn btn-block btn-danger">
+        <Link
+          to="/add-member-vehicle"
+          className="btn btn-block btn-danger mt-2"
+        >
           Add new Vehicle
         </Link>
+        <Button
+          className="btn btn-block btn-danger mt-3 "
+          style={styles.bookApptButton}
+          onClick={logOutUser}
+          variant="contained"
+        >
+          Log Out
+        </Button>
       </div>
       <div className="container" style={{ marginLeft: "250px" }}>
         <div className="row">
