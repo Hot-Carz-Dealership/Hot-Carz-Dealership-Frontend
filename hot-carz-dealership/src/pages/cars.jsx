@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CarInventorySearchbar from "../components/features/Car_Inv_Page/CarInventorySearchbar";
 import CarInventoryGrid from "../components/features/Car_Inv_Page/CarInventoryGrid";
 import { BASE_URL } from "../utilities/constants";
+import Footer from "../components/common/Footer";
 
 const Cars = () => {
   const [cars, setCars] = useState([]);
@@ -17,15 +18,14 @@ const Cars = () => {
   };
 
   return (
+    <div className="flex flex-col justify-between min-h-screen">
       <div className="cars">
         <CarInventorySearchbar handleSearch={handleSearch} />
-
-
         <CarInventoryGrid searchResults={cars} />
-        
-
-     {/* Pass updated cars data to Grid component */}
       </div>
+
+      <Footer />
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ import {
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../../../utilities/constants";
 import VehicleImage from "../../../utilities/VehicleImage";
-import Footer from "../../common/Footer";
+// import Footer from "../../common/Footer";
 
 const drawerWidth = 240;
 
@@ -157,273 +157,270 @@ const CarInventoryGrid = ({ searchResults }) => {
 
   return (
     <div>
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      ></AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        ></AppBar>
+        <Drawer
+          variant="permanent"
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            {/* Years */}
-            <ListItem disablePadding>
-              <List disablePadding>
-                <ListItem>
-                  <span>Years </span>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    id="minYear-number"
-                    label="Min"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={minYear}
-                    onChange={(e) => setMinYear(e.target.value)}
-                  />
-                  <span className="mr-2 ml-2">to</span>
-                  <TextField
-                    id="maxYear-number"
-                    label="Max"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={maxYear}
-                    onChange={(e) => setMaxYear(e.target.value)}
-                  />
-                </ListItem>
-              </List>
-            </ListItem>
-            {/* Mileage */}
-            <ListItem disablePadding>
-              <List disablePadding>
-                <ListItem>
-                  <span>Milage </span>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    id="minMileage-number"
-                    label="Min"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={minMileage}
-                    onChange={(e) => setMinMileage(e.target.value)}
-                  />
-                  <span className="mr-2 ml-2">to</span>
-                  <TextField
-                    id="maxMileage-number"
-                    label="Max"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={maxMileage}
-                    onChange={(e) => setMaxMileage(e.target.value)}
-                  />
-                </ListItem>
-              </List>
-            </ListItem>
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+        >
+          <Toolbar />
+          <Box sx={{ overflow: "auto" }}>
+            <List>
+              {/* Years */}
+              <ListItem disablePadding>
+                <List disablePadding>
+                  <ListItem>
+                    <span>Years </span>
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      id="minYear-number"
+                      label="Min"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={minYear}
+                      onChange={(e) => setMinYear(e.target.value)}
+                    />
+                    <span className="mr-2 ml-2">to</span>
+                    <TextField
+                      id="maxYear-number"
+                      label="Max"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={maxYear}
+                      onChange={(e) => setMaxYear(e.target.value)}
+                    />
+                  </ListItem>
+                </List>
+              </ListItem>
+              {/* Mileage */}
+              <ListItem disablePadding>
+                <List disablePadding>
+                  <ListItem>
+                    <span>Milage </span>
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      id="minMileage-number"
+                      label="Min"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={minMileage}
+                      onChange={(e) => setMinMileage(e.target.value)}
+                    />
+                    <span className="mr-2 ml-2">to</span>
+                    <TextField
+                      id="maxMileage-number"
+                      label="Max"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={maxMileage}
+                      onChange={(e) => setMaxMileage(e.target.value)}
+                    />
+                  </ListItem>
+                </List>
+              </ListItem>
 
-            {/* Price */}
-            <ListItem disablePadding>
-              <List disablePadding>
-                <ListItem>
-                  <span>Price </span>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    id="minPrice-number"
-                    label="Min"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                  />
-                  <span className="mr-2 ml-2">to</span>
-                  <TextField
-                    id="maxPrice-number"
-                    label="Max"
-                    type="number"
-                    size="small"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                  />
-                </ListItem>
-              </List>
-            </ListItem>
-            {/* Color */}
-            <ListItem disablePadding>
-              <List disablePadding>
-                <ListItem>
-                  <span>Color </span>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    id="color-select"
-                    select
-                    // label="Select"
-                    value={selectedColor}
-                    size="small"
-                    onChange={(e) => setSelectedColor(e.target.value)}
-                    SelectProps={{
-                      native: true,
-                    }}
-                  >
-                    {carColors.map((color, index) => (
-                      <option key={index} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </TextField>
-                </ListItem>
-              </List>
-            </ListItem>
-            {/* Select Make */}
-            <ListItem>
-              <List disablePadding>
-                <ListItem disablePadding>
-                  <span>Make </span>
-                </ListItem>
-                <ListItem>
-                  <div>
-                    <Button
-                      variant="contained"
-                      sx={{ backgroundColor: "red" }}
-                      onClick={handleOpenMakeMenu}
-                      aria-controls="car-make-menu"
-                      aria-haspopup="true"
-                      style={buttonStyle}
+              {/* Price */}
+              <ListItem disablePadding>
+                <List disablePadding>
+                  <ListItem>
+                    <span>Price </span>
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      id="minPrice-number"
+                      label="Min"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                    />
+                    <span className="mr-2 ml-2">to</span>
+                    <TextField
+                      id="maxPrice-number"
+                      label="Max"
+                      type="number"
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                    />
+                  </ListItem>
+                </List>
+              </ListItem>
+              {/* Color */}
+              <ListItem disablePadding>
+                <List disablePadding>
+                  <ListItem>
+                    <span>Color </span>
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      id="color-select"
+                      select
+                      // label="Select"
+                      value={selectedColor}
+                      size="small"
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      SelectProps={{
+                        native: true,
+                      }}
                     >
-                      {selectedCarMake ? selectedCarMake : "Select Make"}
-                    </Button>
-                    <Menu
-                      id="car-make-menu"
-                      anchorEl={makeAnchorEl}
-                      open={Boolean(makeAnchorEl)}
-                      onClose={handleCloseMakeMenu}
-                    >
-                      {carMakes.map((carMake, index) => (
-                        <MenuItem
-                          key={index}
-                          onClick={() => handleCarMakeSelect(carMake)}
-                        >
-                          {carMake}
-                        </MenuItem>
+                      {carColors.map((color, index) => (
+                        <option key={index} value={color}>
+                          {color}
+                        </option>
                       ))}
-                    </Menu>
-
-                    {/* {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>} */}
-                  </div>
-                </ListItem>
-              </List>
-            </ListItem>
-
-            {/* Select Model */}
-            <ListItem>
-              <List disablePadding>
-                <ListItem disablePadding>
-                  <span>Model </span>
-                </ListItem>
-                <ListItem>
-                  <div>
-                    <Button
-                      variant="contained"
-                      sx={{ backgroundColor: "red" }}
-                      onClick={handleOpenModelMenu}
-                      aria-controls="car-model-menu"
-                      aria-haspopup="true"
-                      disabled={!selectedCarMake}
-                      style={buttonStyle}
-                    >
-                      {selectedCarModel ? selectedCarModel : "Select Model"}
-                    </Button>
-                    <Menu
-                      id="car-model-menu"
-                      anchorEl={modelAnchorEl}
-                      open={Boolean(modelAnchorEl)}
-                      onClose={handleCloseModelMenu}
-                    >
-                      {selectedCarMake &&
-                        carModels[selectedCarMake] &&
-                        carModels[selectedCarMake].map((carModel, index) => (
+                    </TextField>
+                  </ListItem>
+                </List>
+              </ListItem>
+              {/* Select Make */}
+              <ListItem>
+                <List disablePadding>
+                  <ListItem disablePadding>
+                    <span>Make </span>
+                  </ListItem>
+                  <ListItem>
+                    <div>
+                      <Button
+                        variant="contained"
+                        sx={{ backgroundColor: "red" }}
+                        onClick={handleOpenMakeMenu}
+                        aria-controls="car-make-menu"
+                        aria-haspopup="true"
+                        style={buttonStyle}
+                      >
+                        {selectedCarMake ? selectedCarMake : "Select Make"}
+                      </Button>
+                      <Menu
+                        id="car-make-menu"
+                        anchorEl={makeAnchorEl}
+                        open={Boolean(makeAnchorEl)}
+                        onClose={handleCloseMakeMenu}
+                      >
+                        {carMakes.map((carMake, index) => (
                           <MenuItem
                             key={index}
-                            onClick={() => handleCarModelSelect(carModel)}
+                            onClick={() => handleCarMakeSelect(carMake)}
                           >
-                            {carModel}
+                            {carMake}
                           </MenuItem>
                         ))}
-                    </Menu>
+                      </Menu>
 
-                    {/* {selectedCarModel && (
+                      {/* {selectedCarMake && <p>Selected Make: {selectedCarMake}</p>} */}
+                    </div>
+                  </ListItem>
+                </List>
+              </ListItem>
+
+              {/* Select Model */}
+              <ListItem>
+                <List disablePadding>
+                  <ListItem disablePadding>
+                    <span>Model </span>
+                  </ListItem>
+                  <ListItem>
+                    <div>
+                      <Button
+                        variant="contained"
+                        sx={{ backgroundColor: "red" }}
+                        onClick={handleOpenModelMenu}
+                        aria-controls="car-model-menu"
+                        aria-haspopup="true"
+                        disabled={!selectedCarMake}
+                        style={buttonStyle}
+                      >
+                        {selectedCarModel ? selectedCarModel : "Select Model"}
+                      </Button>
+                      <Menu
+                        id="car-model-menu"
+                        anchorEl={modelAnchorEl}
+                        open={Boolean(modelAnchorEl)}
+                        onClose={handleCloseModelMenu}
+                      >
+                        {selectedCarMake &&
+                          carModels[selectedCarMake] &&
+                          carModels[selectedCarMake].map((carModel, index) => (
+                            <MenuItem
+                              key={index}
+                              onClick={() => handleCarModelSelect(carModel)}
+                            >
+                              {carModel}
+                            </MenuItem>
+                          ))}
+                      </Menu>
+
+                      {/* {selectedCarModel && (
                       <p>Selected Model: {selectedCarModel}</p>
                     )} */}
-                  </div>
-                </ListItem>
-                <ListItem></ListItem>
-                <ListItem>
-                  <Button
-                    variant="contained"
-                    sx={{ backgroundColor: "black" }}
-                    onClick={() => setCars(handleFilter)}
-                  >
-                    Apply Filter
-                  </Button>
-                </ListItem>
-                <ListItem>
-                  <Button
-                    variant="contained"
-                    sx={{ backgroundColor: "grey" }}
-                    onClick={resetFilters}
-                  >
-                    Reset Filters
-                  </Button>
-                </ListItem>
-              </List>
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {cars.map((car, index) => (
-            <CarCard key={index} car={car} />
-          ))}
+                    </div>
+                  </ListItem>
+                  <ListItem></ListItem>
+                  <ListItem>
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "black" }}
+                      onClick={() => setCars(handleFilter)}
+                    >
+                      Apply Filter
+                    </Button>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "grey" }}
+                      onClick={resetFilters}
+                    >
+                      Reset Filters
+                    </Button>
+                  </ListItem>
+                </List>
+              </ListItem>
+            </List>
+          </Box>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+            {cars.map((car, index) => (
+              <CarCard key={index} car={car} />
+            ))}
+          </Box>
         </Box>
       </Box>
 
-
-    </Box>
-
-    {cars.length > 0 && <Footer />}
-
-</div>
+      {/* {cars.length > 0 && <Footer />} */}
+    </div>
   );
 };
 
@@ -475,8 +472,6 @@ const CarCard = ({ car }) => {
         </Button>
       </CardActions>
     </Card>
-
-
   );
 };
 
