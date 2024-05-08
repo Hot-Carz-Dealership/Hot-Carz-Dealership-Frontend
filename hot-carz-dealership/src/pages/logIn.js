@@ -70,6 +70,7 @@ export default function LogIn() {
         const errorData = await response.json();
         setError(errorData.error);
         console.error("Error", error);
+        window.alert("Incorrect Username or Password");
       }
     } catch (error) {
       setError("An error occurred while logging in. Please try again.");
