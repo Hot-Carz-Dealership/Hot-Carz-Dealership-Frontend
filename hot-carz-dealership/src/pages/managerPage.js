@@ -559,21 +559,24 @@ const ManagerPage = () => {
               </tr>
             ) : (
               <>
-                {contracts.map((contract) => (
-                  <tr key={contract.purchaseID}>
-                    <td>{contract.VIN_carID}</td>
-                    <td>{contract.purchaseType}</td>
-                    <td>{contract.purchaseDate}</td>
-                    <td>
-                      <button
-                        onClick={() => handleViewContract(contract)}
-                        className="btn btn-primary "
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {contracts.map((contract) =>
+                  // Add condition to skip rendering if VIN_carID is empty or null
+                  contract.VIN_carID ? (
+                    <tr key={contract.purchaseID}>
+                      <td>{contract.VIN_carID}</td>
+                      <td>{contract.purchaseType}</td>
+                      <td>{contract.purchaseDate}</td>
+                      <td>
+                        <button
+                          onClick={() => handleViewContract(contract)}
+                          className="btn btn-primary"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ) : null
+                )}
                 {contracts.length === 0 && (
                   <tr>
                     <td colSpan="4">No contracts awaiting manager signature</td>
