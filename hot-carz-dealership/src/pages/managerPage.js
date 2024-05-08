@@ -444,11 +444,6 @@ const ManagerPage = () => {
       await fetchVehicleAndMemberInfo(contract);
     };
 
-    const handleSignatureChange = (event) => {
-      setManagerSignature(event.target.value);
-      setIsSignatureEntered(!!event.target.value);
-    };
-
     const fetchFinanceInfo = async (memberId) => {
       try {
         const response = await fetch(
@@ -739,7 +734,7 @@ const ManagerPage = () => {
     const [newServiceName, setNewServiceName] = useState("");
     const [newServicePrice, setNewServicePrice] = useState("");
     const [serviceAppointments, setServiceAppointments] = useState([]);
-    const [/*technicians*/ setTechnicians] = useState([]);
+    const [,/*technicians*/ setTechnicians] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState("");
     const [editedPrice, setEditedPrice] = useState("");
@@ -753,10 +748,10 @@ const ManagerPage = () => {
     useEffect(() => {
       fetchServiceAppointments();
       fetchServices();
-      fetchTechnicians();
+      fetchTechnicians(); // Moved inside useEffect
     }, []);
-
-    const fetchTechnicians = async () => {
+  
+    const fetchTechnicians = async () => { // Defined inside useEffect
       try {
         const response = await fetch(`${BASE_URL}/api/employees/technicians`);
         if (!response.ok) {
@@ -768,7 +763,6 @@ const ManagerPage = () => {
         console.error("Error fetching technicians:", error.message);
       }
     };
-
     const fetchServices = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/service-menu`);
@@ -1413,7 +1407,6 @@ const ManagerPage = () => {
     const [selectedBid, setSelectedBid] = useState(null);
     const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
-    const [signature, setSignature] = useState("");
     const [isSignatureEntered, setIsSignatureEntered] = useState(false);
     const [managerSignature, setManagerSignature] = useState("");
 
@@ -1439,34 +1432,7 @@ const ManagerPage = () => {
       setIsLoading(false);
     };
 
-    /*
-    const fetchFinanceInfo = async (memberId) => {
-      try {
-        const response = await fetch(
-          `${FORWARD_URL}/api/manager/get-financing`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              member_id: memberId,
-            }),
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch finance information");
-        }
 
-        const financeData = await response.json();
-        console.log(financeData);
-
-        setFinanceInfo(financeData);
-      } catch (error) {
-        console.error("Error fetching finance information:", error.message);
-      }
-    };
-*/
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
         const response = await fetch(
@@ -1516,14 +1482,6 @@ const ManagerPage = () => {
       setShowReplacementModal(false);
       setConfirmationStatus(null);
       setCounterOfferAmount("");
-    };
-
-    const handleSignatureChange = (e) => {
-      const signatureValue = e.target.value;
-      setSignature(signatureValue);
-      setIsSignatureEntered(
-        !!signatureValue && signatureValue.trim().split(" ").length >= 2
-      ); // Check if first and last name are provided
     };
 
     const handleCounterBidOffer = async () => {
