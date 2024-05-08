@@ -20,15 +20,15 @@ import styles from "../css/employees.css";
 const ManagerPage = () => {
   const [setBids] = useState([]);
   const [vehicleListings, setVehicleListings] = useState([]);
-  const [, /*serviceAppointments*/ setServiceAppointments] = useState([]);
+  const [ /*serviceAppointments*/ setServiceAppointments] = useState([]);
   const [members, setMembers] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [, /*purchases*/ setPurchases] = useState([]);
+  const [ /*purchases*/ setPurchases] = useState([]);
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [renderTable, setRenderTable] = useState(false); // Flag to control table rendering
-  const [, /*testDrives*/ setTestDrives] = useState([]);
+  const [ /*testDrives*/ setTestDrives] = useState([]);
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
 
   const navigate = useNavigate(); // Initialize useNavigate
@@ -613,10 +613,6 @@ const ManagerPage = () => {
                       <p>Income: ${financeInfo[0].income}</p>
                       <p>Down Payment: ${financeInfo[0].down_payment}</p>
                       <p>Loan Total: ${financeInfo[0].loan_total}</p>
-                      <p>
-                        Monthly Payment Sum: $
-                        {financeInfo[0].monthly_payment_sum}
-                      </p>
                       <p>Percentage: {financeInfo[0].percentage}%</p>
                       <p>Remaining Months: {financeInfo[0].remaining_months}</p>
                     </div>
@@ -651,6 +647,8 @@ const ManagerPage = () => {
                       <p>Phone: {memberInfo.phone}</p>
                     </div>
                   )}
+
+
                   {/* Signature input field */}
                   <div className="form-group">
                     <label htmlFor="signature">Manager's Signature:</label>
@@ -660,7 +658,12 @@ const ManagerPage = () => {
                       id="signature"
                       placeholder="Enter Signature"
                       value={managerSignature}
-                      onChange={handleSignatureChange}
+                      onChange={(event) => {
+                        const inputValue = event.target.value;
+                        const expectedSignature = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
+                        setIsSignatureEntered(inputValue.trim().toLowerCase() === expectedSignature);
+                        setManagerSignature(inputValue);
+                      }}
                     />
                     <small className="form-text text-muted">
                       By signing this, you are accepting the contract.
@@ -671,6 +674,12 @@ const ManagerPage = () => {
                       </p>
                     )}
                   </div>
+
+
+
+
+
+
                 </div>
                 <div className="modal-footer">
                   <button
@@ -730,12 +739,7 @@ const ManagerPage = () => {
     const [newServiceName, setNewServiceName] = useState("");
     const [newServicePrice, setNewServicePrice] = useState("");
     const [serviceAppointments, setServiceAppointments] = useState([]);
-    // const [ /*selectedAppointment*/ , setSelectedAppointment] = useState(null);
-    // const [ /*vehicleInfo */, setVehicleInfo] = useState(null);
-    // const [ /* memberInfo*/ , setMemberInfo] = useState(null);
-    const [, /*technicians*/ setTechnicians] = useState([]);
-    // const [/*selectedTechnician*/, setSelectedTechnician] = useState(null);
-    //  const [/*showReplacementModal*/ , setShowReplacementModal] = useState(false);
+    const [/*technicians*/ setTechnicians] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editedName, setEditedName] = useState("");
     const [editedPrice, setEditedPrice] = useState("");
@@ -793,40 +797,6 @@ const ManagerPage = () => {
         setIsLoading(false);
       }
     };
-
-    /*
-        const fetchVehicleAndMemberInfo = async (appointment) => {
-          try {
-            const vehicleResponse = await fetch(`${BASE_URL}/api/vehicles?vin=${appointment.VIN_carID}&service=1`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!vehicleResponse.ok) {
-              throw new Error('Failed to fetch vehicle information');
-            }
-            const vehicleData = await vehicleResponse.json();
-            setVehicleInfo(vehicleData);
-    
-            const memberResponse = await fetch(`${BASE_URL}/api/manager/get_member`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ memberID: appointment.memberID }),
-            });
-            if (!memberResponse.ok) {
-              throw new Error('Failed to fetch member information');
-            }
-            const memberData = await memberResponse.json();
-            setMemberInfo(memberData);
-          } catch (error) {
-            console.error('Error fetching vehicle and member information:', error.message);
-          }
-        };
-    
-    */
 
     const handleAddService = async () => {
       try {
@@ -914,23 +884,6 @@ const ManagerPage = () => {
       setEditedPrice(service.price);
       setShowEditModal(true);
     };
-
-    /*
-    const openModal = (appointment) => {
-      setShowEditModal(true);
-      setEditedService(appointment);
-      setEditedName(appointment.service_name);
-      setEditedPrice(appointment.price);
-    };
-
-    const closeModal = () => {
-      setShowReplacementModal(false);
-      setSelectedAppointment(null);
-      setVehicleInfo(null);
-      setMemberInfo(null);
-      setSelectedTechnician(null);
-    };
-*/
 
     // Function to handle pagination
     const nextPage = () => {
@@ -1458,12 +1411,13 @@ const ManagerPage = () => {
   const BidsTable = ({ applyFilter }) => {
     const [bids, setBids] = useState([]);
     const [selectedBid, setSelectedBid] = useState(null);
-    const [financeInfo, setFinanceInfo] = useState([]);
     const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [showReplacementModal, setShowReplacementModal] = useState(false);
     const [signature, setSignature] = useState("");
     const [isSignatureEntered, setIsSignatureEntered] = useState(false);
+    const [managerSignature, setManagerSignature] = useState("");
 
+    const [member, setMember] = useState(false);
     const [counterOfferAmount, setCounterOfferAmount] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
@@ -1485,6 +1439,7 @@ const ManagerPage = () => {
       setIsLoading(false);
     };
 
+    /*
     const fetchFinanceInfo = async (memberId) => {
       try {
         const response = await fetch(
@@ -1511,7 +1466,7 @@ const ManagerPage = () => {
         console.error("Error fetching finance information:", error.message);
       }
     };
-
+*/
     const handleBidConfirmation = async (bidId, confirmationStatus) => {
       try {
         const response = await fetch(
@@ -1552,12 +1507,12 @@ const ManagerPage = () => {
 
     const handleViewBid = async (bid) => {
       setSelectedBid(bid);
-      await fetchFinanceInfo(bid.memberID);
+      await fetchMemberInfo(bid.memberID);
     };
 
     const closeModal = () => {
       setSelectedBid(null);
-      setFinanceInfo([]);
+      setMember([]);
       setShowReplacementModal(false);
       setConfirmationStatus(null);
       setCounterOfferAmount("");
@@ -1595,6 +1550,29 @@ const ManagerPage = () => {
         console.error("Error updating bid offer price:", error.message);
       }
     };
+
+    const fetchMemberInfo = async (memberID) => {
+      try {
+        const memberResponse = await fetch(
+          `${BASE_URL}/api/manager/get_member`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ memberID }),
+          }
+        );
+        if (!memberResponse.ok) {
+          throw new Error("Failed to fetch member information");
+        }
+        const memberData = await memberResponse.json();
+        setMember(memberData);
+      } catch (error) {
+        console.error("Error fetching member information:", error.message);
+      }
+    };
+    
 
     return (
       <div>
@@ -1684,27 +1662,8 @@ const ManagerPage = () => {
                     %
                   </p>
                   <p>Status: {selectedBid.bidStatus}</p>
-                  {/* Display finance information */}
-                  {financeInfo.length > 0 && (
-                    <div>
-                      <h5>Finance Information</h5>
-                      <p>
-                        Offer from: {financeInfo[0].first_name}{" "}
-                        {financeInfo[0].last_name}, {financeInfo[0].phone}{" "}
-                      </p>
+                  <p>Member: {member.first_name} {member.last_name}</p>
 
-                      <p>Income: {financeInfo[0].income}</p>
-                      <p>Credit Score: {financeInfo[0].credit_score}</p>
-                      <p>Loan Total: {financeInfo[0].loan_total}</p>
-                      <p>Down Payment: {financeInfo[0].down_payment}</p>
-                      <p>Percentage: {financeInfo[0].percentage}</p>
-                      <p>
-                        Monthly Payment Sum:{" "}
-                        {financeInfo[0].monthly_payment_sum}
-                      </p>
-                      <p>Remaining Months: {financeInfo[0].remaining_months}</p>
-                    </div>
-                  )}
                   <div className="form-group">
                     <input
                       type="text"
@@ -1723,26 +1682,31 @@ const ManagerPage = () => {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <div className="form-group">
-                    <label htmlFor="signature">Signature:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="signature"
-                      placeholder="Enter Signature"
-                      value={signature}
-                      onChange={handleSignatureChange}
-                    />
-                    <small className="form-text text-muted">
-                      By signing this, you are accepting the proposed bid and
-                      are entering into a contract with this entity.
-                    </small>
-                    {signature && !isSignatureEntered && (
-                      <p style={{ color: "red" }}>
-                        Please enter your first and last name.
-                      </p>
-                    )}
-                  </div>
+                <div className="form-group">
+    <label htmlFor="signature">Employee's Signature:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="signature"
+      placeholder="Enter Signature"
+      value={managerSignature}
+      onChange={(event) => {
+        const inputValue = event.target.value;
+        const expectedSignature = `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`;
+        setIsSignatureEntered(inputValue.trim().toLowerCase() === expectedSignature);
+        setManagerSignature(inputValue);
+      }}
+    />
+    <small className="form-text text-muted">
+      By signing this, you are accepting the proposed bid and
+      are entering into a contract with this member.
+    </small>
+    {managerSignature && !isSignatureEntered && (
+      <p style={{ color: "red" }}>
+        Please enter your first and last name.
+      </p>
+    )}
+  </div>
 
                   <button
                     type="button"
@@ -1822,40 +1786,6 @@ const ManagerPage = () => {
     );
   };
 
-  /*
-    const PurchaseTable = () => (
-      <div className="table-responsive" style={styles.tableHeight}>
-        <h2>Purchases</h2>
-        <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>Purchase ID</th>
-              <th>Bid ID</th>
-              <th>VIN</th>
-              <th>Member ID</th>
-              <th>Confirmation Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchases && purchases.map((purchase, index) => (
-              <tr key={index}>
-                <td>{purchase.purchaseID}</td>
-                <td>{purchase.bidID}</td>
-                <td>{purchase.VIN_carID}</td>
-                <td>{purchase.memberID}</td>
-                <td>{purchase.confirmationNumber}</td>
-              </tr>
-            ))}
-            {!purchases && (
-              <tr>
-                <td colSpan="5">No purchases available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    );
-  */
 
   const TestDrivesTable = ({ applyFilter }) => {
     // Function to fetch pending test drives
@@ -2724,12 +2654,18 @@ const ManagerPage = () => {
   return (
     <div>
       {!showWelcomeScreen && (
-        <div className="sidebarEmployees">
+        <div className="bg-dark text-white p-3 flex w-auto"
+          style={{
+            height: "100vh",
+            overflowY: "auto",
+            position: "fixed",
+            left: 0,
+            flexDirection: "column",
+          }}>
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 0 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 0 ? "selected" : ""
+                }`}
               onClick={() => handleTabSelect(0)}
             >
               To-Do's
@@ -2738,9 +2674,8 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 1 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 1 ? "selected" : ""
+                }`}
               onClick={() => {
                 handleTabSelect(1);
                 console.log("Clicked on Service Center button");
@@ -2752,9 +2687,8 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 4 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 4 ? "selected" : ""
+                }`}
               onClick={() => {
                 handleTabSelect(4);
                 fetchDataSelection(4);
@@ -2766,9 +2700,8 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 5 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 5 ? "selected" : ""
+                }`}
               onClick={() => {
                 handleTabSelect(5);
                 fetchDataSelection(5);
@@ -2780,9 +2713,8 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 6 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 6 ? "selected" : ""
+                }`}
               onClick={() => {
                 handleTabSelect(6);
                 fetchDataSelection(6);
@@ -2794,9 +2726,8 @@ const ManagerPage = () => {
 
           <div style={{ marginBottom: "10px" }}>
             <button
-              className={`btn btn-block btn-dark ${
-                selectedTab === 7 ? "selected" : ""
-              }`}
+              className={`btn btn-block btn-dark ${selectedTab === 7 ? "selected" : ""
+                }`}
               onClick={() => {
                 handleTabSelect(7);
                 fetchDataSelection(7);
@@ -2821,7 +2752,7 @@ const ManagerPage = () => {
               Add new Vehicle
             </Link>
           </div>
-
+          <br />
           <Button
             className="btn btn-block btn-danger "
             style={styles.bookApptButton}
